@@ -1,3 +1,4 @@
+import env
 import psycopg2
 import psycopg2.extras
 
@@ -5,7 +6,7 @@ import psycopg2.extras
 # Função para conectar ao banco
 def conecta_db():
     con = psycopg2.connect(
-        host="localhost", database="adm_simcc", user="postgres", password="987456"
+        host=env.HOST, database=env.DATABASE, user=env.USER, password=env.PASSWORD
     )
 
     return con
