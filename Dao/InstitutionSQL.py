@@ -20,7 +20,7 @@ def Insert(institution):
         password=institution.password,
     )
 
-    return dbHandler.execScript_db(sql)
+    return dbHandler.db_script(sql)
 
 
 def Query(ID):
@@ -30,6 +30,6 @@ def Query(ID):
         filter=ID
     )
     return pd.DataFrame(
-        dbHandler.consultar_db(sql),
+        dbHandler.db_select(sql),
         columns=["institution_id", "name", "acronym", "email_user", "password"],
     )

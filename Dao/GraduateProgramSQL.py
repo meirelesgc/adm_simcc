@@ -28,7 +28,7 @@ def Insert(GraduateProgram):
         visible=GraduateProgram.visible,
     )
 
-    return dbHandler.execScript_db(sql)
+    return dbHandler.db_script(sql)
 
 
 def Query(ID):
@@ -38,7 +38,7 @@ def Query(ID):
         filter=ID
     )
     return pd.DataFrame(
-        dbHandler.consultar_db(sql),
+        dbHandler.db_select(sql),
         columns=[
             "graduate_program_id",
             "code",
@@ -62,7 +62,7 @@ def Update(ID):
     sql = """UPDATE graduate_program SET visible = NOT visible WHERE graduate_program_id = '{filter}';""".format(
         filter=ID
     )
-    dbHandler.execScript_db(sql=sql)
+    dbHandler.db_script(script_sql=sql)
     return "Update concluido"
 
 
@@ -70,7 +70,7 @@ def Delete(ID):
     sql = """DELETE FROM graduate_program WHERE graduate_program_id = '{filter}';""".format(
         filter=ID
     )
-    dbHandler.execScript_db(sql=sql)
+    dbHandler.db_script(script_sql=sql)
     return "Delete concluido"
 
 
@@ -92,5 +92,5 @@ def Fix(GraduateProgram):
         visible=GraduateProgram.visible,
         filter=GraduateProgram.graduate_program_id,
     )
-    dbHandler.execScript_db(sql=sql)
+    dbHandler.db_script(script_sql=sql)
     return "Update concluido"

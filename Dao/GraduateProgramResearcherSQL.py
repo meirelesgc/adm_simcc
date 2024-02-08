@@ -20,7 +20,7 @@ def insert(GraduateProgram):
         type_=GraduateProgram.type_,
     )
 
-    return dbHandler.execScript_db(sql)
+    return dbHandler.db_script(sql)
 
 
 def query(ID):
@@ -30,7 +30,7 @@ def query(ID):
         filter=ID
     )
     return pd.DataFrame(
-        dbHandler.consultar_db(sql),
+        dbHandler.db_select(sql),
         columns=[
             "graduate_program_id",
             "researcher_id",

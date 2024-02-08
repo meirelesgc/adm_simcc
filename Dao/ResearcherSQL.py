@@ -19,7 +19,7 @@ def Insert(Researcher):
         institution_id=Researcher.institution_id,
     )
 
-    return dbHandler.execScript_db(sql)
+    return dbHandler.db_script(sql)
 
 
 def Query(ID):
@@ -29,7 +29,7 @@ def Query(ID):
         filter=ID
     )
     return pd.DataFrame(
-        dbHandler.consultar_db(sql),
+        dbHandler.db_select(sql),
         columns=["researcher_id", "name", "lattes_id", "institution_id"],
     )
 
@@ -41,5 +41,5 @@ def Delete(ID):
 """.format(
         filter=ID
     )
-    dbHandler.execScript_db(sql=sql)
+    dbHandler.db_script(script_sql=sql)
     return "OK"
