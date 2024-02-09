@@ -13,19 +13,15 @@ def get_actual_researchers():
         SELECT 
             r.name, 
             r.lattes_id,
-            CASE
-                WHEN i.name = 'Instituto Federal da Bahia' THEN 6
-                WHEN i.name = 'Universidade Federal da Bahia ' THEN 1
-                WHEN i.name = 'Universidade do Estado da Bahia' THEN 2
-                WHEN i.name = 'Universidade Estadual de Santa Cruz' THEN 3
-                ELSE 0
-            END as adm_code
+            i.id as adm_code
         FROM
-            researcher as r
+            researcher r
         JOIN
-            institution as i
+            institution i
         ON
-            i.id = r.institution_id;
+            i.id = r.institution_id
+        WHERE 
+            i.acronym IN ('IFBA', 'UFBA', 'UNEB', 'UESC');
         """
     registry = dbHandler.db_select(sql_script)
 
@@ -54,9 +50,15 @@ def build_script_sql(data_frame):
     ]
 
 
+def adm_for_simcc():
+    script_sql = """
+
+    """
+
+
 if __name__ == "__main__":
     data_frame = get_actual_researchers()
-
+    print(data_frame)
     script_sql = build_script_sql(data_frame)
 
     dbHandler.db_script(script_sql, database="adm_simcc")
