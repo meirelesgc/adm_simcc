@@ -21,7 +21,9 @@ def get_actual_researchers():
         ON
             i.id = r.institution_id
         WHERE 
-            i.acronym IN ('IFBA', 'UFBA', 'UNEB', 'UESC');
+            i.acronym IN ('UESB', 'UFBA', 'UNEB', 'UESC')
+        AND
+            i.acronym IS NOT NULL;
         """
     registry = dbHandler.db_select(sql_script)
 
@@ -39,7 +41,7 @@ def build_script_sql(data_frame):
         lattes_id = Data["lattes_id"]
         code = Data["adm_code"]
         if code != INSTITUICAO_INVALIDA:
-            insert_data += f"('{name}', '{lattes_id}', {code}),"
+            insert_data += f"('{name}', '{lattes_id}', '{code}'),"
 
     return f"""
         INSERT INTO researcher(
@@ -58,7 +60,7 @@ def adm_for_simcc():
 
 if __name__ == "__main__":
     data_frame = get_actual_researchers()
-    print(data_frame)
+
     script_sql = build_script_sql(data_frame)
 
     dbHandler.db_script(script_sql, database="adm_simcc")
