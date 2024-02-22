@@ -3,16 +3,14 @@ class Institution(object):
         self.institution_id = None
         self.name = ""
         self.acronym = ""
-        self.email_user = ""
-        self.password = ""
+        self.lattes_id = ""
 
     def get_json(self):
         institution = {
             "institution_id": str(self.institution_id),
             "name": str(self.name),
             "acronym": str(self.acronym),
-            "email_user": str(self.email_user),
-            "password": str(self.password),
+            "lattes_id": str(self.lattes_id),
         }
 
         return institution

@@ -5,31 +5,31 @@ sys.path.append("../")
 
 import Dao.dbHandler as dbHandler
 import pandas as pd
-from Model.Institution import Institution
 
 
-def Insert(institution):
-    sql = """
-      INSERT INTO institution (institution_id, name, acronym, email_user, PASSWORD)
-      VALUES ('{institution_id}', '{name}', '{acronym}', '{email_user}', '{password}')
-   """.format(
-        institution_id=institution.institution_id,
-        name=institution.name,
-        acronym=institution.acronym,
-        email_user=institution.email_user,
-        password=institution.password,
-    )
+def Insert(Institution):
+    sql = f"""
+        INSERT INTO institution (institution_id, name, acronym, lattes_id)
+        VALUES ('{Institution.institution_id}', '{Institution.name}', '{Institution.acronym}', '{Institution.lattes_id}')
+        """
 
     return dbHandler.db_script(sql)
 
 
 def Query(ID):
-    sql = """
-    SELECT * FROM institution WHERE institution_id = {filter}
-""".format(
-        filter=ID
-    )
+    sql = f"""
+        SELECT 
+            institution_id, 
+            name, 
+            acronym, 
+            lattes_id
+	    FROM 
+            institution 
+        WHERE 
+            institution_id = '{ID}'
+        """
+
     return pd.DataFrame(
         dbHandler.db_select(sql),
-        columns=["institution_id", "name", "acronym", "email_user", "password"],
+        columns=["institution_id", "name", "acronym", "lattes_id"],
     )

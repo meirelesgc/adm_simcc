@@ -14,22 +14,22 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 DROP TABLE  IF EXISTS institution;
 CREATE TABLE institution(
-      institution_id SERIAL PRIMARY KEY,
-      name VARCHAR(150) NOT NULL,
-      acronym VARCHAR(20) NOT NULL,
-      email_user VARCHAR(100) NOT NULL,
-      PASSWORD  VARCHAR(100) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    institution_id uuid DEFAULT uuid_generate_v4(),
+    name VARCHAR(255) NOT NULL,
+    acronym VARCHAR(50) UNIQUE,
+    lattes_id CHAR(12),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (institution_id)
 );
 
 
 DROP TABLE  IF EXISTS researcher;
 CREATE TABLE researcher(
-      researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      researcher_id uuid NOT NULL,
       name VARCHAR(150) NOT NULL,
       lattes_id VARCHAR(20) NOT NULL,
-      institution_id INTEGER NOT NULL,
+      institution_id uuid NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (researcher_id),
@@ -47,7 +47,7 @@ CREATE TABLE graduate_program(
       modality VARCHAR(100) NOT NULL,
       TYPE VARCHAR(100) NULL,
       rating VARCHAR(5),
-      institution_id INTEGER NOT NULL,
+      institution_id uuid NOT NULL,
       description VARCHAR(500) NULL,
       url_image VARCHAR(200) NULL,
       city varchar(100) NULL,

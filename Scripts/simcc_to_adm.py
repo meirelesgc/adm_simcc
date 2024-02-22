@@ -13,7 +13,7 @@ def get_actual_researchers():
         SELECT 
             r.name, 
             r.lattes_id,
-            i.id as adm_code
+            i.id as institution_id
         FROM
             researcher r
         JOIN
@@ -27,21 +27,19 @@ def get_actual_researchers():
         """
     registry = dbHandler.db_select(sql_script)
 
-    data_frame = pd.DataFrame(registry, columns=["name", "lattes_id", "adm_code"])
+    data_frame = pd.DataFrame(registry, columns=["name", "lattes_id", "institution_id"])
     return data_frame
 
 
 def build_script_sql(data_frame):
 
-    INSTITUICAO_INVALIDA = 0
     insert_data = str()
     for Index, Data in data_frame.iterrows():
 
         name = Data["name"].replace("'", "''")
         lattes_id = Data["lattes_id"]
-        code = Data["adm_code"]
-        if code != INSTITUICAO_INVALIDA:
-            insert_data += f"('{name}', '{lattes_id}', '{code}'),"
+        code = Data["institution_id"]
+        insert_data += f"('{name}', '{lattes_id}', '{code}'),"
 
     return f"""
         INSERT INTO researcher(
@@ -52,13 +50,8 @@ def build_script_sql(data_frame):
     ]
 
 
-def adm_for_simcc():
-    script_sql = """
-
-    """
-
-
 if __name__ == "__main__":
+    # simcc_ > adm_simcc
     data_frame = get_actual_researchers()
 
     script_sql = build_script_sql(data_frame)

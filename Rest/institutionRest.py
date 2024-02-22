@@ -11,14 +11,15 @@ institutionRest = Blueprint("institutionRest", __name__)
 @cross_origin(origin="*", headers=["Content-Type"])
 def Query():
     JsonInstitutions = list()
+    print(request.args.get("institution_id"))
     dfInstitutions = InstitutionSQL.Query(request.args.get("institution_id"))
+
     for Index, institution in dfInstitutions.iterrows():
         institution_inst = Institution()
         institution_inst.institution_id = institution["institution_id"]
         institution_inst.name = institution["name"]
         institution_inst.acronym = institution["acronym"]
-        institution_inst.email_user = institution["email_user"]
-        institution_inst.password = institution["password"]
+        institution_inst.email_user = institution["lattes_id"]
 
         JsonInstitutions.append(institution_inst.get_json())
 
@@ -39,8 +40,7 @@ def Insert():
             institution_instance.institution_id = institution_data["institution_id"]
             institution_instance.name = institution_data["name"]
             institution_instance.acronym = institution_data["acronym"]
-            institution_instance.email_user = institution_data["email_user"]
-            institution_instance.password = institution_data["password"]
+            institution_instance.lattes_id = institution_data["lattes_id"]
 
             InstitutionSQL.Insert(institution_instance)
     except Exception as Error:

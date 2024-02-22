@@ -23,11 +23,18 @@ def Insert(Researcher):
 
 
 def Query(ID):
-    sql = """
-    SELECT * FROM researcher WHERE institution_id = {filter}
-""".format(
-        filter=ID
-    )
+    sql = f"""
+        SELECT 
+            researcher_id, 
+            name, 
+            lattes_id, 
+            institution_id 
+        FROM 
+            researcher 
+        WHERE 
+            institution_id = '{ID}'
+        """
+
     return pd.DataFrame(
         dbHandler.db_select(sql),
         columns=["researcher_id", "name", "lattes_id", "institution_id"],
