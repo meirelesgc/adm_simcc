@@ -25,7 +25,7 @@ def insert(GraduateProgram):
 
 def query(ID):
     sql = """
-    SELECT * FROM graduate_program_researcher WHERE graduate_program_id = {filter}
+    SELECT * FROM graduate_program_researcher WHERE graduate_program_id = '{filter}'
 """.format(
         filter=ID
     )
