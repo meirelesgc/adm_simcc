@@ -1,9 +1,3 @@
-import sys
-from os.path import dirname, abspath
-
-PATH = dirname(dirname(abspath(__file__)))
-sys.path.append(PATH)
-
 from Dao import dbHandler
 import pandas as pd
 
@@ -13,19 +7,17 @@ def get_actual_researchers():
         SELECT 
             r.name, 
             r.lattes_id,
-            i.id as institution_id
+            COALESCE(i.id, '498cadc8-b8f6-4008-902e-76281101237d') AS institution_id
         FROM
             researcher r
-        JOIN
+        LEFT JOIN
             institution i
         ON
             i.id = r.institution_id
-        WHERE 
-            i.acronym IN ('UESB', 'UFBA', 'UNEB', 'UESC')
         AND
-            i.acronym IS NOT NULL;
+            i.acronym IN ('UESB', 'UFBA', 'UNEB', 'UESC');
         """
-    registry = dbHandler.db_select(sql_script)
+    registry = dbHandler.db_select(sql_script, database="simcc_")
 
     data_frame = pd.DataFrame(registry, columns=["name", "lattes_id", "institution_id"])
     return data_frame
@@ -51,9 +43,8 @@ def build_script_sql(data_frame):
 
 
 if __name__ == "__main__":
-    # simcc_ > adm_simcc
     data_frame = get_actual_researchers()
 
     script_sql = build_script_sql(data_frame)
 
-    dbHandler.db_script(script_sql, database="adm_simcc")
+    dbHandler.db_script(script_sql)
