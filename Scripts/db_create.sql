@@ -35,13 +35,29 @@ CREATE TABLE graduate_program(
       description VARCHAR(500) NULL,
       url_image VARCHAR(200) NULL,
       city varchar(100) NULL,
+      state varchar(4),
       visible bool DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (graduate_program_id),
       FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
+) CREATE TABLE IF NOT EXISTS graduate_program (
+      graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      code character varying(100) NOT NULL,
+      name character varying(100) NOT NULL,
+      area character varying(100) NOT NULL,
+      modality character varying(100) NOT NULL,
+      type character varying(100),
+      rating character varying(5),
+      institution_id uuid,
+      state character varying(4) DEFAULT 'BA'::character varying,
+      city character varying(100) DEFAULT 'Salvador'::character varying,
+      instituicao character varying(100) DEFAULT NULL::character varying,
+      url_image character varying(400) DEFAULT NULL::character varying,
+      region character varying(100) DEFAULT NULL::character varying,
+      sigla character varying(100) DEFAULT NULL::character varying,
+      CONSTRAINT graduate_program_pkey PRIMARY KEY (graduate_program_id)
 );
-DROP TABLE IF EXISTS graduate_program_researcher;
 CREATE TABLE graduate_program_researcher(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),

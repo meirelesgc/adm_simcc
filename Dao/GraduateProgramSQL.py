@@ -1,11 +1,10 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
+from Model.GraduateProgram import GraduateProgram
+import pandas as pd
+import Dao.dbHandler as dbHandler
 import sys
 
 sys.path.append("../")
-
-import Dao.dbHandler as dbHandler
-import pandas as pd
-from Model.GraduateProgram import GraduateProgram
 
 
 def Insert(GraduateProgram):
