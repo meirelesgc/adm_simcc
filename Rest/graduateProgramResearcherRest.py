@@ -4,7 +4,8 @@ from flask_cors import cross_origin
 from Dao import GraduateProgramResearcherSQL
 from Model.GraduateProgramResearcher import GraduateProgramResearcher
 
-graduateProgramResearcherRest = Blueprint("graduateProgramResearcherRest", __name__)
+graduateProgramResearcherRest = Blueprint(
+    "graduateProgramResearcherRest", __name__)
 
 
 @graduateProgramResearcherRest.route(

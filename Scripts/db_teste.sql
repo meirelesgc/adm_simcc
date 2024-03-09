@@ -35,6 +35,13 @@ VALUES (
         'UICL',
         '000000000000'
     );
+INSERT INTO institution (institution_id, name, acronym, lattes_id)
+VALUES (
+        '68125679-c357-4830-ba4d-ec3ca757c323',
+        'Centro Integrado de Manufatura e Tecnologia',
+        'CIMATEC',
+        '529701000007'
+    )
 SELECT *
 FROM institution;
 DELETE FROM institution
