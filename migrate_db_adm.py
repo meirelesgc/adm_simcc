@@ -40,18 +40,19 @@ def get_actual_graduate_program(migrate_db=str()):
 
     sql_script = """
         SELECT
-            code,
-            name,
-            area,
-            modality,
-            TYPE,
-            rating,
-            institution_id,
-            state,
-            city,
-            region,
-            sigla,
-            url_image
+            code, 
+            name, 
+            area, 
+            modality, 
+            type, 
+            rating, 
+            institution_id, 
+            state, 
+            city, 
+            instituicao, 
+            url_image, 
+            region, 
+            sigla
         FROM
             graduate_program;
     """
@@ -64,14 +65,15 @@ def get_actual_graduate_program(migrate_db=str()):
             "name",
             "area",
             "modality",
-            "TYPE",
+            "type",
             "rating",
             "institution_id",
             "state",
             "city",
+            "instituicao",
+            "url_image",
             "region",
-            "sigla",
-            "url_image"
+            "sigla"
         ],
     )
     return data_frame
@@ -86,20 +88,21 @@ def build_script_sql_graduate_program(data_frame):
         name = Data["name"]
         area = Data["area"]
         modality = Data["modality"]
-        TYPE = Data["TYPE"]
+        type = Data["type"]
         rating = Data["rating"]
         institution_id = Data["institution_id"]
         state = Data["state"]
         city = Data["city"]
+        instituicao = Data["instituicao"]
+        url_image = Data["url_image"]
         region = Data["region"]
         sigla = Data["sigla"]
-        url_image = Data["url_image"]
 
-        insert_data += f"('{code}', '{name}', '{area}', '{modality}', '{TYPE}', '{rating}', '{institution_id}', '{state}', '{city}', '{url_image}', '{region}', '{sigla}'),"
+        insert_data += f"('{code}', '{name}', '{area}', '{modality}', '{type}', '{rating}', '{institution_id}', '{state}', '{city}', '{instituicao}', '{url_image}', '{region}', '{sigla}'),"
 
     return f"""
         INSERT INTO graduate_program(
-        code, name, area, modality, TYPE, rating, institution_id, state, city, url_image, region, sigla)
+        code, name, area, modality, type, rating, institution_id, state, city, instituicao, url_image, region, sigla)
 	    VALUES {insert_data[:-1]}
         """[
         :-1
