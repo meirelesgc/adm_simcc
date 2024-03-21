@@ -72,22 +72,37 @@ if __name__ == "__main__":
                 """
             bd.db_script(script_sql=script_sql)
 
-    if int(
-        input("Cadastrar pesquisadores nos programas de graduação?\n[1-Sim / 0-Não]: ")
-    ):
+    if int(input("Importar pesquisadores?\n[1-Sim / 0-Não]: ")):
         data_frame_pesquisadores = pd.read_excel(
             "Files/graduate_program_researcher_ufsb.xlsx"
-        ).dropna(how="all")
-        data_frame_pesquisadores["Lattes"] = data_frame_pesquisadores["Lattes"].astype(
-            str
         )
+        data_frame_institutions = get_institutions()
+        for Index, Data in data_frame_institutions.iterrows():
+            print(f"[{Index}] - {Data['name']} - {Data['acronym']}")
+        institution_index = int(
+            input(
+                f"Anexar os programas de graduação na instituição [Index - 0/{Index}]: "
+            )
+        )
+        data_frame_institutions = data_frame_institutions.iloc[institution_index]
+
         for Index, Data in data_frame_pesquisadores.iterrows():
-            if Data["Lattes"] != "nan":
+            type_ = str(Data["type_"]).capitalize()
+            try:
                 script_sql = f"""
-                INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
-                SELECT gp.graduate_program_id, r.researcher_id, {2024}, '{Data['type_']}'
-                FROM researcher r
-                JOIN graduate_program gp
-                ON gp.code = '{sanitize_string(Data['Code'])}'
-                WHERE r.lattes_id = '{sanitize_string(Data['Lattes'])}';"""
+                    INSERT INTO public.researcher(
+                    name, lattes_id, institution_id)
+                    VALUES ('{Data['Name']}', '{Data['Lattes'][-16:]}', '{data_frame_institutions['institution_id']}');"""
                 bd.db_script(script_sql=script_sql)
+            except:
+                print("BUG")
+
+            script_sql = f"""
+            INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
+            SELECT gp.graduate_program_id, r.researcher_id, {2024}, '{type_}'
+            FROM researcher r
+            JOIN graduate_program gp
+            ON gp.code ILIKE '{Data['Code']}'
+            WHERE r.lattes_id = '{Data['Lattes'][-16:]}';"""
+
+            bd.db_script(script_sql=script_sql)
