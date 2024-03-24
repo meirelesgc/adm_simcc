@@ -1,9 +1,10 @@
+import os
 import pandas as pd
 from Dao import dbHandler as bd
 from pprint import pprint
 
 
-def get_institutions():
+def get_institution_data():
     script_sql = "SELECT institution_id, name, acronym, lattes_id FROM institution;"
 
     registry = bd.db_select(script_sql=script_sql)
@@ -13,11 +14,24 @@ def get_institutions():
         columns=["institution_id", "name", "acronym", "lattes_id"],
     )
 
-    return data_frame
+    for Index, Data in data_frame.iterrows():
+        print(f"[{Index}] - {Data['name']} - {Data['acronym']}")
+    institution_index = int(
+        input(f"Anexar os programas de graduação na instituição [Index - 0/{Index}]: ")
+    )
+    return data_frame.iloc[institution_index]
 
 
-def get_graduate_program():
-    return pd.read_csv("Files/graduate_program.csv", encoding="utf-8", delimiter=";")
+def get_data_frame(file_name: str):
+    if file_name.endswith(".csv"):
+        try:
+            return pd.read_csv(f"Files/{file_name}", encoding="utf-8", delimiter=";")
+        except:
+            return pd.read_csv(f"Files/{file_name}", encoding="utf-8", delimiter=",")
+    elif file_name.endswith("xls"):
+        return pd.read_excel(f"Files/{file_name}", engine="xlrd")
+    elif file_name.endswith("xlsx"):
+        return pd.read_excel(f"Files/{file_name}", engine="openpyxl")
 
 
 def select_type_graduate_program(serie_gp: pd.Series) -> str:
@@ -39,70 +53,70 @@ def sanitize_string(string: str) -> str:
 
 if __name__ == "__main__":
     if int(input("Cadastrar programas de graduação?\n[1-Sim / 0-Não]: ")):
-        data_frame_institutions = get_institutions()
-        for Index, Data in data_frame_institutions.iterrows():
-            print(f"[{Index}] - {Data['name']} - {Data['acronym']}")
-        institution_index = int(
+
+        data_frame_institutions = get_institution_data()
+        localização = str(input("Digite a cidade do programa: "))
+
+        file_list = os.listdir("Files")
+        for Index in range(len(file_list)):
+            print(f"[{Index}] - {file_list[Index]}")
+        file_index = int(
             input(
                 f"Anexar os programas de graduação na instituição [Index - 0/{Index}]: "
             )
         )
-        data_frame_institutions = data_frame_institutions.iloc[institution_index]
 
-        localização = str(input("Digite a cidade do programa: "))
-
-        for Index, Data in get_graduate_program().iterrows():
-
+        for Index, Data in get_data_frame(file_list[file_index]).iterrows():
             type = select_type_graduate_program(Data)
-
             script_sql = f"""
                 INSERT INTO graduate_program(
                 code, name, area, modality, type, rating, institution_id, city, instituicao, sigla)
-                VALUES 
-                    ('{Data['Código']}', 
-                    '{Data['Programa']}', 
-                    '{Data['Área de Avaliação'].strip()}', 
-                    '{Data['Modalidade']}', 
-                    '{type[0]}', 
-                    '{type[1]}', 
-                    '{data_frame_institutions['institution_id']}', 
-                    '{localização}', 
-                    '{Data["Instituição de Ensino"]}', 
+                VALUES
+                    ('{Data['Código']}',
+                    '{Data['Programa']}',
+                    '{Data['Área de Avaliação'].strip()}',
+                    '{Data['Modalidade']}',
+                    '{type[0]}',
+                    '{type[1]}',
+                    '{data_frame_institutions['institution_id']}',
+                    '{localização}',
+                    '{Data["Instituição de Ensino"]}',
                     '{data_frame_institutions["acronym"]}')
                 """
             bd.db_script(script_sql=script_sql)
 
     if int(input("Importar pesquisadores?\n[1-Sim / 0-Não]: ")):
-        data_frame_pesquisadores = pd.read_excel(
-            "Files/graduate_program_researcher_ufsb.xlsx"
-        )
-        data_frame_institutions = get_institutions()
-        for Index, Data in data_frame_institutions.iterrows():
-            print(f"[{Index}] - {Data['name']} - {Data['acronym']}")
-        institution_index = int(
+
+        data_frame_institutions = get_institution_data()
+
+        file_list = os.listdir("Files")
+        for Index in range(len(file_list)):
+            print(f"[{Index}] - {file_list[Index]}")
+        file_index = int(
             input(
                 f"Anexar os programas de graduação na instituição [Index - 0/{Index}]: "
             )
         )
-        data_frame_institutions = data_frame_institutions.iloc[institution_index]
 
-        for Index, Data in data_frame_pesquisadores.iterrows():
-            type_ = str(Data["type_"]).capitalize()
-            try:
+        for Index, Data in get_data_frame(file_list[file_index]).dropna().iterrows():
+            if not bd.db_select(
+                f"SELECT 'True' FROM researcher WHERE lattes_id = '{Data['Lattes'][-16:]}'"
+            ):
                 script_sql = f"""
-                    INSERT INTO public.researcher(
+                    INSERT INTO researcher(
                     name, lattes_id, institution_id)
-                    VALUES ('{Data['Name']}', '{Data['Lattes'][-16:]}', '{data_frame_institutions['institution_id']}');"""
+                    VALUES ('{Data['Name'].title()}', '{Data['Lattes'][-16:]}', '{data_frame_institutions['institution_id']}');
+                    """
                 bd.db_script(script_sql=script_sql)
-            except:
-                print("BUG")
+
+            type_ = str(Data["type_"]).upper()
 
             script_sql = f"""
             INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
             SELECT gp.graduate_program_id, r.researcher_id, {2024}, '{type_}'
             FROM researcher r
             JOIN graduate_program gp
-            ON gp.code ILIKE '{Data['Code']}'
+            ON gp.code ILIKE '{Data['code']}'
             WHERE r.lattes_id = '{Data['Lattes'][-16:]}';"""
 
             bd.db_script(script_sql=script_sql)
