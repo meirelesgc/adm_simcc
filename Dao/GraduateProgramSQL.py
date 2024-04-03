@@ -32,7 +32,26 @@ def Insert(GraduateProgram):
 
 def Query(ID):
     sql = """
-    SELECT * FROM graduate_program WHERE institution_id = '{filter}'
+    SELECT 
+        graduate_program_id, 
+        code, 
+        name, 
+        area, 
+        modality, 
+        type, 
+        rating, 
+        institution_id, 
+        description, 
+        url_image,
+        city, 
+        visible, 
+        created_at, 
+        updated_at 
+    FROM 
+        graduate_program 
+    WHERE 
+        institution_id = '{filter}'
+
 """.format(
         filter=ID
     )

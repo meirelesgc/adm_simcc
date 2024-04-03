@@ -1,11 +1,10 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
+from Model.Resercher import Researcher
+import pandas as pd
+import Dao.dbHandler as dbHandler
 import sys
 
 sys.path.append("../")
-
-import Dao.dbHandler as dbHandler
-import pandas as pd
-from Model.Resercher import Researcher
 
 
 def Insert(Researcher):
