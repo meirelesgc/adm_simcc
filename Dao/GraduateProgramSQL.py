@@ -112,3 +112,9 @@ def Fix(GraduateProgram):
     )
     dbHandler.db_script(script_sql=sql)
     return "Update concluido"
+
+
+def query_count():
+    script_sql = "SELECT COUNT(*) FROM graduate_program;"
+
+    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])

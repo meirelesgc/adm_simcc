@@ -11,7 +11,8 @@ graduateProgramRest = Blueprint("graduateProgramRest", __name__)
 @cross_origin(origin="*", headers=["Content-Type"])
 def Query():
     JsonGraduateProgram = list()
-    dfGraduateProgram = GraduateProgramSQL.Query(request.args.get("institution_id"))
+    dfGraduateProgram = GraduateProgramSQL.Query(
+        request.args.get("institution_id"))
 
     for Index, graduateprogram in dfGraduateProgram.iterrows():
         graduation_program_inst = GraduateProgram()
@@ -117,3 +118,10 @@ def Fix():
             return jsonify(f"{Error}"), 400
 
     return jsonify("OK"), 200
+
+
+@graduateProgramRest.route("/GraduateProgramRest/Query/Count", methods=["GET"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def query_count():
+    count = GraduateProgramSQL.query_count()
+    return jsonify(count), 200

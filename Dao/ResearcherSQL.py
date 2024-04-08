@@ -49,3 +49,9 @@ def Delete(ID):
     )
     dbHandler.db_script(script_sql=sql)
     return "OK"
+
+
+def query_count():
+    script_sql = "SELECT COUNT(*) FROM researcher;"
+
+    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])

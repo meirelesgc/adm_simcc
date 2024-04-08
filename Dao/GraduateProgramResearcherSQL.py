@@ -1,11 +1,10 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
+from Model.GraduateProgram import GraduateProgram
+import pandas as pd
+import Dao.dbHandler as dbHandler
 import sys
 
 sys.path.append("../")
-
-import Dao.dbHandler as dbHandler
-import pandas as pd
-from Model.GraduateProgram import GraduateProgram
 
 
 def insert(GraduateProgram):
@@ -38,3 +37,9 @@ def query(ID):
             "type_",
         ],
     )
+
+
+def query_count():
+    script_sql = "SELECT COUNT(*) FROM graduate_program_researcher;"
+
+    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])

@@ -54,3 +54,10 @@ def Insert():
         return jsonify(f"{Error}"), 400
 
     return jsonify("Incerssão bem sucedida"), 200
+
+
+@graduateProgramResearcherRest.route("/GraduateProgramResearcherRest/Query/Count", methods=["GET"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def query_count():
+    count = GraduateProgramResearcherSQL.query_count()
+    return jsonify(count), 200

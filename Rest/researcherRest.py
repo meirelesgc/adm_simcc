@@ -9,7 +9,7 @@ researcherRest = Blueprint("researcherRest", __name__)
 
 @researcherRest.route("/ResearcherRest/Query", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def Query():
+def query_table():
     JsonResearchers = list()
 
     dfResearcher = ResearcherSQL.Query(request.args.get("institution_id"))
@@ -24,6 +24,13 @@ def Query():
         JsonResearchers.append(researcher_inst.get_json())
 
     return jsonify(JsonResearchers), 200
+
+
+@researcherRest.route("/ResearcherRest/Query/Count", methods=["GET"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def query_count():
+    count = ResearcherSQL.query_count()
+    return jsonify(count), 200
 
 
 @researcherRest.route("/ResearcherRest/Insert", methods=["POST"])
@@ -46,11 +53,11 @@ def Insert():
     except Exception as Error:
         return jsonify(f"{Error}"), 400
 
-    return jsonify("Incerssão bem sucedida"), 200
+    return jsonify("OK"), 200
 
 
 @researcherRest.route("/ResearcherRest/Delete", methods=["DELETE"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def Delete():
     ResearcherSQL.Delete(request.args.get("researcher_id"))
-    return "Ok"
+    return jsonify("OK"), 200

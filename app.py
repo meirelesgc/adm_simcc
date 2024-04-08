@@ -1,5 +1,4 @@
 from flask import Flask, jsonify
-from flask_cors import CORS, cross_origin
 from Rest.graduateProgramResearcherRest import graduateProgramResearcherRest
 from Rest.institutionRest import institutionRest
 from Rest.researcherRest import researcherRest
@@ -15,7 +14,7 @@ app.register_blueprint(graduateProgramResearcherRest)
 
 @app.route("/", methods=["GET"])
 def hello_world():
-    return jsonify("Hello World"), 200
+    return jsonify('OK'), 200
 
 
 if __name__ == "__main__":

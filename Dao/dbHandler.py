@@ -35,12 +35,19 @@ def db_script(script_sql: str, database: str = None):
 
 
 # Função para consultas
-def db_select(script_sql: str, database: str = None):
+def db_select(script_sql: str, database: str = None, rows: int = 0):
     connection, cursor = db_connect(database)
 
     try:
         cursor.execute(script_sql)
-        recset = cursor.fetchall()
+
+        if rows == 0:
+            recset = cursor.fetchall()
+        elif rows == -1:
+            recset = cursor.fetchone()
+        else:
+            recset = cursor.fetchmany(rows)
+
         registros = []
         for rec in recset:
             registros.append(rec)

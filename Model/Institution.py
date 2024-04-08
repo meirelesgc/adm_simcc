@@ -1,4 +1,5 @@
 class Institution(object):
+
     def __init__(self):
         self.institution_id = None
         self.name = ""
