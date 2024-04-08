@@ -34,7 +34,31 @@ def query_table(ID):
     )
 
 
-def query_count():
-    script_sql = "SELECT COUNT(*) FROM institution;"
+def query_count(institution_id: str = None):
 
-    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])
+    filter_institution = str()
+    if institution_id:
+        filter_institution = f"WHERE i.institution_id = '{institution_id}'"
+
+    script_sql = f"""
+        SELECT 
+            i.name AS name,
+            i.institution_id,
+            COUNT(DISTINCT gp.graduate_program_id) AS count_gp,
+            COUNT(gpr.researcher_id) AS count_gpr
+        FROM 
+            institution i
+        LEFT JOIN graduate_program gp
+            ON gp.institution_id = i.institution_id
+        LEFT JOIN graduate_program_researcher gpr
+            ON gpr.graduate_program_id = gp.graduate_program_id
+        {filter_institution}
+        GROUP BY
+            i.institution_id, i.name;
+        """
+    registry = dbHandler.db_select(script_sql=script_sql)
+
+    data_frame = pd.DataFrame(registry, columns=[
+        'name', 'institution_id', 'count_gp', 'count_gpr'])
+
+    return (data_frame)

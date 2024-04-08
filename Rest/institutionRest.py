@@ -38,8 +38,20 @@ def query_table():
 @institutionRest.route("/InstitutionRest/Query/Count", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def query_count():
-    count = InstitutionSQL.query_count()
-    return jsonify(count), 200
+
+    institution_id = request.args.get("institution_id")
+    data_frame_count = InstitutionSQL.query_count(institution_id)
+    json_count = list()
+    for Index, Data in data_frame_count.iterrows():
+        dict_count = {
+            'name': Data['name'],
+            'institution_id': Data['institution_id'],
+            'count_gp': Data['count_gp'],
+            'count_gpr': Data['count_gpr'],
+        }
+        json_count.append(dict_count)
+
+    return jsonify(json_count), 200
 
 
 @institutionRest.route("/InstitutionRest/Insert", methods=["POST"])
