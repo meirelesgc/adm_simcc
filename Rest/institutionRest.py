@@ -7,8 +7,8 @@ from Model.Institution import Institution
 
 institutionRest = Blueprint("institutionRest", __name__)
 
-spec = FlaskPydanticSpec('Flask', title='ADM-SIMCC')
-spec.register(institutionRest)
+# spec = FlaskPydanticSpec('Flask', title='ADM-SIMCC')
+# spec.register(institutionRest)
 
 
 @institutionRest.route("/InstitutionRest/Query", methods=["GET"])
