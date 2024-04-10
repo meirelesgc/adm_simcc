@@ -1,4 +1,4 @@
-from flask_pydantic_spec import FlaskPydanticSpec
+# from flask_pydantic_spec import FlaskPydanticSpec
 from flask import jsonify, request, Blueprint
 from flask_cors import cross_origin
 

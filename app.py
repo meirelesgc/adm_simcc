@@ -22,4 +22,5 @@ def hello_world():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000, host="0.0.0.0")
+    app.run(debug=True, port=5000, host="0.0.0.0", ssl_context=(
+        '/etc/apache2/ssl/certificado/simcc.uesc.br.crt', '/etc/apache2/ssl/chave/simcc.uesc.br.unlock.key'))
