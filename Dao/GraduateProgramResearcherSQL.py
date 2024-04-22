@@ -25,17 +25,23 @@ def insert(GraduateProgram):
 
 
 def query(ID):
-    sql = """
-    SELECT * FROM graduate_program_researcher WHERE graduate_program_id = '{filter}'
-""".format(
-        filter=ID
-    )
+    sql = f"""
+        SELECT 
+            r.name,
+            r.lattes_id,
+            gpr.type_
+        FROM 
+            graduate_program_researcher gpr
+        JOIN researcher r ON 
+        r.researcher_id = gpr.researcher_id
+        WHERE 
+            graduate_program_id = '{ID}'
+    """
     return pd.DataFrame(
         dbHandler.db_select(sql),
         columns=[
-            "graduate_program_id",
-            "researcher_id",
-            "year",
+            "name",
+            "lattes_id",
             "type_",
         ],
     )

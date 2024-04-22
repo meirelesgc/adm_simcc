@@ -14,15 +14,14 @@ graduateProgramResearcherRest = Blueprint("graduateProgramResearcherRest", __nam
 def Query():
     JsonGpResearcher = list()
     dfGpResearcher = GraduateProgramResearcherSQL.query(
-        request.args.get("institution_id")
+        request.args.get("graduate_program_id")
     )
+    print(dfGpResearcher)
+
     for Index, GpResearcher in dfGpResearcher.iterrows():
         graduation_program_researcher_inst = GraduateProgramResearcher()
-        graduation_program_researcher_inst.graduate_program_id = GpResearcher[
-            "graduate_program_id"
-        ]
-        graduation_program_researcher_inst.researcher_id = GpResearcher["researcher_id"]
-        graduation_program_researcher_inst.year = GpResearcher["year"]
+        graduation_program_researcher_inst.name = GpResearcher["name"]
+        graduation_program_researcher_inst.lattes_id = GpResearcher["lattes_id"]
         graduation_program_researcher_inst.type_ = GpResearcher["type_"]
 
         JsonGpResearcher.append(graduation_program_researcher_inst.get_json())

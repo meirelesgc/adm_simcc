@@ -1,5 +1,4 @@
 from flask import Flask, jsonify
-from flask_pydantic_spec import FlaskPydanticSpec
 
 from Rest.graduateProgramResearcherRest import graduateProgramResearcherRest
 from Rest.graduateProgramRest import graduateProgramRest
@@ -8,8 +7,6 @@ from Rest.researcherRest import researcherRest
 
 app = Flask(__name__)
 
-api_spec = FlaskPydanticSpec("Flask", title="Api - Administrativo")
-api_spec.register(app)
 
 app.register_blueprint(institutionRest)
 app.register_blueprint(researcherRest)

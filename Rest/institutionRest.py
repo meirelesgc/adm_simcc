@@ -1,18 +1,15 @@
 # from flask_pydantic_spec import FlaskPydanticSpec
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
-from flask_pydantic_spec import FlaskPydanticSpec, Request, Response
 
 from Dao import InstitutionSQL
 from Model.Institution import Institution
 
 institutionRest = Blueprint("institutionRest", __name__)
-api_spec = FlaskPydanticSpec("Flask", title="Chamadas para instituição")
 
 
 @institutionRest.route("/InstitutionRest/Query", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
-@api_spec.validate(resp=Response(HTTP_200=list[Institution]))
 def query_table():
     JsonInstitutions = list()
     dfInstitutions = InstitutionSQL.query_table(request.args.get("institution_id"))

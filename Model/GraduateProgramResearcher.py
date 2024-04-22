@@ -1,15 +1,13 @@
 class GraduateProgramResearcher(object):
     def __init__(self):
-        self.graduate_program_id = None
-        self.researcher_id = None
-        self.year = None
+        self.name = None
+        self.lattes_id = None
         self.type_ = ""
 
     def get_json(self):
         graduate_program_researcher = {
-            "graduate_program_id": str(self.graduate_program_id),
-            "researcher_id": str(self.researcher_id),
-            "year": str(self.year),
+            "name": str(self.name),
+            "lattes_id": str(self.lattes_id),
             "type_": str(self.type_),
         }
         return graduate_program_researcher
