@@ -1,11 +1,10 @@
-from flask import jsonify, request, Blueprint
+from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from Dao import GraduateProgramResearcherSQL
 from Model.GraduateProgramResearcher import GraduateProgramResearcher
 
-graduateProgramResearcherRest = Blueprint(
-    "graduateProgramResearcherRest", __name__)
+graduateProgramResearcherRest = Blueprint("graduateProgramResearcherRest", __name__)
 
 
 @graduateProgramResearcherRest.route(
@@ -56,7 +55,20 @@ def Insert():
     return jsonify("Incerssão bem sucedida"), 200
 
 
-@graduateProgramResearcherRest.route("/GraduateProgramResearcherRest/Query/Count", methods=["GET"])
+@graduateProgramResearcherRest.route(
+    "/GraduateProgramResearcherRest/Delete", methods=["DELETE"]
+)
+@cross_origin(origin="*", headers=["Content-Type"])
+def Delete():
+    GraduateProgramResearcherSQL.delete(
+        request.args.get("graduate_program_id"), request.args.get("graduate_program_id")
+    )
+    return jsonify("Ok"), 200
+
+
+@graduateProgramResearcherRest.route(
+    "/GraduateProgramResearcherRest/Query/Count", methods=["GET"]
+)
 @cross_origin(origin="*", headers=["Content-Type"])
 def query_count():
     count = GraduateProgramResearcherSQL.query_count()

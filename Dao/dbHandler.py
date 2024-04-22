@@ -1,6 +1,7 @@
-import env
 import psycopg2
 import psycopg2.extras
+
+import env
 
 
 # Função para conectar ao banco

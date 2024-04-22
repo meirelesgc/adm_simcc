@@ -1,8 +1,10 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
-from Model.GraduateProgram import GraduateProgram
-import pandas as pd
-import Dao.dbHandler as dbHandler
 import sys
+
+import pandas as pd
+
+import Dao.dbHandler as dbHandler
+from Model.GraduateProgram import GraduateProgram
 
 sys.path.append("../")
 
@@ -42,4 +44,11 @@ def query(ID):
 def query_count():
     script_sql = "SELECT COUNT(*) FROM graduate_program_researcher;"
 
-    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])
+    return dbHandler.db_select(script_sql=script_sql, rows=-1)[0]
+
+
+def delete(researcher_id, graduate_program_id):
+    dbHandler.db_script(
+        f"DELETE FROM graduate_program_researcher WHERE researcher_id = '{researcher_id}' AND graduate_program_id = '{graduate_program_id}';"
+    )
+    return "Delete concluido"
