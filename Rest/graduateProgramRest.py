@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from Dao import GraduateProgramSQL
@@ -11,8 +11,7 @@ graduateProgramRest = Blueprint("graduateProgramRest", __name__)
 @cross_origin(origin="*", headers=["Content-Type"])
 def Query():
     JsonGraduateProgram = list()
-    dfGraduateProgram = GraduateProgramSQL.Query(
-        request.args.get("institution_id"))
+    dfGraduateProgram = GraduateProgramSQL.Query(request.args.get("institution_id"))
 
     for Index, graduateprogram in dfGraduateProgram.iterrows():
         graduation_program_inst = GraduateProgram()
