@@ -55,6 +55,10 @@ def query_count():
 
 def delete(researcher_id, graduate_program_id):
     dbHandler.db_script(
-        f"DELETE FROM graduate_program_researcher WHERE researcher_id = '{researcher_id}' AND graduate_program_id = '{graduate_program_id}';"
+        f"DELETE FROM 
+            graduate_program_researcher 
+        WHERE researcher_id = (SELECT researcher_id FROM researcher WHERE lattes_id = '{researcher_id}') 
+        AND graduate_program_id = '{graduate_program_id}';"
     )
     return "Delete concluido"
+
