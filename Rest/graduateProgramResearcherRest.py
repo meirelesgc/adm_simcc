@@ -61,6 +61,7 @@ def Insert():
 def Delete():
 
     researcher = request.get_json()
+    print(type(researcher), researcher)
     GraduateProgramResearcherSQL.delete(
         researcher["lattes_id"], researcher["graduate_program_id"]
     )
