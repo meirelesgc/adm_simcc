@@ -59,8 +59,10 @@ def Insert():
 )
 @cross_origin(origin="*", headers=["Content-Type"])
 def Delete():
+
+    researcher = request.get_json()
     GraduateProgramResearcherSQL.delete(
-        request.args.get("lattes_id"), request.args.get("graduate_program_id")
+        researcher["lattes_id"], researcher["graduate_program_id"]
     )
     return jsonify("Ok"), 200
 
