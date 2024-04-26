@@ -1,4 +1,20 @@
-{
-    "graduate_program_id": "c9e3f5dc-d84b-4b2b-a4ee-10f101b2b066",
-    "lattes_id": "3823674449164339"
-}
+[
+    {
+        "graduate_program_id": "68e3615a-9826-40df-a2ec-89f327a93a7c",
+        "researcher_id": "b65958ea-a56a-4ed3-901c-09a276d064fb",
+        "year": 2020,
+        "type_": "PhD"
+    },
+    {
+        "graduate_program_id": "68e3615a-9826-40df-a2ec-89f327a93a7c",
+        "researcher_id": "6429a73c-6ea5-4331-bf50-c82a920ec011",
+        "year": 2021,
+        "type_": "Masters"
+    },
+    {
+        "graduate_program_id": "68e3615a-9826-40df-a2ec-89f327a93a7c",
+        "researcher_id": "170d81c2-5e0c-46fa-b4f5-a4ad799c4101",
+        "year": 2022,
+        "type_": "PostDoc"
+    }
+]

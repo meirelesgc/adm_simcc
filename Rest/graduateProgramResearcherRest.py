@@ -73,5 +73,9 @@ def Delete():
 )
 @cross_origin(origin="*", headers=["Content-Type"])
 def query_count():
+    institution_id = GraduateProgramResearcherSQL.query(
+        request.args.get("institution_id")
+    )
+
     count = GraduateProgramResearcherSQL.query_count()
     return jsonify(count), 200

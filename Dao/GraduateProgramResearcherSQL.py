@@ -47,8 +47,16 @@ def query(ID):
     )
 
 
-def query_count():
-    script_sql = "SELECT COUNT(*) FROM graduate_program_researcher;"
+def query_count(institution_id):
+    script_sql = """
+    SELECT 
+        COUNT(*)
+    FROM 
+        graduate_program_researcher gpr
+    JOIN graduate_program gp ON
+    gp.graduate_program_id = gpr.graduate_program_id
+    WHERE institution_id = '{institution_id}';
+    """
 
     return dbHandler.db_select(script_sql=script_sql, rows=-1)[0]
 
