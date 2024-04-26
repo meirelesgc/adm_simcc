@@ -1,8 +1,10 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
-from Model.Resercher import Researcher
-import pandas as pd
-import Dao.dbHandler as dbHandler
 import sys
+
+import pandas as pd
+
+import Dao.dbHandler as dbHandler
+from Model.Resercher import Researcher
 
 sys.path.append("../")
 
@@ -51,7 +53,11 @@ def Delete(ID):
     return "OK"
 
 
-def query_count():
-    script_sql = "SELECT COUNT(*) FROM researcher;"
+def query_count(institution_id):
+    filter = str()
+    if institution_id:
+        filter = f"WHERE institution_id = '{institution_id}'"
 
-    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])
+    script_sql = f"SELECT COUNT(*) FROM researcher {filter};"
+
+    return dbHandler.db_select(script_sql=script_sql, rows=-1)[0]

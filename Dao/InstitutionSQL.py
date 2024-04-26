@@ -1,7 +1,9 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
-import pandas as pd
-import Dao.dbHandler as dbHandler
 import sys
+
+import pandas as pd
+
+import Dao.dbHandler as dbHandler
 
 sys.path.append("../")
 
@@ -58,7 +60,8 @@ def query_count(institution_id: str = None):
         """
     registry = dbHandler.db_select(script_sql=script_sql)
 
-    data_frame = pd.DataFrame(registry, columns=[
-        'name', 'institution_id', 'count_gp', 'count_gpr'])
+    data_frame = pd.DataFrame(
+        registry, columns=["name", "institution_id", "count_gp", "count_gpr"]
+    )
 
-    return (data_frame)
+    return data_frame

@@ -77,5 +77,5 @@ def query_count():
         request.args.get("institution_id")
     )
 
-    count = GraduateProgramResearcherSQL.query_count()
+    count = GraduateProgramResearcherSQL.query_count(institution_id)
     return jsonify(count), 200
