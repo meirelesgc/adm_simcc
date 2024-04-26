@@ -39,6 +39,7 @@ def query_count():
             "institution_id": Data["institution_id"],
             "count_gp": Data["count_gp"],
             "count_gpr": Data["count_gpr"],
+            "count_r": Data["count_researcher"],
         }
         json_count.append(dict_count)
 
