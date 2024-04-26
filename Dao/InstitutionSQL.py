@@ -48,7 +48,7 @@ def query_count(institution_id: str = None):
             i.institution_id,
             COUNT(DISTINCT gp.graduate_program_id) AS count_gp,
             COUNT(gpr.researcher_id) AS count_gpr,
-            COUNT(DISTINCT r.researcher_id) as count_researcher
+            COUNT(DISTINCT r.researcher_id) as count_r
         FROM 
             institution i
         LEFT JOIN graduate_program gp
@@ -65,7 +65,7 @@ def query_count(institution_id: str = None):
     registry = dbHandler.db_select(script_sql=script_sql)
 
     data_frame = pd.DataFrame(
-        registry, columns=["name", "institution_id", "count_gp", "count_gpr"]
+        registry, columns=["name", "institution_id", "count_gp", "count_gpr", "count_r"]
     )
 
     return data_frame
