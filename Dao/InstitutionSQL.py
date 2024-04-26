@@ -43,21 +43,25 @@ def query_count(institution_id: str = None):
         filter_institution = f"WHERE i.institution_id = '{institution_id}'"
 
     script_sql = f"""
-        SELECT 
+        SELECT
             i.name AS name,
             i.institution_id,
             COUNT(DISTINCT gp.graduate_program_id) AS count_gp,
-            COUNT(gpr.researcher_id) AS count_gpr
+            COUNT(gpr.researcher_id) AS count_gpr,
+            COUNT(DISTINCT r.researcher_id) as count_researcher
         FROM 
             institution i
         LEFT JOIN graduate_program gp
             ON gp.institution_id = i.institution_id
         LEFT JOIN graduate_program_researcher gpr
             ON gpr.graduate_program_id = gp.graduate_program_id
+        LEFT JOIN researcher r
+            ON r.institution_id = i.institution_id
         {filter_institution}
         GROUP BY
             i.institution_id, i.name;
         """
+
     registry = dbHandler.db_select(script_sql=script_sql)
 
     data_frame = pd.DataFrame(
