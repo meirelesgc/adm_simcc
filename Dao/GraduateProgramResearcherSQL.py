@@ -1,8 +1,10 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
-from Model.GraduateProgram import GraduateProgram
-import pandas as pd
-import Dao.dbHandler as dbHandler
 import sys
+
+import pandas as pd
+
+import Dao.dbHandler as dbHandler
+from Model.GraduateProgram import GraduateProgram
 
 sys.path.append("../")
 
@@ -23,23 +25,47 @@ def insert(GraduateProgram):
 
 
 def query(ID):
-    sql = """
-    SELECT * FROM graduate_program_researcher WHERE graduate_program_id = '{filter}'
-""".format(
-        filter=ID
-    )
+    sql = f"""
+        SELECT 
+            r.name,
+            r.lattes_id,
+            gpr.type_
+        FROM 
+            graduate_program_researcher gpr
+        JOIN researcher r ON 
+        r.researcher_id = gpr.researcher_id
+        WHERE 
+            graduate_program_id = '{ID}'
+    """
     return pd.DataFrame(
         dbHandler.db_select(sql),
         columns=[
-            "graduate_program_id",
-            "researcher_id",
-            "year",
+            "name",
+            "lattes_id",
             "type_",
         ],
     )
 
 
-def query_count():
-    script_sql = "SELECT COUNT(*) FROM graduate_program_researcher;"
+def query_count(institution_id):
+    script_sql = """
+    SELECT 
+        COUNT(*)
+    FROM 
+        graduate_program_researcher gpr
+    JOIN graduate_program gp ON
+    gp.graduate_program_id = gpr.graduate_program_id
+    WHERE institution_id = '{institution_id}';
+    """
 
-    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])
+    return dbHandler.db_select(script_sql=script_sql, rows=-1)[0]
+
+
+def delete(researcher_id, graduate_program_id):
+    dbHandler.db_script(
+        f"""DELETE FROM 
+            graduate_program_researcher 
+        WHERE researcher_id = (SELECT researcher_id FROM researcher WHERE lattes_id = '{researcher_id}') 
+        AND graduate_program_id = '{graduate_program_id}';"""
+    )
+    return "Delete concluido"

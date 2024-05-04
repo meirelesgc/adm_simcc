@@ -1,11 +1,10 @@
-from flask import jsonify, request, Blueprint
+from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from Dao import GraduateProgramResearcherSQL
 from Model.GraduateProgramResearcher import GraduateProgramResearcher
 
-graduateProgramResearcherRest = Blueprint(
-    "graduateProgramResearcherRest", __name__)
+graduateProgramResearcherRest = Blueprint("graduateProgramResearcherRest", __name__)
 
 
 @graduateProgramResearcherRest.route(
@@ -15,15 +14,14 @@ graduateProgramResearcherRest = Blueprint(
 def Query():
     JsonGpResearcher = list()
     dfGpResearcher = GraduateProgramResearcherSQL.query(
-        request.args.get("institution_id")
+        request.args.get("graduate_program_id")
     )
+    print(dfGpResearcher)
+
     for Index, GpResearcher in dfGpResearcher.iterrows():
         graduation_program_researcher_inst = GraduateProgramResearcher()
-        graduation_program_researcher_inst.graduate_program_id = GpResearcher[
-            "graduate_program_id"
-        ]
-        graduation_program_researcher_inst.researcher_id = GpResearcher["researcher_id"]
-        graduation_program_researcher_inst.year = GpResearcher["year"]
+        graduation_program_researcher_inst.name = GpResearcher["name"]
+        graduation_program_researcher_inst.lattes_id = GpResearcher["lattes_id"]
         graduation_program_researcher_inst.type_ = GpResearcher["type_"]
 
         JsonGpResearcher.append(graduation_program_researcher_inst.get_json())
@@ -56,8 +54,28 @@ def Insert():
     return jsonify("Incerssão bem sucedida"), 200
 
 
-@graduateProgramResearcherRest.route("/GraduateProgramResearcherRest/Query/Count", methods=["GET"])
+@graduateProgramResearcherRest.route(
+    "/GraduateProgramResearcherRest/Delete", methods=["DELETE"]
+)
+@cross_origin(origin="*", headers=["Content-Type"])
+def Delete():
+
+    researcher = request.get_json()
+    print(type(researcher), researcher)
+    GraduateProgramResearcherSQL.delete(
+        researcher["lattes_id"], researcher["graduate_program_id"]
+    )
+    return jsonify("Ok"), 200
+
+
+@graduateProgramResearcherRest.route(
+    "/GraduateProgramResearcherRest/Query/Count", methods=["GET"]
+)
 @cross_origin(origin="*", headers=["Content-Type"])
 def query_count():
-    count = GraduateProgramResearcherSQL.query_count()
+    institution_id = GraduateProgramResearcherSQL.query(
+        request.args.get("institution_id")
+    )
+
+    count = GraduateProgramResearcherSQL.query_count(institution_id)
     return jsonify(count), 200

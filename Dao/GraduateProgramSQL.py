@@ -1,8 +1,10 @@
 # Para conseguir importar os modulos de projeto em tempo de execução desse script
-from Model.GraduateProgram import GraduateProgram
-import pandas as pd
-import Dao.dbHandler as dbHandler
 import sys
+
+import pandas as pd
+
+import Dao.dbHandler as dbHandler
+from Model.GraduateProgram import GraduateProgram
 
 sys.path.append("../")
 
@@ -40,7 +42,7 @@ def Query(ID):
         modality, 
         type, 
         rating, 
-        institution_id, 
+        institution_id,
         description, 
         url_image,
         city, 
@@ -117,4 +119,4 @@ def Fix(GraduateProgram):
 def query_count():
     script_sql = "SELECT COUNT(*) FROM graduate_program;"
 
-    return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])
+    return dbHandler.db_select(script_sql=script_sql, rows=-1)[0]

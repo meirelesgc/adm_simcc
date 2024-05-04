@@ -183,12 +183,21 @@ def QueryByInstitutionId(institution_id):
     )
 
 
-
 def Delete(research_group_id):
     sql = """
     DELETE FROM research_group WHERE research_group_id = '{filter}';
 """.format(
         filter=research_group_id
+    )
+    db_script(sql)
+    return "OK"
+
+
+def DeleteByInstitutionId(institution_id):
+    sql = """
+    DELETE FROM research_group WHERE institution_id = '{filter}';
+""".format(
+        filter=institution_id
     )
     db_script(sql)
     return "OK"

@@ -1,15 +1,14 @@
 from flask import Flask, jsonify
+
 from Rest.graduateProgramResearcherRest import graduateProgramResearcherRest
+from Rest.graduateProgramRest import graduateProgramRest
 from Rest.institutionRest import institutionRest
 from Rest.researcherRest import researcherRest
 from Rest.graduateProgramRest import graduateProgramRest
 from Rest.researchGroupRest import researchGroupRest
-# from flask_pydantic_spec import FlaskPydanticSpec
 
 app = Flask(__name__)
 
-# spec = FlaskPydanticSpec('Flask', title='Api - Administrativo')
-# spec.register(app)
 
 app.register_blueprint(institutionRest)
 app.register_blueprint(researcherRest)
@@ -20,10 +19,12 @@ app.register_blueprint(researchGroupRest)
 
 @app.route("/", methods=["GET"])
 def hello_world():
-    return jsonify('OK'), 200
+    return jsonify("OK"), 200
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, port=5000, host="0.0.0.0", ssl_context=(
-    #     '/etc/apache2/ssl/certificado/simcc.uesc.br.crt', '/etc/apache2/ssl/chave/simcc.uesc.br.unlock.key'))
-    app.run(debug=True, port=5000, host="0.0.0.0")
+    app.run(
+        debug=True,
+        port=5000,
+        host="0.0.0.0",
+    )

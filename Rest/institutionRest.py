@@ -1,5 +1,5 @@
 # from flask_pydantic_spec import FlaskPydanticSpec
-from flask import jsonify, request, Blueprint
+from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from Dao import InstitutionSQL
@@ -7,21 +7,12 @@ from Model.Institution import Institution
 
 institutionRest = Blueprint("institutionRest", __name__)
 
-# spec = FlaskPydanticSpec('Flask', title='ADM-SIMCC')
-# spec.register(institutionRest)
-
 
 @institutionRest.route("/InstitutionRest/Query", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def query_table():
-    """
-    Envie um UUID valido pela chamada e eu retorno os dados relacionados a 
-    essa instituição
-    """
-
     JsonInstitutions = list()
-    dfInstitutions = InstitutionSQL.query_table(
-        request.args.get("institution_id"))
+    dfInstitutions = InstitutionSQL.query_table(request.args.get("institution_id"))
 
     for Index, institution in dfInstitutions.iterrows():
         institution_inst = Institution()
@@ -44,10 +35,11 @@ def query_count():
     json_count = list()
     for Index, Data in data_frame_count.iterrows():
         dict_count = {
-            'name': Data['name'],
-            'institution_id': Data['institution_id'],
-            'count_gp': Data['count_gp'],
-            'count_gpr': Data['count_gpr'],
+            "name": Data["name"],
+            "institution_id": Data["institution_id"],
+            "count_gp": Data["count_gp"],
+            "count_gpr": Data["count_gpr"],
+            "count_r": Data["count_r"],
         }
         json_count.append(dict_count)
 

@@ -26,7 +26,6 @@ class ResearchGroup(object):
             "last_date_sent": str(self.last_date_sent),
             "situation": str(self.situation),
             "lattes_id": str(self.lattes_id),
-            "file_path": str(self.file_path),
         }
 
         return research_group
