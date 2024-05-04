@@ -7,6 +7,6 @@ try:
 except:
     HOST = str("localhost")
     USER = str("postgres")
-    PASSWORD = str("root")
+    PASSWORD = str("joaovitorcafe")
 
 DATABASE = str("adm_simcc")

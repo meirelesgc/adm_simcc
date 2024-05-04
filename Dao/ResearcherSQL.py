@@ -55,3 +55,21 @@ def query_count():
     script_sql = "SELECT COUNT(*) FROM researcher;"
 
     return (dbHandler.db_select(script_sql=script_sql, rows=-1)[0])
+
+
+def QueryByName(researcher_name):
+    sql = f"""
+    SELECT 
+        researcher_id
+    FROM 
+        researcher as r
+    WHERE 
+        similarity(unaccent(LOWER('{researcher_name.replace("'", "''")}')), unaccent(LOWER(r.name))) > 0.8
+    LIMIT 1;
+    """
+
+    result = dbHandler.db_select(sql)
+    if result:
+        return result[0][0]
+    else:
+        return None

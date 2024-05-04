@@ -9,7 +9,7 @@ sys.path.append("../")
 def Insert(Institution):
     sql = f"""
         INSERT INTO institution (institution_id, name, acronym, lattes_id)
-        VALUES ('{Institution.institution_id}', '{Institution.name}', '{Institution.acronym}', '{Institution.lattes_id}')
+        VALUES ({Institution.institution_id}', '{Institution.name}', '{Institution.acronym}', '{Institution.lattes_id}')
         """
 
     return dbHandler.db_script(sql)
@@ -62,3 +62,21 @@ def query_count(institution_id: str = None):
         'name', 'institution_id', 'count_gp', 'count_gpr'])
 
     return (data_frame)
+
+
+def QueryByName(institution_name):
+    sql = f"""
+    SELECT 
+        institution_id
+    FROM 
+        institution as i
+    WHERE 
+        similarity(unaccent(LOWER('{institution_name.replace("'", "''")}')), unaccent(LOWER(i.name))) > 0.8
+    LIMIT 1;
+    """
+
+    result = dbHandler.db_select(sql)
+    if result:
+        return result[0][0]
+    else:
+        return None

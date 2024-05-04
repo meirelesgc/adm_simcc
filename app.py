@@ -3,6 +3,7 @@ from Rest.graduateProgramResearcherRest import graduateProgramResearcherRest
 from Rest.institutionRest import institutionRest
 from Rest.researcherRest import researcherRest
 from Rest.graduateProgramRest import graduateProgramRest
+from Rest.researchGroupRest import researchGroupRest
 # from flask_pydantic_spec import FlaskPydanticSpec
 
 app = Flask(__name__)
@@ -14,6 +15,7 @@ app.register_blueprint(institutionRest)
 app.register_blueprint(researcherRest)
 app.register_blueprint(graduateProgramRest)
 app.register_blueprint(graduateProgramResearcherRest)
+app.register_blueprint(researchGroupRest)
 
 
 @app.route("/", methods=["GET"])
@@ -22,5 +24,6 @@ def hello_world():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000, host="0.0.0.0", ssl_context=(
-        '/etc/apache2/ssl/certificado/simcc.uesc.br.crt', '/etc/apache2/ssl/chave/simcc.uesc.br.unlock.key'))
+    # app.run(debug=True, port=5000, host="0.0.0.0", ssl_context=(
+    #     '/etc/apache2/ssl/certificado/simcc.uesc.br.crt', '/etc/apache2/ssl/chave/simcc.uesc.br.unlock.key'))
+    app.run(debug=True, port=5000, host="0.0.0.0")
