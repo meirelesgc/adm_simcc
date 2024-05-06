@@ -24,8 +24,13 @@ def insert(GraduateProgram):
     return dbHandler.db_script(sql)
 
 
-def query(ID):
-    sql = f"""
+def query(graduate_program_id, type_: str = None):
+    if type_:
+        type_filter = f"AND type = '{type_}'"
+    else:
+        type_filter = "AND type_ IN ('PERMANENTE', 'COLABORADOR')"
+
+    script_sql = f"""
         SELECT 
             r.name,
             r.lattes_id,
@@ -35,16 +40,21 @@ def query(ID):
         JOIN researcher r ON 
         r.researcher_id = gpr.researcher_id
         WHERE 
-            graduate_program_id = '{ID}'
+            graduate_program_id = '{graduate_program_id}'
+            {type_filter}
     """
-    return pd.DataFrame(
-        dbHandler.db_select(sql),
+    registry = dbHandler.db_select(script_sql)
+
+    data_frame = pd.DataFrame(
+        registry,
         columns=[
             "name",
             "lattes_id",
             "type_",
         ],
     )
+
+    return data_frame.to_dict(orient="records")
 
 
 def query_count(institution_id):

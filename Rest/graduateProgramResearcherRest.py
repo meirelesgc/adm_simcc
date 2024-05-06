@@ -12,21 +12,11 @@ graduateProgramResearcherRest = Blueprint("graduateProgramResearcherRest", __nam
 )
 @cross_origin(origin="*", headers=["Content-Type"])
 def Query():
-    JsonGpResearcher = list()
-    dfGpResearcher = GraduateProgramResearcherSQL.query(
-        request.args.get("graduate_program_id")
-    )
-    print(dfGpResearcher)
+    graduate_program_id = request.args.get("graduate_program_id")
+    type_ = request.args.get("type")
 
-    for Index, GpResearcher in dfGpResearcher.iterrows():
-        graduation_program_researcher_inst = GraduateProgramResearcher()
-        graduation_program_researcher_inst.name = GpResearcher["name"]
-        graduation_program_researcher_inst.lattes_id = GpResearcher["lattes_id"]
-        graduation_program_researcher_inst.type_ = GpResearcher["type_"]
-
-        JsonGpResearcher.append(graduation_program_researcher_inst.get_json())
-
-    return jsonify(JsonGpResearcher), 200
+    jsonResearchers = GraduateProgramResearcherSQL.query(graduate_program_id, type_)
+    return jsonify(jsonResearchers), 200
 
 
 @graduateProgramResearcherRest.route(
