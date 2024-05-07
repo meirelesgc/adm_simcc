@@ -4,24 +4,28 @@ import sys
 import pandas as pd
 
 import Dao.dbHandler as dbHandler
-from Model.GraduateProgram import GraduateProgram
+from Model.GraduateProgramResearcher import GraduateProgramResearcher
 
 sys.path.append("../")
 
 
-def insert(GraduateProgram):
-    sql = """
+def insert(researcher: GraduateProgramResearcher):
+    script_sql = f"""
     INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
-    VALUES
-        ('{graduate_program_id}', '{researcher_id}', '{year}', '{type_}')
-    """.format(
-        graduate_program_id=GraduateProgram.graduate_program_id,
-        researcher_id=GraduateProgram.researcher_id,
-        year=GraduateProgram.year,
-        type_=GraduateProgram.type_,
-    )
+    (SELECT 
+        '{researcher.graduate_program_id}',
+        researcher_id,
+        '{researcher.year}',
+        '{researcher.type_}'
+    FROM
+        researcher
+    WHERE
+        lattes_id = '{researcher.lattes_id}')
+    """
 
-    return dbHandler.db_script(sql)
+    print(script_sql)
+
+    return dbHandler.db_script(script_sql)
 
 
 def query(graduate_program_id, type_: str = None):
