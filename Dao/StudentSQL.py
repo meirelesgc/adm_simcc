@@ -31,6 +31,7 @@ def query(graduate_program_id: str = None, institution_id: str = None):
         filter_institution = f"AND r.institution_id = '{institution_id}'"
     else:
         filter_institution = str()
+
     script_sql = f"""
         SELECT 
             r.name,
