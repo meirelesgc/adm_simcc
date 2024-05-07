@@ -4,8 +4,8 @@ from Rest.graduateProgramResearcherRest import graduateProgramResearcherRest
 from Rest.graduateProgramRest import graduateProgramRest
 from Rest.institutionRest import institutionRest
 from Rest.researcherRest import researcherRest
-from Rest.graduateProgramRest import graduateProgramRest
 from Rest.researchGroupRest import researchGroupRest
+from Rest.studentRest import studentRest
 
 app = Flask(__name__)
 
@@ -15,6 +15,7 @@ app.register_blueprint(researcherRest)
 app.register_blueprint(graduateProgramRest)
 app.register_blueprint(graduateProgramResearcherRest)
 app.register_blueprint(researchGroupRest)
+app.register_blueprint(studentRest)
 
 
 @app.route("/", methods=["GET"])

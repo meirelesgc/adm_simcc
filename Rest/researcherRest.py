@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from Dao import ResearcherSQL

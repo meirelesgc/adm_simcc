@@ -25,6 +25,7 @@ def insert(GraduateProgram):
 
 
 def query(graduate_program_id, type_: str = None):
+
     if type_:
         type_filter = f"AND type = '{type_}'"
     else:
@@ -58,7 +59,7 @@ def query(graduate_program_id, type_: str = None):
 
 
 def query_count(institution_id):
-    script_sql = """
+    script_sql = f"""
     SELECT 
         COUNT(*)
     FROM 

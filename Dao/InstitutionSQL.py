@@ -1,4 +1,3 @@
-# Para conseguir importar os modulos de projeto em tempo de execução desse script
 import sys
 
 import pandas as pd
@@ -88,6 +87,7 @@ def QueryByName(institution_name):
     else:
         return None
 
+
 def QueryById(institution_id):
     sql = f"""
     SELECT
@@ -99,7 +99,16 @@ def QueryById(institution_id):
     """
 
     data = dbHandler.db_select(sql)
-    data_frame = pd.DataFrame(data, columns=["institution_id", "name", "acronym", "lattes_id", "created_at", "updated_at"])
+    data_frame = pd.DataFrame(
+        data,
+        columns=[
+            "institution_id",
+            "name",
+            "acronym",
+            "lattes_id",
+            "created_at",
+            "updated_at",
+        ],
+    )
 
     return data_frame
-
