@@ -1,18 +1,4 @@
-[
-    {
-        "student_id": "08aa6e17-f9ae-4979-a399-5b32a506a15e",
-        "name": "João Silva",
-        "lattes_id": 1234569875,
-        "graduate_program_id": "53b09a60-3168-4f27-93bc-4bc44e06eb61",
-        "institution_id": "68125729-c357-4830-ba4d-ec3ca757c323",
-        "year": 2023
-    },
-    {
-        "student_id": "09aa6e17-f9ae-4979-a399-5b32a506a15e",
-        "graduate_program_id": "53b09a60-3168-4f27-93bc-4bc44e06eb61",
-        "name": "João Silva",
-        "lattes_id": 1234569874,
-        "institution_id": "68125729-c357-4830-ba4d-ec3ca757c323",
-        "year": 2023
-    }
-]
+{
+    "graduate_program_id": "53b09a60-3168-4f27-93bc-4bc44e06eb61",
+    "lattes_id": "1234569875"
+}

@@ -23,7 +23,7 @@ def Insert(Researcher):
     return dbHandler.db_script(sql)
 
 
-def Query(ID):
+def Query(institution_id):
     sql = f"""
         SELECT 
             researcher_id, 
@@ -33,7 +33,8 @@ def Query(ID):
         FROM 
             researcher 
         WHERE 
-            institution_id = '{ID}'
+            institution_id = '{institution_id}'
+            AND type_ IN ('PERMANENTE', 'COLABORADOR')
         """
 
     return pd.DataFrame(

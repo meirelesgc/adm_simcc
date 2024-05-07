@@ -58,3 +58,25 @@ def query(graduate_program_id: str = None, institution_id: str = None):
     )
 
     return data_frame.to_dict(orient="records")
+
+
+def delete(student_id):
+    script_sql = f"""
+    DELETE FROM graduate_program_researcher WHERE researcher_id = '{student_id}';
+    DELETE FROM researcher WHERE researcher_id = '{student_id}';
+    """
+    dbHandler.db_script(script_sql)
+
+
+def update(student: Student):
+    script_sql = f"""
+        UPDATE public.researcher
+        SET 
+            researcher_id = {student.researcher_id}, 
+            name={student.name}, 
+            lattes_id={student.lattes_id}, 
+            institution_id={student.institution_id}, 
+            type_={student.type_}
+        WHERE researcher_id = {student.researcher_id};
+        """
+    dbHandler.db_script(script_sql)

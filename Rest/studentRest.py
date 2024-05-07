@@ -26,3 +26,20 @@ def basic_query():
 
     jsonStudents = StudentSQL.query(graduate_program_id, institution_id)
     return jsonify(jsonStudents)
+
+
+@studentRest.route("/studentRest/delete", methods=["DELETE"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def delete():
+    student_id = request.args.get("student_id")
+    StudentSQL.delete(student_id)
+    return jsonify(200, "ok")
+
+
+@studentRest.route("/studentRest/update", methods=["POST"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def update():
+    student = request.get_json()
+    student_instance = Student(**student)
+    StudentSQL.update(student_instance)
+    return jsonify(200, "ok")
