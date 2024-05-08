@@ -26,15 +26,15 @@ def Insert(Researcher):
 def Query(institution_id):
     sql = f"""
         SELECT 
-            researcher_id, 
-            name, 
-            lattes_id, 
-            institution_id 
+            r.researcher_id, 
+            r.name, 
+            r.lattes_id, 
+            r.institution_id 
         FROM 
-            researcher 
+            researcher r
         WHERE 
             institution_id = '{institution_id}'
-            AND type_ IN ('PERMANENTE', 'COLABORADOR')
+            AND r.type_ IN ('PERMANENTE', 'COLABORADOR')
         """
 
     return pd.DataFrame(
