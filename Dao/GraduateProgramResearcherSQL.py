@@ -45,9 +45,11 @@ def query(graduate_program_id, type_: str = None):
         JOIN researcher r ON 
         r.researcher_id = gpr.researcher_id
         WHERE 
-            graduate_program_id = '{graduate_program_id}'
+            gpr.graduate_program_id = '{graduate_program_id}'
             {type_filter}
     """
+
+    print(script_sql)
     registry = dbHandler.db_select(script_sql)
 
     data_frame = pd.DataFrame(
