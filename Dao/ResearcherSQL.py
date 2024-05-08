@@ -34,9 +34,10 @@ def Query(institution_id):
             researcher r
         WHERE 
             institution_id = '{institution_id}'
-            AND r.type_ IN ('PERMANENTE', 'COLABORADOR')
+            AND r.type_ IN ('PERMANENTE', 'COLABORADOR', 'DOCENTE')
         """
 
+    print(sql)
     return pd.DataFrame(
         dbHandler.db_select(sql),
         columns=["researcher_id", "name", "lattes_id", "institution_id"],
