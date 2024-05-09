@@ -42,7 +42,7 @@ def query(graduate_program_id: str = None, institution_id: str = None):
         JOIN researcher r ON 
         r.researcher_id = gpr.researcher_id
         WHERE 
-            r.type_ = 'DISCENTE'
+            gpr.type_ = 'DISCENTE'
             {filter_graduate_program}
             {filter_institution}
 

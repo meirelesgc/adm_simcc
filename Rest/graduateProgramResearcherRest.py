@@ -14,7 +14,6 @@ graduateProgramResearcherRest = Blueprint("graduateProgramResearcherRest", __nam
 def Query():
     graduate_program_id = request.args.get("graduate_program_id")
     type_ = request.args.get("type")
-
     jsonResearchers = GraduateProgramResearcherSQL.query(graduate_program_id, type_)
     return jsonify(jsonResearchers), 200
 

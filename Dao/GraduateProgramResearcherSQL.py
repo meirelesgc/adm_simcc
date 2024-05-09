@@ -42,7 +42,6 @@ def query(graduate_program_id, type_: str = None):
             {type_filter}
     """
 
-    print(script_sql)
     registry = dbHandler.db_select(script_sql)
 
     data_frame = pd.DataFrame(
