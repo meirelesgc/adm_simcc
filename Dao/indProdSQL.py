@@ -26,7 +26,11 @@ def insert_ind_prod(weights: Weights):
             f2, 
             f3, 
             f4, 
-            f5)
+            f5,
+            software, 
+            patent_granted, 
+            patent_not_granted, 
+            report)
         VALUES (
             '{weights.name}', 
             '{weights.institution_id}', 
@@ -42,11 +46,15 @@ def insert_ind_prod(weights: Weights):
             {weights.SQ}, 
             {weights.BOOK}, 
             {weights.BOOK_CHAPTER}, 
-            {weights.F1}, 
-            {weights.F2}, 
-            {weights.F3}, 
-            {weights.F4}, 
-            {weights.F5}
+            '{weights.F1}', 
+            '{weights.F2}', 
+            '{weights.F3}', 
+            '{weights.F4}', 
+            '{weights.F5}',
+            '{weights.SOFTWARE}',
+            '{weights.PATENT_NOT_GRANTED}',
+            '{weights.PATENT_GRANTED}',
+            '{weights.REPORT}',
             );
         """
 
@@ -66,6 +74,10 @@ def ind_prod_basic_query(institution_id):
             book, 
             book_chapter, 
             f1, f2, f3, f4, f5
+            software, 
+            patent_granted, 
+            patent_not_granted, 
+            report
         FROM 
             public.weights
         WHERE institution_id = '{institution_id}';
@@ -95,6 +107,10 @@ def ind_prod_basic_query(institution_id):
             "f3",
             "f4",
             "f5",
+            "software",
+            "patent_granted",
+            "patent_not_granted",
+            "report",
         ],
     )
 
