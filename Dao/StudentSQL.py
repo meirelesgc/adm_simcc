@@ -77,7 +77,6 @@ def update(student: Student):
             name={student.name}, 
             lattes_id={student.lattes_id}, 
             institution_id={student.institution_id}, 
-            type_={student.type_}
         WHERE researcher_id = {student.researcher_id};
         """
     dbHandler.db_script(script_sql)

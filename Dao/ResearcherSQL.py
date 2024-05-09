@@ -32,12 +32,20 @@ def Query(institution_id):
             r.institution_id 
         FROM 
             researcher r
+        JOIN graduate_program_researcher gpr ON
+            gpr.researcher_id = r.researcher_id
         WHERE 
             institution_id = '{institution_id}'
-            AND r.type_ IN ('PERMANENTE', 'COLABORADOR', 'DOCENTE')
+            AND gpr.researcher_id NOT IN (
+                SELECT 
+                    researcher_id 
+                FROM
+                    graduate_program_researcher
+                WHERE
+                    type_ != 'DISCENTE'
+            )
         """
 
-    print(sql)
     return pd.DataFrame(
         dbHandler.db_select(sql),
         columns=["researcher_id", "name", "lattes_id", "institution_id"],
