@@ -1,8 +1,14 @@
 [
     {
-        "graduate_program_id": "b9636a42-ce24-4fa3-b77d-ff7f17b413d0",
-        "lattes_id": "0374467335068310",
-        "year": "2023",
-        "type_": "PERMANENTE"
+        "graduate_program_id": "99bbfdc8-c17d-4bd3-984e-f87172ebca19",
+        "researcher_id": "44851be2-fd64-47e8-8cdb-331fd05c1112",
+        "year": 2024,
+        "type_": "PhD"
+    },
+    {
+        "graduate_program_id": "86c8dcba-f2f5-4c53-8472-ec9b0e13ce16",
+        "researcher_id": "44851be2-fd64-47e8-8cdb-331fd05c1112",
+        "year": 2024,
+        "type_": "PhD"
     }
 ]

@@ -33,7 +33,7 @@ def Insert():
             gp_researcher_inst.graduate_program_id = GpResearcher_data[
                 "graduate_program_id"
             ]
-            gp_researcher_inst.lattes_id = GpResearcher_data["lattes_id"]
+            gp_researcher_inst.researcher_id = GpResearcher_data["researcher_id"]
             gp_researcher_inst.year = GpResearcher_data["year"]
             gp_researcher_inst.type_ = GpResearcher_data["type_"]
 

@@ -25,7 +25,6 @@ def basic_query():
     graduate_program_id = request.args.get("graduate_program_id")
 
     jsonStudents = StudentSQL.query(graduate_program_id, institution_id)
-    print(jsonStudents)
     return jsonify(jsonStudents)
 
 

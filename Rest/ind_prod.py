@@ -2,14 +2,30 @@ from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from Dao import indProdSQL
+from Model.weights import Weights
 
-ind_prod = Blueprint("ind_prod", __name__)
+ind_prod = Blueprint("ind_prod", __name__, url_prefix="/indprod")
 
 
-@ind_prod.route("/indProd", methods=["GET"])
+@ind_prod.route("/insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def indProd():
+def ind_prod_insert():
     weights = request.get_json()
-
-    indProdSQL.calc_ind_prod(weights)
+    indProdSQL.insert_ind_prod(Weights(**weights))
     return jsonify(200, "ok")
+
+
+@ind_prod.route("/delete", methods=["DELETE"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def ind_prod_delete():
+    weight_id = request.args.get("weight_id")
+    indProdSQL.ind_prod_delete(weight_id)
+    return jsonify(200, "ok")
+
+
+@ind_prod.route("/query", methods=["GET"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def ind_prod_basic_query():
+    institution_id = request.args.get("institution_id")
+    jsonWeights = indProdSQL.ind_prod_basic_query(institution_id)
+    return jsonify(jsonWeights)

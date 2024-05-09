@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 
 from Rest.graduateProgramResearcherRest import graduateProgramResearcherRest
 from Rest.graduateProgramRest import graduateProgramRest
+from Rest.ind_prod import ind_prod
 from Rest.institutionRest import institutionRest
 from Rest.researcherRest import researcherRest
 from Rest.researchGroupRest import researchGroupRest
@@ -16,6 +17,7 @@ app.register_blueprint(graduateProgramRest)
 app.register_blueprint(graduateProgramResearcherRest)
 app.register_blueprint(researchGroupRest)
 app.register_blueprint(studentRest)
+app.register_blueprint(ind_prod)
 
 
 @app.route("/", methods=["GET"])

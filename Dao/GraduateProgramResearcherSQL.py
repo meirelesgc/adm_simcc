@@ -12,19 +12,12 @@ sys.path.append("../")
 def insert(researcher: GraduateProgramResearcher):
     script_sql = f"""
     INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
-    (SELECT 
+    VALUES (
         '{researcher.graduate_program_id}',
-        researcher_id,
+        '{researcher.researcher_id}',
         '{researcher.year}',
-        '{researcher.type_}'
-    FROM
-        researcher
-    WHERE
-        lattes_id = '{researcher.lattes_id}')
+        '{researcher.type_}')
     """
-
-    print(script_sql)
-
     return dbHandler.db_script(script_sql)
 
 
@@ -36,7 +29,7 @@ def query(graduate_program_id, type_: str = None):
         type_filter = "AND type_ IN ('PERMANENTE', 'COLABORADOR')"
 
     script_sql = f"""
-        SELECT 
+        SELECT
             r.name,
             r.lattes_id,
             gpr.type_
