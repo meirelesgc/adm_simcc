@@ -8,8 +8,8 @@ from Model import Student
 
 def insert(student: Student):
     script_sql = f"""
-        INSERT INTO researcher (researcher_id, name, lattes_id, institution_id, type_)
-        VALUES ('{student.student_id}', '{student.name}', '{student.lattes_id}', '{student.institution_id}', 'DISCENTE')
+        INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
+        VALUES ('{student.student_id}', '{student.name}', '{student.lattes_id}', '{student.institution_id}')
         """
     dbHandler.db_script(script_sql=script_sql)
 
