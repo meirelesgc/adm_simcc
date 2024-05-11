@@ -13,26 +13,7 @@ def Query():
     JsonGraduateProgram = list()
     dfGraduateProgram = GraduateProgramSQL.Query(request.args.get("institution_id"))
 
-    for Index, graduateprogram in dfGraduateProgram.iterrows():
-        graduation_program_inst = GraduateProgram()
-        graduation_program_inst.graduate_program_id = graduateprogram[
-            "graduate_program_id"
-        ]
-        graduation_program_inst.code = graduateprogram["code"]
-        graduation_program_inst.name = graduateprogram["name"]
-        graduation_program_inst.area = graduateprogram["area"]
-        graduation_program_inst.modality = graduateprogram["modality"]
-        graduation_program_inst.type = graduateprogram["type"]
-        graduation_program_inst.rating = graduateprogram["rating"]
-        graduation_program_inst.institution_id = graduateprogram["institution_id"]
-        graduation_program_inst.description = graduateprogram["description"]
-        graduation_program_inst.url_image = graduateprogram["url_image"]
-        graduation_program_inst.city = graduateprogram["city"]
-        graduation_program_inst.visible = graduateprogram["visible"]
-
-        JsonGraduateProgram.append(graduation_program_inst.get_json())
-
-    return jsonify(JsonGraduateProgram), 200
+    return jsonify(dfGraduateProgram), 200
 
 
 @graduateProgramRest.route("/GraduateProgramRest/Update", methods=["POST"])
