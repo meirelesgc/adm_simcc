@@ -103,7 +103,7 @@ def ind_prod_basic_query(institution_id):
             sq, 
             book, 
             book_chapter, 
-            f1, f2, f3, f4, f5
+            f1, f2, f3, f4, f5,
             software, 
             patent_granted, 
             patent_not_granted, 
@@ -113,34 +113,22 @@ def ind_prod_basic_query(institution_id):
         WHERE institution_id = '{institution_id}';
         """
     registry = dbHandler.db_select(script_sql)
-
+    print(registry)
     data_frame = pd.DataFrame(
         registry,
         columns=[
-            "id",
-            "name",
-            "institution_id",
-            "a1",
-            "a2",
-            "a3",
-            "a4",
-            "b1",
-            "b2",
-            "b3",
-            "b4",
-            "c",
-            "sq",
-            "book",
-            "book_chapter",
-            "f1",
-            "f2",
-            "f3",
-            "f4",
-            "f5",
-            "software",
-            "patent_granted",
-            "patent_not_granted",
-            "report",
+            'institution_id', 
+            'a1', 'a2', 'a3', 'a4', 
+            'b1', 'b2', 'b3', 'b4', 
+            'c', 
+            'sq', 
+            'book', 
+            'book_chapter', 
+            'f1', 'f2', 'f3', 'f4', 'f5',
+            'software', 
+            'patent_granted', 
+            'patent_not_granted', 
+            'report'
         ],
     )
 
