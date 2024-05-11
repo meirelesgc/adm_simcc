@@ -1,0 +1,26 @@
+[
+    {
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f7bb",
+        "name": "Nome do Pesquisador 1",
+        "lattes_id": 9879879871,
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a79"
+    },
+    {
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f8bb",
+        "name": "Nome do Pesquisador 2",
+        "lattes_id": 6546546542,
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a79"
+    },
+    {
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f9bb",
+        "name": "Nome do Pesquisador 3",
+        "lattes_id": 3213213213,
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a78"
+    },
+    {
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f0bb",
+        "name": "Nome do Pesquisador 4",
+        "lattes_id": 74174174187,
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a78"
+    }
+]

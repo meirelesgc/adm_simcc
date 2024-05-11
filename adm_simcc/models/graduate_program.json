@@ -1,0 +1,38 @@
+[
+    {
+        "graduate_program_id": "b4874009-284f-4cd6-88fb-d481efcd2a79",
+        "code": "EX123",
+        "name": "Um programa qualquer",
+        "area": "Ciências Exatas",
+        "modality": "Presencial",
+        "type": "Mestrado",
+        "rating": "5",
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a78",
+        "state": "BA",
+        "city": "Salvador",
+        "region": "Nordeste",
+        "instituicao": "Universidade Exemplo",
+        "url_image": "http://exemplo.com/imagem.jpg",
+        "sigla": "UE",
+        "description": "Este é um programa de pós-graduação de exemplo.",
+        "visible": true
+    },
+    {
+        "graduate_program_id": "b4874009-284f-4cd6-88fb-d481efcd2a78",
+        "code": "EX123",
+        "name": "Outro programa qualquer",
+        "area": "Ciências Exatas",
+        "modality": "Presencial",
+        "type": "Mestrado",
+        "rating": "5",
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a78",
+        "state": "BA",
+        "city": "Salvador",
+        "region": "Nordeste",
+        "instituicao": "Universidade Exemplo",
+        "url_image": "http://exemplo.com/imagem.jpg",
+        "sigla": "UE",
+        "description": "Este é um programa de pós-graduação de exemplo.",
+        "visible": true
+    }
+]
