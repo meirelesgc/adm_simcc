@@ -10,7 +10,7 @@ def insert_ind_prod(weights: Weights):
     script_sql = f"""SELECT COUNT(*) FROM weights WHERE institution_id = '{weights.institution_id}'"""
     
     if (dbHandler.db_select(script_sql=script_sql)[0][0]):
-        script_sql = f""""
+        script_sql = f"""
             UPDATE public.weights
             SET 
                 a1 = {weights.A1}, 
