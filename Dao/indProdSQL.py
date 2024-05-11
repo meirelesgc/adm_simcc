@@ -8,7 +8,6 @@ from Model.weights import Weights
 def insert_ind_prod(weights: Weights):
     script_sql = f"""
         INSERT INTO public.weights(
-            name, 
             institution_id, 
             a1, 
             a2, 
@@ -32,7 +31,6 @@ def insert_ind_prod(weights: Weights):
             patent_not_granted, 
             report)
         VALUES (
-            '{weights.name}', 
             '{weights.institution_id}', 
             {weights.A1}, 
             {weights.A2}, 
@@ -54,7 +52,7 @@ def insert_ind_prod(weights: Weights):
             '{weights.SOFTWARE}',
             '{weights.PATENT_NOT_GRANTED}',
             '{weights.PATENT_GRANTED}',
-            '{weights.REPORT}',
+            '{weights.REPORT}'
             );
         """
 
