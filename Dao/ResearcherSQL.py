@@ -42,7 +42,7 @@ def Query(institution_id):
                 FROM
                     graduate_program_researcher
                 WHERE
-                    type_ != 'DISCENTE'
+                    type_ = 'DISCENTE'
             )
         """
 
