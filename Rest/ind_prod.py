@@ -10,9 +10,11 @@ ind_prod = Blueprint("ind_prod", __name__, url_prefix="/indprod")
 @ind_prod.route("/insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def ind_prod_insert():
-    weights = request.get_json()
-    indProdSQL.insert_ind_prod(Weights(**weights))
-    return jsonify(200, "ok")
+    weights_list = request.get_json()
+    if weights_list:
+        for weights in weights_list:
+            indProdSQL.insert_ind_prod(Weights(**weights))
+        return jsonify(200, "ok")
 
 
 @ind_prod.route("/delete", methods=["DELETE"])
