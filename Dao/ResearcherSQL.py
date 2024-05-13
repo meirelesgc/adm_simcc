@@ -32,7 +32,7 @@ def Query(institution_id):
             r.institution_id 
         FROM 
             researcher r
-        JOIN graduate_program_researcher gpr ON
+        LEFT JOIN graduate_program_researcher gpr ON
             gpr.researcher_id = r.researcher_id
         WHERE 
             institution_id = '{institution_id}'
