@@ -24,6 +24,11 @@ def Insert(Researcher):
 
 
 def Query(institution_id):
+    filter_institution = str()
+    if institution_id:
+        filter_institution = f"""
+            r.institution_id = '{institution_id}'
+            AND """
     sql = f"""
         SELECT DISTINCT
             r.researcher_id, 
@@ -33,14 +38,14 @@ def Query(institution_id):
         FROM
             researcher r
         WHERE 
-            r.institution_id = '{institution_id}'
-            AND r.researcher_id NOT IN (
-                SELECT 
-                    researcher_id
-                FROM
-                    graduate_program_researcher
-                WHERE
-                    type_ = 'DISCENTE') 
+            {filter_institution}
+            r.researcher_id NOT IN (
+            SELECT 
+                researcher_id
+            FROM
+                graduate_program_researcher
+            WHERE
+                type_ = 'DISCENTE') 
         """
 
     return pd.DataFrame(
