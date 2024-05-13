@@ -25,25 +25,22 @@ def Insert(Researcher):
 
 def Query(institution_id):
     sql = f"""
-        SELECT 
+        SELECT DISTINCT
             r.researcher_id, 
-            r.name, 
-            r.lattes_id, 
-            r.institution_id 
-        FROM 
+            r.name,
+            r.lattes_id,
+            r.institution_id
+        FROM
             researcher r
-        LEFT JOIN graduate_program_researcher gpr ON
-            gpr.researcher_id = r.researcher_id
         WHERE 
-            institution_id = '{institution_id}'
-            AND gpr.researcher_id NOT IN (
+            r.institution_id = '{institution_id}'
+            AND r.researcher_id NOT IN (
                 SELECT 
-                    researcher_id 
+                    researcher_id
                 FROM
                     graduate_program_researcher
                 WHERE
-                    type_ = 'DISCENTE'
-            )
+                    type_ = 'DISCENTE') 
         """
 
     return pd.DataFrame(
