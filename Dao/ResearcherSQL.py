@@ -23,12 +23,19 @@ def Insert(Researcher):
     return dbHandler.db_script(sql)
 
 
-def Query(institution_id):
-    filter_institution = str()
+def Query(institution_id, researcher_name):
     if institution_id:
         filter_institution = f"""
-            r.institution_id = '{institution_id}'
-            AND """
+            AND r.institution_id = '{institution_id}'
+            """
+    else:
+        filter_institution = str()
+
+    if researcher_name:
+        filter_name = f"""
+        AND r.name ILIKE '{researcher_name}%' 
+        """
+
     sql = f"""
         SELECT DISTINCT
             r.researcher_id, 
@@ -38,7 +45,6 @@ def Query(institution_id):
         FROM
             researcher r
         WHERE 
-            {filter_institution}
             r.researcher_id NOT IN (
             SELECT 
                 researcher_id
@@ -46,6 +52,8 @@ def Query(institution_id):
                 graduate_program_researcher
             WHERE
                 type_ = 'DISCENTE') 
+            {filter_institution}
+            {filter_name}
         """
 
     return pd.DataFrame(

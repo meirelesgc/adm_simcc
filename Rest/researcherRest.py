@@ -11,8 +11,10 @@ researcherRest = Blueprint("researcherRest", __name__)
 @cross_origin(origin="*", headers=["Content-Type"])
 def query_table():
     JsonResearchers = list()
-
-    dfResearcher = ResearcherSQL.Query(request.args.get("institution_id"))
+    
+    instituion_id = request.args.get("institution_id")
+    researcher_name = request.arg.get('name')
+    dfResearcher = ResearcherSQL.Query(instituion_id, researcher_name)
 
     for Index, researcher in dfResearcher.iterrows():
         researcher_inst = Researcher()
@@ -39,7 +41,7 @@ def Insert():
     JsonInstitutions = request.get_json()
 
     if not JsonInstitutions:
-        return jsonify({"error": "Erro no Json enviado"}), 400
+        return jsonify({"https://github.com/ovictorhugo/sistema-de-mapeamento-de-competencias.giterror": "Erro no Json enviado"}), 400
 
     try:
         for researcher_data in JsonInstitutions:
