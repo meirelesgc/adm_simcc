@@ -47,7 +47,8 @@ def Query(institution_id, researcher_name, limit):
             r.researcher_id, 
             r.name,
             r.lattes_id,
-            r.institution_id
+            r.institution_id,
+            r.created_at
         FROM
             researcher r
         WHERE 
