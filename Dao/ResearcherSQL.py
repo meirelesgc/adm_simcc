@@ -66,7 +66,7 @@ def Query(institution_id, researcher_name, limit):
 
     return pd.DataFrame(
         dbHandler.db_select(sql),
-        columns=["researcher_id", "name", "lattes_id", "institution_id"],
+        columns=["researcher_id", "name", "lattes_id", "institution_id", "created_at"],
     )
 
 

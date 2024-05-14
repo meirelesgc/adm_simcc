@@ -32,7 +32,8 @@ def query(graduate_program_id, type_: str = None):
         SELECT
             r.name,
             r.lattes_id,
-            gpr.type_
+            gpr.type_,
+            created_at
         FROM 
             graduate_program_researcher gpr
         JOIN researcher r ON 
@@ -40,7 +41,8 @@ def query(graduate_program_id, type_: str = None):
         WHERE 
             gpr.graduate_program_id = '{graduate_program_id}'
             {type_filter}
-    """
+        ORDER BY created_at
+        """
 
     registry = dbHandler.db_select(script_sql)
 
