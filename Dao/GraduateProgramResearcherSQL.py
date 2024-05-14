@@ -33,7 +33,7 @@ def query(graduate_program_id, type_: str = None):
             r.name,
             r.lattes_id,
             gpr.type_,
-            created_at
+            gpr.created_at
         FROM 
             graduate_program_researcher gpr
         JOIN researcher r ON 
@@ -41,17 +41,20 @@ def query(graduate_program_id, type_: str = None):
         WHERE 
             gpr.graduate_program_id = '{graduate_program_id}'
             {type_filter}
-        ORDER BY created_at
+        ORDER BY gpr.created_at
         """
 
     registry = dbHandler.db_select(script_sql)
 
+
+    print(script_sql)
     data_frame = pd.DataFrame(
         registry,
         columns=[
             "name",
             "lattes_id",
             "type_",
+            "created_at"
         ],
     )
 
