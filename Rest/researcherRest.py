@@ -23,7 +23,7 @@ def query_table():
         researcher_inst.name = researcher["name"]
         researcher_inst.lattes_id = researcher["lattes_id"]
         researcher_inst.institution_id = researcher["institution_id"]
-
+        
         JsonResearchers.append(researcher_inst.get_json())
 
     return jsonify(JsonResearchers), 200
