@@ -61,8 +61,8 @@ def Query(institution_id, researcher_name, limit):
                 type_ = 'DISCENTE') 
             {filter_institution}
             {filter_name}
-            {filter_limit}
             ORDER by created_at DESC
+            {filter_limit}
         """
 
     return pd.DataFrame(
