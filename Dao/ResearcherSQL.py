@@ -23,17 +23,25 @@ def Insert(Researcher):
     return dbHandler.db_script(sql)
 
 
-def Query(institution_id, researcher_name):
-    filter_institution = str()
+def Query(institution_id, researcher_name, limit):
     if institution_id:
         filter_institution = f"""
             AND r.institution_id = '{institution_id}'
             """
+    else:
+        filter_institution = str()
     if researcher_name:
         filter_name = f"""
         AND r.name ILIKE '{researcher_name}%' 
         """
-
+    else:
+        filter_name = str()
+    if limit:
+        filter_limit = f"""
+        LIMIT {limit}
+        """
+    else:
+        filter_limit = str()
     sql = f"""
         SELECT DISTINCT
             r.researcher_id, 
@@ -52,6 +60,7 @@ def Query(institution_id, researcher_name):
                 type_ = 'DISCENTE') 
             {filter_institution}
             {filter_name}
+            {filter_limit}
         """
 
     return pd.DataFrame(

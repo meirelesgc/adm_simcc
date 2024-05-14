@@ -14,7 +14,8 @@ def query_table():
     
     instituion_id = request.args.get("institution_id")
     researcher_name = request.args.get('name')
-    dfResearcher = ResearcherSQL.Query(instituion_id, researcher_name)
+    limit = request.args.get('count')
+    dfResearcher = ResearcherSQL.Query(instituion_id, researcher_name, limit)
 
     for Index, researcher in dfResearcher.iterrows():
         researcher_inst = Researcher()
