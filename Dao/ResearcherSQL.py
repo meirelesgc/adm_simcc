@@ -32,14 +32,14 @@ def Query(institution_id, researcher_name, limit):
         filter_institution = str()
     if researcher_name:
         filter_name = f"""
-        AND r.name ILIKE '{researcher_name}%' 
-        """
+            AND r.name ILIKE '{researcher_name}%' 
+            """
     else:
         filter_name = str()
     if limit:
         filter_limit = f"""
-        LIMIT {limit}
-        """
+            LIMIT {limit}
+            """
     else:
         filter_limit = str()
     sql = f"""
@@ -61,6 +61,7 @@ def Query(institution_id, researcher_name, limit):
             {filter_institution}
             {filter_name}
             {filter_limit}
+            ORDER by created_at DESC
         """
 
     return pd.DataFrame(
