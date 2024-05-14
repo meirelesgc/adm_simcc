@@ -24,13 +24,11 @@ def Insert(Researcher):
 
 
 def Query(institution_id, researcher_name):
+    filter_institution = str()
     if institution_id:
         filter_institution = f"""
             AND r.institution_id = '{institution_id}'
             """
-    else:
-        filter_institution = str()
-
     if researcher_name:
         filter_name = f"""
         AND r.name ILIKE '{researcher_name}%' 

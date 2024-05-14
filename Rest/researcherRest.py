@@ -13,7 +13,7 @@ def query_table():
     JsonResearchers = list()
     
     instituion_id = request.args.get("institution_id")
-    researcher_name = request.arg.get('name')
+    researcher_name = request.args.get('name')
     dfResearcher = ResearcherSQL.Query(instituion_id, researcher_name)
 
     for Index, researcher in dfResearcher.iterrows():
