@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS researcher;
 CREATE TABLE researcher(
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       name VARCHAR(150) NOT NULL,
-      lattes_id VARCHAR(20) NOT NULL,
+      lattes_id VARCHAR(20) UNIQUE,
       institution_id uuid NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

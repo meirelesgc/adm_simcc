@@ -43,7 +43,6 @@ def query(graduate_program_id, type_: str = None):
             {type_filter}
         ORDER BY gpr.created_at DESC
         """
-
     registry = dbHandler.db_select(script_sql)
 
 
