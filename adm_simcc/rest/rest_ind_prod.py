@@ -29,5 +29,5 @@ def ind_prod_delete():
 @cross_origin(origin="*", headers=["Content-Type"])
 def ind_prod_basic_query():
     institution_id = request.args.get("institution_id")
-    weights = dao_ind_prod.ind_prod_basic_query(institution_id)
-    return jsonify(weights)
+    jsonWeights = dao_ind_prod.ind_prod_basic_query(institution_id)
+    return jsonify(jsonWeights)

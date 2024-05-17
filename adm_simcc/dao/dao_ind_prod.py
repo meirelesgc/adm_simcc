@@ -9,15 +9,9 @@ adm_database = Connection()
 
 def insert_ind_prod(weights: Weights):
 
-    script_sql = f"""
-        SELECT 
-            COUNT(*) 
-        FROM 
-            weights 
-        WHERE 
-            institution_id = '{weights.institution_id}';"""
+    script_sql = f"""SELECT COUNT(*) FROM weights WHERE institution_id = '{weights.institution_id}'"""
 
-    if adm_database.select(script_sql):
+    if adm_database.select(script_sql=script_sql)[0][0]:
         script_sql = f"""
             UPDATE public.weights
             SET 
@@ -44,7 +38,7 @@ def insert_ind_prod(weights: Weights):
                 report = '{weights.REPORT}'
             WHERE institution_id = '{weights.institution_id}';
         """
-        adm_database.exec(script_sql)
+        adm_database.exec(script_sql=script_sql)
         return
 
     script_sql = f"""
@@ -97,7 +91,7 @@ def insert_ind_prod(weights: Weights):
             );
         """
 
-    adm_database.exec(script_sql)
+    adm_database.select(script_sql=script_sql)
 
 
 def ind_prod_basic_query(institution_id):
@@ -120,6 +114,7 @@ def ind_prod_basic_query(institution_id):
         WHERE institution_id = '{institution_id}';
         """
     registry = adm_database.select(script_sql)
+    print(registry)
     data_frame = pd.DataFrame(
         registry,
         columns=[
@@ -156,4 +151,4 @@ def ind_prod_delete(weight_id: UUID4):
         DELETE FROM public.weights
         WHERE weight_id = '{weight_id}';
         """
-    adm_database.select(script_sql)
+    adm_database.exec(script_sql)

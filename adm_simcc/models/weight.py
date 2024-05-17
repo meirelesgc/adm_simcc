@@ -2,7 +2,6 @@ from pydantic import UUID4, BaseModel
 
 
 class Weights(BaseModel):
-    name: str
     institution_id: UUID4
     A1: float
     A2: float
@@ -16,13 +15,12 @@ class Weights(BaseModel):
     SQ: float
     BOOK: float
     BOOK_CHAPTER: float
+    SOFTWARE: str
+    PATENT_GRANTED: str
+    PATENT_NOT_GRANTED: str
+    REPORT: str
     F1: float = 0
     F2: float = 0
     F3: float = 0
     F4: float = 0
     F5: float = 0
-
-    SOFTWARE: str
-    PATENT_GRANTED: str
-    PATENT_NOT_GRANTED: str
-    REPORT: str
