@@ -18,7 +18,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             '{graduate_program.name}',
             '{graduate_program.area}',
             '{graduate_program.modality}',
-            '{graduate_program.type_}',
+            '{graduate_program.type}',
             '{graduate_program.rating}',
             '{graduate_program.institution_id}',
             '{graduate_program.city}',
@@ -45,6 +45,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             visible)
             VALUES {values[:-1]};
         """
+    print(script_sql)
     try:
         adm_database.exec(script_sql)
     except Error as erro:
