@@ -11,7 +11,7 @@ from psycopg2 import Error, IntegrityError
 
 
 rest_graduate_program = Blueprint(
-    "rest_graduate_program", __name__, url_prefix="/graduateProgramRest"
+    "rest_graduate_program", __name__, url_prefix="/GraduateProgramRest"
 )
 
 
@@ -27,7 +27,7 @@ def graduate_program_insert():
         return jsonify({"message": str(E)}), HTTPStatus.BAD_REQUEST
     except Error as E:
         return (
-            jsonify({"message":  str(E)}),
+            jsonify({"message": str(E)}),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
     except Exception as E:
