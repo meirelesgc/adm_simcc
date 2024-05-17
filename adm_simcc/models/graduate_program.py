@@ -8,15 +8,11 @@ class GraduateProgram(BaseModel):
     name: str
     area: str
     modality: str
-    type_: Optional[str]
+    type: Optional[str]
     rating: Optional[str]
     institution_id: UUID4
-    state: str = "BA"
     city: str = "Salvador"
-    region: str = "Nordeste"
-    instituicao: Optional[str]
     url_image: Optional[str]
-    sigla: Optional[str]
     description: Optional[str]
     visible: bool = False
 

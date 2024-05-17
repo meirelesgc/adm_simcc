@@ -21,12 +21,8 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             '{graduate_program.type_}',
             '{graduate_program.rating}',
             '{graduate_program.institution_id}',
-            '{graduate_program.state}',
             '{graduate_program.city}',
-            '{graduate_program.region}',
-            '{graduate_program.instituicao}',
             '{graduate_program.url_image}',
-            '{graduate_program.sigla}',
             '{graduate_program.description}',
             '{graduate_program.visible}'),"""
 
@@ -43,12 +39,8 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             type,
             rating,
             institution_id,
-            state,
             city,
-            region,
-            instituicao,
             url_image,
-            sigla,
             description,
             visible)
             VALUES {values[:-1]};
