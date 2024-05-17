@@ -42,9 +42,3 @@ addopts = '-p no:warnings'
 run = 'gunicorn --certfile=$CERT_FILE --keyfile=$KEY_FILE -b 0.0.0.0:5000 app:app --reload'
 test = 'pytest -s -x --cov=adm_simcc -vv'
 post_test = 'coverage html'
-
-Environment=ADM_DATABASE=adm_simcc
-Environment=ADM_USER=postgres
-Environment=ADM_HOST=localhost
-Environment=ADM_PASSWORD=root
-Environment=ADM_PORT=5432

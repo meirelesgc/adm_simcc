@@ -9,7 +9,6 @@ from http import HTTPStatus
 from pydantic import ValidationError, UUID4
 from psycopg2 import Error, IntegrityError
 
-from adm_simcc.models import graduate_program
 
 rest_graduate_program = Blueprint(
     "rest_graduate_program", __name__, url_prefix="/graduateProgramRest"
@@ -26,14 +25,14 @@ def graduate_program_insert():
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except ValidationError as E:
         return jsonify({"message": str(E)}), HTTPStatus.BAD_REQUEST
-    except IntegrityError:
+    except Error as E:
         return (
-            jsonify({"message": "Violação de regras do banco de dados."}),
+            jsonify({"message":  str(E)}),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
-    except (Exception, Error):
+    except Exception as E:
         return (
-            jsonify({"message": "Problema não mapeado"}),
+            jsonify({"message": str(E)}),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
 

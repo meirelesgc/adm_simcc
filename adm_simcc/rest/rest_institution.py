@@ -1,12 +1,13 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
+
 from ..dao import dao_institution
 from ..models.institution import ListInstitutions
 
 from http import HTTPStatus
 from pydantic import ValidationError
-
+from psycopg2 import Error
 
 rest_institution = Blueprint(
     "rest_institution", __name__, url_prefix="/InstitutionRest"
@@ -23,9 +24,14 @@ def institution_insert():
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except ValidationError as E:
         return jsonify({"message": str(E)}), HTTPStatus.BAD_REQUEST
-    except Exception:
+    except Error as E:
         return (
-            jsonify({"message": "Problema no banco"}),
+            jsonify({"message":  str(E)}),
+            HTTPStatus.INTERNAL_SERVER_ERROR,
+        )
+    except Exception as E:
+        return (
+            jsonify({"message": str(E)}),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
 

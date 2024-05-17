@@ -7,7 +7,6 @@ def create_app():
 
     from .rest.rest_graduate_program import rest_graduate_program
     from .rest.rest_gradute_program_researcher import rest_graduate_program_researcher
-
     from .rest.rest_ind_prod import rest_ind_prod
     from .rest.rest_institution import rest_institution
     from .rest.rest_researcher import rest_researcher

@@ -1,3 +1,5 @@
+import os
+import select
 import pandas as pd
 from pydantic import UUID4
 from psycopg2 import Error
@@ -5,8 +7,8 @@ from psycopg2 import Error
 from ..dao import Connection
 from ..models.researcher import ListResearchers
 
-
 adm_database = Connection()
+simcc_database = Connection(database=os.environ["SIMCC_DATABASE"])
 
 
 def researcher_insert(ListResearchers: ListResearchers):
@@ -100,6 +102,29 @@ def researcher_basic_query(institution_id: UUID4, researcher_name: str, rows: in
         registry,
         columns=["researcher_id", "name", "lattes_id", "institution_id", "created_at"],
     )
+    script_sql = f"""
+        SELECT 
+            r.lattes_id, 
+            r.last_update 
+        FROM 
+            researcher r
+        WHERE 
+            r.id NOT IN (
+            SELECT
+                researcher_id
+            FROM
+                graduate_program_researcher
+            WHERE
+                type_ = 'DISCENTE')
+            {filter_institution}
+        """
+
+    registry = simcc_database.select(script_sql)
+
+    data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
+
+    data_frame = pd.merge(data_frame, data_frame_simcc, on="lattes_id")
+
     return data_frame.to_dict(orient="records")
 
 

@@ -21,14 +21,14 @@ def researcher_insert():
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except ValidationError as E:
         return jsonify({"message": str(E)}), HTTPStatus.BAD_REQUEST
-    except Error:
+    except Error as E:
         return (
-            jsonify({"message": "Problema no banco"}),
+            jsonify({"message": str(E)}),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
-    except Exception:
+    except Exception as E:
         return (
-            jsonify({"message": "Problema não mapeado"}),
+            jsonify({"message": str(E)}),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
 
@@ -64,7 +64,8 @@ def basic_query():
             institution_id, researcher_name, rows
         )
         return jsonify(researchers)
-    except Exception:
+    except Exception as E:
+        print(E)
         return (
             jsonify({"message": "Problema no banco"}),
             HTTPStatus.INTERNAL_SERVER_ERROR,
