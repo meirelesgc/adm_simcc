@@ -1,11 +1,10 @@
 from typing import Optional
-
-from pydantic import UUID4, BaseModel
+from pydantic import UUID4, BaseModel, model_validator
 
 
 class GraduateProgram(BaseModel):
     graduate_program_id: UUID4
-    code: str
+    code: Optional[str]
     name: str
     area: str
     modality: str
@@ -20,3 +19,7 @@ class GraduateProgram(BaseModel):
     sigla: Optional[str]
     description: Optional[str]
     visible: bool = False
+
+
+class ListGraduateProgram(BaseModel):
+    graduate_program_list: list[GraduateProgram]

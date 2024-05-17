@@ -8,3 +8,7 @@ class Student(BaseModel):
     institution_id: UUID4
     graduate_program_id: UUID4
     year: int
+
+
+class ListStudent(BaseModel):
+    student_list: list[Student]

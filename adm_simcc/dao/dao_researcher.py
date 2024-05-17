@@ -1,61 +1,104 @@
 import pandas as pd
 from pydantic import UUID4
+from psycopg2 import Error
 
 from ..dao import Connection
-from ..models.researcher import Researcher
+from ..models.researcher import ListResearchers
+
 
 adm_database = Connection()
 
 
-def researcher_insert(Researcher: Researcher):
+def researcher_insert(ListResearchers: ListResearchers):
+
+    values = str()
+    for researcher in ListResearchers.researcher_list:
+        values += f"""(
+            '{researcher.researcher_id}',
+            '{researcher.name}',
+            '{researcher.lattes_id}',
+            '{researcher.institution_id}'),"""
+
+    # Criação do script de insert.
+    # Unifiquei em um unico comando para facilitar
+    # o retorno da mensagem de erro
     script_sql = f"""
         INSERT INTO researcher
         (researcher_id, name, lattes_id, institution_id)
-        VALUES (
-            '{Researcher.researcher_id}', 
-            '{Researcher.name}', 
-            '{Researcher.lattes_id}', 
-            '{Researcher.institution_id}');
+        VALUES {values[:-1]};
         """
-    adm_database.exec(script_sql)
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro
 
 
 def researcher_delete(researcher_id: UUID4):
     script_sql = f"""
-        DELETE FROM graduate_program_researcher 
+        BEGIN;
+
+        DELETE FROM graduate_program_researcher
         WHERE researcher_id = '{researcher_id}';
-        
-        DELETE FROM researcher 
+
+        DELETE FROM researcher
         WHERE researcher_id = '{researcher_id}';
+
+        COMMIT;
         """
-    adm_database.exec(script_sql)
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro
 
 
-def researcher_basic_query(institution_id: UUID4):
+def researcher_basic_query(institution_id: UUID4, researcher_name: str, rows: int):
+    if institution_id:
+        filter_institution = f"""
+            AND r.institution_id = '{institution_id}'
+            """
+    else:
+        filter_institution = str()
+    if researcher_name:
+        researcher_name = researcher_name.replace("'", "''")
+        filter_name = f"""
+            AND similarity(unaccent(LOWER('{researcher_name}')), unaccent(LOWER(r.name))) > 0.5
+            """
+    else:
+        filter_name = str()
+    if rows:
+        filter_limit = f"""
+            LIMIT {rows}
+            """
+    else:
+        filter_limit = str()
     script_sql = f"""
-        SELECT
-            researcher_id,
-            name,
-            lattes_id,
-            institution_id
+        SELECT DISTINCT
+            r.researcher_id,
+            r.name,
+            r.lattes_id,
+            r.institution_id,
+            r.created_at
         FROM
-            researcher
+            researcher r
         WHERE
-            institution_id = '{institution_id}'
-            AND researcher_id NOT IN (
-                SELECT 
-                    researcher_id 
-                FROM 
-                    graduate_program_researcher 
-                WHERE 
-                    type_ = 'DISCENTE')
+            r.researcher_id NOT IN (
+            SELECT
+                researcher_id
+            FROM
+                graduate_program_researcher
+            WHERE
+                type_ = 'DISCENTE')
+            {filter_institution}
+            {filter_name}
+            ORDER by created_at DESC
+            {filter_limit}
         """
 
     registry = adm_database.select(script_sql=script_sql)
 
     data_frame = pd.DataFrame(
         registry,
-        columns=["researcher_id", "name", "lattes_id", "institution_id"],
+        columns=["researcher_id", "name", "lattes_id", "institution_id", "created_at"],
     )
     return data_frame.to_dict(orient="records")
 

@@ -2,22 +2,34 @@ import pandas as pd
 from pydantic import UUID4
 
 from ..dao import Connection
-from ..models.institution import Institution
+from ..models.institution import ListInstitutions
+
+from psycopg2 import Error
 
 adm_database = Connection()
 
 
-def institution_insert(Institution: Institution):
+def institution_insert(ListInstitutions: ListInstitutions):
+    values = str()
+    for institution in ListInstitutions.institution_list:
+        values += f"""(
+            '{institution.institution_id}',
+            '{institution.name}',
+            '{institution.acronym}',
+            '{institution.lattes_id}'),"""
+
+    # Criação do script de insert.
+    # Unifiquei em um unico comando para facilitar
+    # o retorno da mensagem de erro
     script_sql = f"""
-        INSERT INTO institution
+        INSERT INTO public.institution
         (institution_id, name, acronym, lattes_id)
-        VALUES (
-            '{Institution.institution_id}',
-            '{Institution.name}',
-            '{Institution.acronym}',
-            '{Institution.lattes_id}')
+        VALUES {values[:-1]};
         """
-    adm_database.exec(script_sql)
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro
 
 
 def institution_full_query(institution_id: UUID4 = None):
@@ -51,15 +63,17 @@ def institution_full_query(institution_id: UUID4 = None):
         columns=["name", "institution_id", "count_gp", "count_gpr", "count_r"],
     )
 
+    return data_frame.to_dict(orient='records')
 
-def institution_basic_query(institution_id: UUID4 = None):
+
+def institution_basic_query(institution_id: UUID4):
     script_sql = f"""
         SELECT
             institution_id,
             name,
             acronym,
             lattes_id
-	    FROM
+            FROM
             institution
         WHERE
             institution_id = '{institution_id}'

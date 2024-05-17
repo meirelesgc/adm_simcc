@@ -2,13 +2,13 @@
     {
         "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a78",
         "name": "Nome da Instituição 1",
-        "acronym": "NI1",
-        "lattes_id": 3219874561
+        "acronym": "I1",
+        "lattes_id": "529701000007"
     },
     {
         "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a79",
         "name": "Nome da Instituição 2",
-        "acronym": "NI2",
-        "lattes_id": 9876549874
+        "acronym": "I2",
+        "lattes_id": "529701000008"
     }
 ]

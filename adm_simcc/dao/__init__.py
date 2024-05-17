@@ -60,5 +60,6 @@ class Connection:
             print("[Error]", E)
             self.connection.rollback()
             self.__close()
-            return None
+            print(E)
+            raise E
         self.__close()

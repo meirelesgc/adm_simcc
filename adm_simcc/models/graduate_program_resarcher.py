@@ -8,3 +8,7 @@ class GraduateProgramResearcher(BaseModel):
     researcher_id: UUID4
     year: Optional[int]
     type_: Optional[str]
+
+
+class ListResearcher(BaseModel):
+    researcher_list: list[GraduateProgramResearcher]

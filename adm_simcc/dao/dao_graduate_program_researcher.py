@@ -1,38 +1,52 @@
 import pandas as pd
 from pydantic import UUID4
+from psycopg2 import Error
 
 from ..dao import Connection
-from ..models.graduate_program import GraduateProgram
+from ..models.graduate_program_resarcher import ListResearcher
 
 adm_database = Connection()
 
 
 def graduate_program_researcher_insert(
-    Graduate_program_reseacher: GraduateProgram,
+    ListResearcher: ListResearcher,
 ):
+    values = str()
+    for researcher in ListResearcher.researcher_list:
+        values += f"""(
+            '{researcher.graduate_program_id}',
+            '{researcher.researcher_id}',
+            '{researcher.year}',
+            '{researcher.type_}'),"""
     script_sql = f"""
         INSERT INTO public.graduate_program_researcher(
         graduate_program_id, researcher_id, year, type_)
-        VALUES (
-            '{Graduate_program_reseacher.graduate_program_id}',
-            '{Graduate_program_reseacher.researcher_id}',
-            '{Graduate_program_reseacher.year}',
-            '{Graduate_program_reseacher.type_}');
+        VALUES {values[:-1]};
         """
-    adm_database.exec(script_sql)
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro
 
 
 def graduate_program_researcher_delete(
     researcher_id: UUID4, graduate_program_id: UUID4
 ):
     script_sql = f"""
-        DELETE FROM
-            graduate_program_researcher
-        WHERE
-            researcher_id = '{researcher_id}'
-            AND graduate_program_id = '{graduate_program_id}';
-        """
-    adm_database.exec(script_sql)
+        DELETE FROM graduate_program_researcher 
+        WHERE 
+            researcher_id = (
+                SELECT 
+                    researcher_id 
+                FROM 
+                    researcher 
+                WHERE 
+                    lattes_id = '{researcher_id}') 
+            AND graduate_program_id = '{graduate_program_id}';"""
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro
 
 
 def graduate_program_researcher_count(
@@ -50,11 +64,12 @@ def graduate_program_researcher_count(
                     WHERE
                         institution_id = '{institution_id}')"""
 
-    filter_graduate_program = str()
     if graduate_program_id:
         filter_graduate_program = f"""
             WHERE 
                 graduate_program_id = '{graduate_program_id}'"""
+    else:
+        filter_graduate_program = str()
 
     script_sql = f"""
         SELECT 
@@ -62,7 +77,7 @@ def graduate_program_researcher_count(
         FROM 
             graduate_program_researcher 
         {filter_institution}
-        {filter_graduate_program}
+        {filter_graduate_program};
         """
 
     registry = adm_database.select(script_sql)
@@ -83,7 +98,8 @@ def graduate_program_researcher_basic_query(
         SELECT
             r.name,
             r.lattes_id,
-            gpr.type_
+            gpr.type_,
+            gpr.created_at
         FROM 
             graduate_program_researcher gpr
         JOIN researcher r ON 
@@ -91,17 +107,13 @@ def graduate_program_researcher_basic_query(
         WHERE 
             gpr.graduate_program_id = '{graduate_program_id}'
             {type_filter}
-    """
-
+        ORDER BY gpr.created_at DESC
+        """
     registry = adm_database.select(script_sql)
 
     data_frame = pd.DataFrame(
         registry,
-        columns=[
-            "name",
-            "lattes_id",
-            "type_",
-        ],
+        columns=["name", "lattes_id", "type_", "created_at"],
     )
 
     return data_frame.to_dict(orient="records")

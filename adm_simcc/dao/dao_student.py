@@ -1,25 +1,40 @@
-import sys
-
 import pandas as pd
+from pydantic import UUID4
+from psycopg2 import Error
 
 from ..dao import Connection
-from ..models.student import Student
+from ..models.student import Student, ListStudent
 
 adm_database = Connection()
 
 
-def student_insert(student: Student):
-    script_sql = f"""
-        INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
-        VALUES ('{student.student_id}', '{student.name}', '{student.lattes_id}', '{student.institution_id}')
-        """
-    adm_database.exec(script_sql=script_sql)
+def student_insert(ListStudent: ListStudent):
+    base_values = graduate_program_values = str()
+    for student in ListStudent.student_list:
+        base_values += f"""(
+            '{student.student_id}', 
+            '{student.name}', 
+            '{student.lattes_id}', 
+            '{student.institution_id}'),"""
+
+        graduate_program_values += f"""(
+            '{student.graduate_program_id}', 
+            '{student.student_id}', 
+            '{student.year}', 
+            'DISCENTE'),"""
 
     script_sql = f"""
+        INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
+        VALUES {base_values[:-1]};
+
         INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
-        VALUES ('{student.graduate_program_id}', '{student.student_id}', '{student.year}', 'DISCENTE')
+        VALUES {graduate_program_values[:-1]};
         """
-    adm_database.exec(script_sql=script_sql)
+
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro
 
 
 def student_basic_query(graduate_program_id: str = None, institution_id: str = None):
@@ -44,7 +59,7 @@ def student_basic_query(graduate_program_id: str = None, institution_id: str = N
         JOIN researcher r ON 
         r.researcher_id = gpr.researcher_id
         WHERE 
-            r.type_ = 'DISCENTE'
+            gpr.type_ = 'DISCENTE'
             {filter_graduate_program}
             {filter_institution}
 
@@ -65,21 +80,26 @@ def student_basic_query(graduate_program_id: str = None, institution_id: str = N
 
 def student_delete(student_id):
     script_sql = f"""
-    DELETE FROM graduate_program_researcher WHERE researcher_id = '{student_id}';
-    DELETE FROM researcher WHERE researcher_id = '{student_id}';
-    """
-    adm_database.exec(script_sql=script_sql)
+        DELETE FROM graduate_program_researcher WHERE researcher_id = '{student_id}';
+        DELETE FROM researcher WHERE researcher_id = '{student_id}';
+        """
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro
 
 
 def student_update(student: Student):
     script_sql = f"""
         UPDATE public.researcher
         SET 
-            researcher_id = {student.researcher_id}, 
-            name={student.name}, 
-            lattes_id={student.lattes_id}, 
-            institution_id={student.institution_id}, 
-            type_={student.type_}
-        WHERE researcher_id = {student.researcher_id};
+            researcher_id = '{student.student_id}', 
+            name = '{student.name}', 
+            lattes_id = '{student.lattes_id}', 
+            institution_id = '{student.institution_id}'
+        WHERE researcher_id = '{student.student_id}';
         """
-    adm_database.exec(script_sql=script_sql)
+    try:
+        adm_database.exec(script_sql)
+    except Error as erro:
+        raise erro

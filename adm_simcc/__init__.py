@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify, Response
+from http import HTTPStatus
 
 
 def create_app():
@@ -6,7 +7,8 @@ def create_app():
 
     from .rest.rest_graduate_program import rest_graduate_program
     from .rest.rest_gradute_program_researcher import rest_graduate_program_researcher
-    from .rest.rest_ind_prod import rest_ind_prod
+
+    # from .rest.rest_ind_prod import rest_ind_prod
     from .rest.rest_institution import rest_institution
     from .rest.rest_researcher import rest_researcher
     from .rest.rest_student import rest_student
@@ -16,6 +18,11 @@ def create_app():
     app.register_blueprint(rest_graduate_program)
     app.register_blueprint(rest_graduate_program_researcher)
     app.register_blueprint(rest_student)
-    app.register_blueprint(rest_ind_prod)
+    # app.register_blueprint(rest_ind_prod)
+
+    @app.route("/", methods=["GET"])
+    def home():
+        response_data = {"message": "api em funcionamento"}
+        return jsonify(response_data), HTTPStatus.OK
 
     return app

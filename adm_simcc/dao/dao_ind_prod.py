@@ -8,9 +8,47 @@ adm_database = Connection()
 
 
 def insert_ind_prod(weights: Weights):
+
+    script_sql = f"""
+        SELECT 
+            COUNT(*) 
+        FROM 
+            weights 
+        WHERE 
+            institution_id = '{weights.institution_id}';"""
+
+    if adm_database.select(script_sql):
+        script_sql = f"""
+            UPDATE public.weights
+            SET 
+                a1 = {weights.A1}, 
+                a2 = {weights.A2}, 
+                a3 = {weights.A3}, 
+                a4 = {weights.A4}, 
+                b1 = {weights.B1},
+                b2 = {weights.B2}, 
+                b3 = {weights.B3}, 
+                b4 = {weights.B4}, 
+                c = {weights.C},
+                sq = {weights.SQ}, 
+                book = {weights.BOOK},
+                book_chapter = {weights.BOOK_CHAPTER}, 
+                f1 = '{weights.F1}', 
+                f2 = '{weights.F2}', 
+                f3 = '{weights.F3}', 
+                f4 = '{weights.F4}', 
+                f5 = '{weights.F5}',
+                software = '{weights.SOFTWARE}', 
+                patent_granted = '{weights.PATENT_GRANTED}',
+                patent_not_granted = '{weights.PATENT_NOT_GRANTED}', 
+                report = '{weights.REPORT}'
+            WHERE institution_id = '{weights.institution_id}';
+        """
+        adm_database.exec(script_sql)
+        return
+
     script_sql = f"""
         INSERT INTO public.weights(
-            name, 
             institution_id, 
             a1, 
             a2, 
@@ -34,7 +72,6 @@ def insert_ind_prod(weights: Weights):
             patent_not_granted, 
             report)
         VALUES (
-            '{weights.name}', 
             '{weights.institution_id}', 
             {weights.A1}, 
             {weights.A2}, 
@@ -56,18 +93,16 @@ def insert_ind_prod(weights: Weights):
             '{weights.SOFTWARE}',
             '{weights.PATENT_NOT_GRANTED}',
             '{weights.PATENT_GRANTED}',
-            '{weights.REPORT}',
+            '{weights.REPORT}'
             );
         """
 
-    adm_database.exec(script_sql=script_sql)
+    adm_database.exec(script_sql)
 
 
 def ind_prod_basic_query(institution_id):
     script_sql = f"""
         SELECT 
-            id, 
-            name, 
             institution_id, 
             a1, a2, a3, a4, 
             b1, b2, b3, b4, 
@@ -75,7 +110,7 @@ def ind_prod_basic_query(institution_id):
             sq, 
             book, 
             book_chapter, 
-            f1, f2, f3, f4, f5
+            f1, f2, f3, f4, f5,
             software, 
             patent_granted, 
             patent_not_granted, 
@@ -85,12 +120,9 @@ def ind_prod_basic_query(institution_id):
         WHERE institution_id = '{institution_id}';
         """
     registry = adm_database.select(script_sql)
-
     data_frame = pd.DataFrame(
         registry,
         columns=[
-            "id",
-            "name",
             "institution_id",
             "a1",
             "a2",
@@ -124,4 +156,4 @@ def ind_prod_delete(weight_id: UUID4):
         DELETE FROM public.weights
         WHERE weight_id = '{weight_id}';
         """
-    adm_database.exec(script_sql)
+    adm_database.select(script_sql)

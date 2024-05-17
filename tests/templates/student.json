@@ -1,0 +1,18 @@
+[
+    {
+        "student_id": "e3548a51-f85f-4ba0-b688-79fcf9e27511",
+        "name": "Nome do Discente 1",
+        "lattes_id": 1232344566,
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a79",
+        "graduate_program_id": "8a8f50d1-c31a-407c-81a1-179357ae15d0",
+        "year": 1231
+    },
+    {
+        "student_id": "23931002-80bd-4752-ae74-0875d02471ae",
+        "name": "Nome do Discente 2",
+        "lattes_id": 2343454567,
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a79",
+        "graduate_program_id": "8a8f50d1-c31a-407c-81a1-179357ae15d0",
+        "year": 1231
+    }
+]
