@@ -8,10 +8,10 @@ from pydantic import ValidationError, UUID4
 from http import HTTPStatus
 from psycopg2 import Error
 
-rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/researcherRest")
+rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/ResearcherRest")
 
 
-@rest_researcher.route("/insert", methods=["POST"])
+@rest_researcher.route("/Insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def researcher_insert():
     researcher_list = request.get_json()
@@ -33,7 +33,7 @@ def researcher_insert():
         )
 
 
-@rest_researcher.route("/delete", methods=["DELETE"])
+@rest_researcher.route("/Delete", methods=["DELETE"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def researcher_delete():
     researcher_id = request.args.get("researcher_id")
@@ -53,7 +53,7 @@ def researcher_delete():
         )
 
 
-@rest_researcher.route("/query", methods=["GET"])
+@rest_researcher.route("/Query", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def basic_query():
     institution_id = request.args.get("institution_id")
@@ -71,7 +71,7 @@ def basic_query():
         )
 
 
-@rest_researcher.route("/query/count", methods=["GET"])
+@rest_researcher.route("/Query/Count", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def researcher_count():
     institution_id = request.args.get("institution_id")

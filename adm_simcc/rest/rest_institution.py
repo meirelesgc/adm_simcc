@@ -9,11 +9,11 @@ from pydantic import ValidationError
 
 
 rest_institution = Blueprint(
-    "rest_institution", __name__, url_prefix="/institutionRest"
+    "rest_institution", __name__, url_prefix="/InstitutionRest"
 )
 
 
-@rest_institution.route("/insert", methods=["POST"])
+@rest_institution.route("/Insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def institution_insert():
     list_institutions = request.get_json()
@@ -30,7 +30,7 @@ def institution_insert():
         )
 
 
-@rest_institution.route("/query", methods=["GET"])
+@rest_institution.route("/Query", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def basic_query():
     institution_id = request.args.get("institution_id")
@@ -46,7 +46,7 @@ def basic_query():
         )
 
 
-@rest_institution.route("/query/count", methods=["GET"])
+@rest_institution.route("/Query/Count", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def full_query():
 
