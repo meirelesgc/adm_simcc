@@ -123,7 +123,7 @@ def researcher_basic_query(institution_id: UUID4, researcher_name: str, rows: in
 
     data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
 
-    data_frame = pd.merge(data_frame, data_frame_simcc, on="lattes_id")
+    data_frame = pd.merge(data_frame, data_frame_simcc, how="left", on="lattes_id")
 
     return data_frame.to_dict(orient="records")
 

@@ -45,7 +45,6 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             visible)
             VALUES {values[:-1]};
         """
-    print(script_sql)
     try:
         adm_database.exec(script_sql)
     except Error as erro:
