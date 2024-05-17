@@ -18,7 +18,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             '{graduate_program.name}',
             '{graduate_program.area}',
             '{graduate_program.modality}',
-            '{graduate_program.type}',
+            '{graduate_program.type_}',
             '{graduate_program.rating}',
             '{graduate_program.institution_id}',
             '{graduate_program.state}',

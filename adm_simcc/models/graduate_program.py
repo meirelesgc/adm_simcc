@@ -8,7 +8,7 @@ class GraduateProgram(BaseModel):
     name: str
     area: str
     modality: str
-    type: Optional[str]
+    type_: Optional[str]
     rating: Optional[str]
     institution_id: UUID4
     state: str = "BA"
