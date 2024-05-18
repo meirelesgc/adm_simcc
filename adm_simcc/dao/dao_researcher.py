@@ -1,6 +1,6 @@
 import os
-import select
 import pandas as pd
+
 from pydantic import UUID4
 from psycopg2 import Error
 
@@ -29,10 +29,7 @@ def researcher_insert(ListResearchers: ListResearchers):
         (researcher_id, name, lattes_id, institution_id)
         VALUES {values[:-1]};
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def researcher_delete(researcher_id: UUID4):
@@ -47,10 +44,7 @@ def researcher_delete(researcher_id: UUID4):
 
         COMMIT;
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def researcher_basic_query(institution_id: UUID4, researcher_name: str, rows: int):
@@ -100,15 +94,16 @@ def researcher_basic_query(institution_id: UUID4, researcher_name: str, rows: in
 
     data_frame = pd.DataFrame(
         registry,
-        columns=["researcher_id", "name", "lattes_id", "institution_id", "created_at"],
+        columns=["researcher_id", "name", "lattes_id",
+                 "institution_id", "created_at"],
     )
     script_sql = f"""
-        SELECT 
-            r.lattes_id, 
-            r.last_update 
-        FROM 
+        SELECT
+            r.lattes_id,
+            r.last_update
+        FROM
             researcher r
-        WHERE 
+        WHERE
             r.id NOT IN (
             SELECT
                 researcher_id
@@ -121,9 +116,10 @@ def researcher_basic_query(institution_id: UUID4, researcher_name: str, rows: in
 
     registry = simcc_database.select(script_sql)
 
-    data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
-
-    data_frame = pd.merge(data_frame, data_frame_simcc, how="left", on="lattes_id")
+    data_frame_simcc = pd.DataFrame(
+        registry, columns=["lattes_id", "last_update"])
+    data_frame = pd.merge(data_frame, data_frame_simcc,
+                          how="left", on="lattes_id")
 
     return data_frame.to_dict(orient="records")
 
@@ -140,3 +136,21 @@ def researcher_count(institution_id: UUID4 = None):
     # psycopg2 retorna uma lista de truplas,
     # quero apenas o primeiro valor da primeira lista
     return registry[0][0]
+
+
+def researcher_query_name(researcher_name: str):
+    script_sql = f"""
+    SELECT
+        researcher_id
+    FROM
+        researcher as r
+    WHERE
+        similarity(unaccent(LOWER('{researcher_name.replace("'", "''")}')), unaccent(LOWER(r.name))) > 0.8
+    LIMIT 1;
+    """
+
+    registry = adm_database.select(script_sql)
+    if registry:
+        return registry[0][0]
+    else:
+        return None

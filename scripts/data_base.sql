@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS research_group (
     area VARCHAR(255),
     last_date_sent DATE,
     situation VARCHAR(50),
-    file_path VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_researcher_id FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id),

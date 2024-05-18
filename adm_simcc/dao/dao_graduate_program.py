@@ -1,6 +1,5 @@
 import pandas as pd
 from pydantic import UUID4
-from psycopg2 import Error
 
 from ..dao import Connection
 from ..models.graduate_program import ListGraduateProgram, GraduateProgram
@@ -45,10 +44,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             visible)
             VALUES {values[:-1]};
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def graduate_program_update(graduate_program_id: UUID4):
@@ -62,29 +58,29 @@ def graduate_program_update(graduate_program_id: UUID4):
 
 def graduate_program_basic_query(institution_id: UUID4):
     script_sql = f"""
-        SELECT 
-            gp.graduate_program_id, 
-            gp.code, 
-            gp.name, 
-            gp.area, 
-            gp.modality, 
-            gp.type, 
-            gp.rating, 
+        SELECT
+            gp.graduate_program_id,
+            gp.code,
+            gp.name,
+            gp.area,
+            gp.modality,
+            gp.type,
+            gp.rating,
             gp.institution_id,
-            gp.description, 
+            gp.description,
             gp.url_image,
-            gp.city, 
-            gp.visible, 
-            gp.created_at, 
+            gp.city,
+            gp.visible,
+            gp.created_at,
             gp.updated_at,
             COUNT(CASE WHEN gr.type_ = 'PERMANENTE' THEN 1 END) as qtd_permanente,
             COUNT(CASE WHEN gr.type_ = 'DISCENTE' THEN 1 END) as qtd_discente,
             COUNT(CASE WHEN gr.type_ = 'COLABORADOR' THEN 1 END) as qtd_colaborador
-        FROM 
+        FROM
             graduate_program gp
         LEFT JOIN
             graduate_program_researcher gr ON gp.graduate_program_id = gr.graduate_program_id
-        WHERE 
+        WHERE
             gp.institution_id = '{institution_id}'
         GROUP BY
             gp.graduate_program_id
@@ -154,10 +150,7 @@ def graduate_program_fix(Graduate_program: GraduateProgram):
         WHERE
             graduate_program_id = '{Graduate_program.graduate_program_id}';
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def graduate_program_count(institution_id: UUID4 = None):

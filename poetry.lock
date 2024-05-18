@@ -979,6 +979,17 @@ typing-extensions = ">=4.6.1"
 email = ["email-validator (>=2.0.0)"]
 
 [[package]]
+name = "pydantic-br"
+version = "1.0.0"
+description = "Pydantic library extension with Brazilian fields"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "pydantic_br-1.0.0-py3-none-any.whl", hash = "sha256:f18b0d74f8c1e16348a4082ad30231c6f4d059f17eb1447c49ebf32557d0871a"},
+    {file = "pydantic_br-1.0.0.tar.gz", hash = "sha256:3f13d07fef5500aa50b8be485d9eb2d5ce0e55e7176db3af5c19d9f4c069f1ff"},
+]
+
+[[package]]
 name = "pydantic-core"
 version = "2.18.2"
 description = "Core functionality for Pydantic validation and serialization"
@@ -1399,4 +1410,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9.2"
-content-hash = "2ffa55e536db4f388fc737ca98bf6f6b6f6ef7059a3b947bd8986babb473825a"
+content-hash = "fc319abc4ade482d8a018117c4f377f2aeb86daa90939cc85f45be89df15f6f8"

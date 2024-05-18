@@ -1,16 +1,16 @@
-from pydantic import UUID4, BaseModel
+from pydantic import BaseModel, Field, AliasChoices
+from pydantic_br import CPF
 
 
 class ResearcherGroup(BaseModel):
-    research_group_id: UUID4
-    research_group_name: str
-    researcher_id: UUID4
-    leader_name: str
-    institution_id: UUID4
-    institution_name: str
-    acronym: str
+    nome_grupo: str
+    nome_lider: str
+    cpf: CPF
     area: str
-    last_date_sent: str
-    situation: str
-    lattes_id: int
-    file_path: str
+    ultimo_envio: str
+    situacao: str
+    instituicao: str
+
+
+class ListResearcherGroup(BaseModel):
+    researcher_groups_list: list[ResearcherGroup]

@@ -12,15 +12,15 @@ def student_insert(ListStudent: ListStudent):
     base_values = graduate_program_values = str()
     for student in ListStudent.student_list:
         base_values += f"""(
-            '{student.student_id}', 
-            '{student.name}', 
-            '{student.lattes_id}', 
+            '{student.student_id}',
+            '{student.name}',
+            '{student.lattes_id}',
             '{student.institution_id}'),"""
 
         graduate_program_values += f"""(
-            '{student.graduate_program_id}', 
-            '{student.student_id}', 
-            '{student.year}', 
+            '{student.graduate_program_id}',
+            '{student.student_id}',
+            '{student.year}',
             'DISCENTE'),"""
 
     script_sql = f"""
@@ -31,10 +31,7 @@ def student_insert(ListStudent: ListStudent):
         VALUES {graduate_program_values[:-1]};
         """
 
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def student_basic_query(graduate_program_id: str = None, institution_id: str = None):
@@ -50,15 +47,15 @@ def student_basic_query(graduate_program_id: str = None, institution_id: str = N
         filter_institution = str()
 
     script_sql = f"""
-        SELECT 
+        SELECT
             r.name,
             r.lattes_id,
             gpr.type_
-        FROM 
+        FROM
             graduate_program_researcher gpr
-        JOIN researcher r ON 
+        JOIN researcher r ON
         r.researcher_id = gpr.researcher_id
-        WHERE 
+        WHERE
             gpr.type_ = 'DISCENTE'
             {filter_graduate_program}
             {filter_institution}
@@ -83,23 +80,17 @@ def student_delete(student_id):
         DELETE FROM graduate_program_researcher WHERE researcher_id = '{student_id}';
         DELETE FROM researcher WHERE researcher_id = '{student_id}';
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def student_update(student: Student):
     script_sql = f"""
         UPDATE public.researcher
-        SET 
-            researcher_id = '{student.student_id}', 
-            name = '{student.name}', 
-            lattes_id = '{student.lattes_id}', 
+        SET
+            researcher_id = '{student.student_id}',
+            name = '{student.name}',
+            lattes_id = '{student.lattes_id}',
             institution_id = '{student.institution_id}'
         WHERE researcher_id = '{student.student_id}';
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)

@@ -3,7 +3,7 @@ from pydantic import UUID4
 
 from ..dao import Connection
 from ..models.institution import ListInstitutions
-
+from ..models.researcher_group import ListResearcherGroup
 from psycopg2 import Error
 
 adm_database = Connection()
@@ -26,10 +26,7 @@ def institution_insert(ListInstitutions: ListInstitutions):
         (institution_id, name, acronym, lattes_id)
         VALUES {values[:-1]};
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def institution_full_query(institution_id: UUID4 = None):
@@ -63,7 +60,7 @@ def institution_full_query(institution_id: UUID4 = None):
         columns=["name", "institution_id", "count_gp", "count_gpr", "count_r"],
     )
 
-    return data_frame.to_dict(orient='records')
+    return data_frame.to_dict(orient="records")
 
 
 def institution_basic_query(institution_id: UUID4):
@@ -87,3 +84,23 @@ def institution_basic_query(institution_id: UUID4):
 
     # to_dict retorna uma lista, e eu so quero o primeiro valor
     return data_frame.to_dict(orient="records")[0]
+
+
+def institution_query_name(institution_name: str):
+
+    script_sql = f"""
+    SELECT
+        institution_id
+    FROM
+        institution as i
+    WHERE
+        similarity(unaccent(LOWER('{institution_name.replace("'", "''")}')), unaccent(LOWER(i.name))) > 0.4
+    LIMIT 1;
+    """
+
+    registry = adm_database.select(script_sql)
+
+    if registry:
+        return registry[0][0]
+    else:
+        return None

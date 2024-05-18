@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, Response
 from http import HTTPStatus
 
+from adm_simcc.rest import rest_researcher_group
+
 
 def create_app():
     app = Flask(__name__)
@@ -11,7 +13,9 @@ def create_app():
     from .rest.rest_institution import rest_institution
     from .rest.rest_researcher import rest_researcher
     from .rest.rest_student import rest_student
+    from .rest.rest_researcher_group import rest_researcher_group
 
+    app.register_blueprint(rest_researcher_group)
     app.register_blueprint(rest_institution)
     app.register_blueprint(rest_researcher)
     app.register_blueprint(rest_graduate_program)

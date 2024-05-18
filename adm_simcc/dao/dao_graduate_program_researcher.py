@@ -23,30 +23,24 @@ def graduate_program_researcher_insert(
         graduate_program_id, researcher_id, year, type_)
         VALUES {values[:-1]};
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def graduate_program_researcher_delete(
     researcher_id: UUID4, graduate_program_id: UUID4
 ):
     script_sql = f"""
-        DELETE FROM graduate_program_researcher 
-        WHERE 
+        DELETE FROM graduate_program_researcher
+        WHERE
             researcher_id = (
-                SELECT 
-                    researcher_id 
-                FROM 
-                    researcher 
-                WHERE 
-                    lattes_id = '{researcher_id}') 
+                SELECT
+                    researcher_id
+                FROM
+                    researcher
+                WHERE
+                    lattes_id = '{researcher_id}')
             AND graduate_program_id = '{graduate_program_id}';"""
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+    adm_database.exec(script_sql)
 
 
 def graduate_program_researcher_count(
@@ -55,27 +49,27 @@ def graduate_program_researcher_count(
     filter_institution = str()
     if institution_id:
         filter_institution = f"""
-            WHERE 
+            WHERE
                 graduate_program_id IN (
-                    SELECT 
+                    SELECT
                         graduate_program_id
-                    FROM 
+                    FROM
                         graduate_program
                     WHERE
                         institution_id = '{institution_id}')"""
 
     if graduate_program_id:
         filter_graduate_program = f"""
-            WHERE 
+            WHERE
                 graduate_program_id = '{graduate_program_id}'"""
     else:
         filter_graduate_program = str()
 
     script_sql = f"""
-        SELECT 
-            COUNT(*) 
-        FROM 
-            graduate_program_researcher 
+        SELECT
+            COUNT(*)
+        FROM
+            graduate_program_researcher
         {filter_institution}
         {filter_graduate_program};
         """
@@ -100,11 +94,11 @@ def graduate_program_researcher_basic_query(
             r.lattes_id,
             gpr.type_,
             gpr.created_at
-        FROM 
+        FROM
             graduate_program_researcher gpr
-        JOIN researcher r ON 
+        JOIN researcher r ON
         r.researcher_id = gpr.researcher_id
-        WHERE 
+        WHERE
             gpr.graduate_program_id = '{graduate_program_id}'
             {type_filter}
         ORDER BY gpr.created_at DESC
