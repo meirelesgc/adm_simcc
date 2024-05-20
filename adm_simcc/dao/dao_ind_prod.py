@@ -91,7 +91,7 @@ def insert_ind_prod(weights: Weights):
             );
         """
 
-    adm_database.select(script_sql=script_sql)
+    adm_database.exec(script_sql=script_sql)
 
 
 def ind_prod_basic_query(institution_id):
