@@ -56,10 +56,10 @@ class Connection:
         self.__close()
         return query
 
-    def exec(self, script_sql: str, parameters: list = None):
+    def exec(self, script_sql: str):
         self.__connect()
         try:
-            self.cursor.execute(script_sql, parameters)
+            self.cursor.execute(script_sql)
             self.connection.commit()
         except (Exception, psycopg2.DatabaseError) as E:
             self.connection.rollback()
