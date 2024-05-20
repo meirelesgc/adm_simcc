@@ -49,6 +49,8 @@ class Connection:
         try:
             self.cursor.execute(script_sql)
             query = self.cursor.fetchall()
+        except psycopg2.errors.InvalidTextRepresentation as E:
+            print(f"[Erro]\n- Possivelmente de Djavan\n{E.pgcode}")
         except psycopg2.errors.UniqueViolation as E:
             print(E.pgcode)
         self.__close()
