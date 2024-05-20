@@ -81,3 +81,28 @@ CREATE TABLE research_group (
     CONSTRAINT fk_researcher_id FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id),
     CONSTRAINT fk_institution_id FOREIGN KEY (institution_id) REFERENCES institution(institution_id)
 );
+CREATE TABLE public.weights
+(
+    institution_id uuid DEFAULT uuid_generate_v4(),
+    a1 numeric(10,3),
+    a2 numeric(10,3),
+    a3 numeric(10,3),
+    a4 numeric(10,3),
+    b1 numeric(10,3),
+    b2 numeric(10,3),
+    b3 numeric(10,3),
+    b4 numeric(10,3),
+    c numeric(10,3),
+    sq numeric(10,3),
+    book numeric(10,3),
+    book_chapter numeric(10,3),
+    software character varying,
+    patent_granted character varying,
+    patent_not_granted character varying,
+    report character varying,
+    f1 numeric(10,3) DEFAULT 0,
+    f2 numeric(10,3) DEFAULT 0,
+    f3 numeric(10,3) DEFAULT 0,
+    f4 numeric(10,3) DEFAULT 0,
+    f5 numeric(10,3) DEFAULT 0
+);
