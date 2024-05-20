@@ -1,4 +1,7 @@
 import pandas as pd
+
+pd.set_option("future.no_silent_downcasting", True)
+
 from pydantic import UUID4
 
 from ..dao import Connection
@@ -130,7 +133,7 @@ def graduate_program_basic_query(institution_id: UUID4):
         how="left",
         on="graduate_program_id",
     )
-    data_frame = data_frame.infer_objects(copy=False).fillna(0)
+    data_frame.fillna(0, inplace=True)
 
     return data_frame.to_dict(orient="records")
 
@@ -158,10 +161,7 @@ def graduate_program_fix(Graduate_program: GraduateProgram):
             type = '{Graduate_program.type}',
             rating = '{Graduate_program.rating}',
             institution_id = '{Graduate_program.institution_id}',
-            state = '{Graduate_program.state}',
             city = '{Graduate_program.city}',
-            region = '{Graduate_program.region}',
-            instituicao = '{Graduate_program.instituicao}',
             url_image = '{Graduate_program.url_image}',
             sigla = '{Graduate_program.sigla}',
             description = '{Graduate_program.description}',

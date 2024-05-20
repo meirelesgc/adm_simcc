@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import UUID4, BaseModel, model_validator
+from pydantic import UUID4, BaseModel
 
 
 class GraduateProgram(BaseModel):
@@ -13,6 +13,7 @@ class GraduateProgram(BaseModel):
     institution_id: UUID4
     city: str = "Salvador"
     url_image: Optional[str]
+    sigla: Optional[str]
     description: Optional[str]
     visible: bool = False
 
