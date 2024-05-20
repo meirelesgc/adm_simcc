@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 from http import HTTPStatus
-from pydantic import UUID4
 
 from ..dao import dao_graduate_program as dao
 from ..models.graduate_program import GraduateProgram, ListGraduateProgram
@@ -25,7 +24,6 @@ def graduate_program_insert():
 @cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_update():
     graduate_program_id = request.args.get("graduate_program_id")
-    graduate_program_id = UUID4(graduate_program_id)
     dao.graduate_program_update(graduate_program_id)
     return jsonify({"message", "ok"}), HTTPStatus.OK
 
@@ -43,7 +41,6 @@ def graduate_program_fix():
 @cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_delete():
     graduate_program_id = request.args.get("graduate_program_id")
-    graduate_program_id = UUID4(graduate_program_id)
     dao.graduate_program_delete(graduate_program_id)
     return jsonify(), HTTPStatus.NO_CONTENT
 

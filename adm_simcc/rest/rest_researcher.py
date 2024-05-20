@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
-from pydantic import UUID4
 from http import HTTPStatus
 
 from ..dao import dao_researcher
@@ -23,7 +22,6 @@ def researcher_insert():
 @cross_origin(origin="*", headers=["Content-Type"])
 def researcher_delete():
     researcher_id = request.args.get("researcher_id")
-    researcher_id = UUID4(researcher_id)
     dao_researcher.researcher_delete(researcher_id)
     return jsonify(), HTTPStatus.NO_CONTENT
 
