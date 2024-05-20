@@ -18,13 +18,12 @@ def research_group_insert(ListResearcherGroup: ListResearcherGroup):
         if institution_id is None:
             return
 
-        date = datetime.strptime(research_group.ultimo_envio, "%d/%m/%Y")
         values += f"""(
             {f"'{research_group.nome_grupo}'" if research_group.nome_grupo else 'NULL'},
             {f"'{researcher_id}'" if researcher_id else 'NULL'},
             {f"'{institution_id}'"},
             {f"'{research_group.area}'" if research_group.area else 'NULL'},
-            {f"'{date.strftime('%Y-%m-%d')}'" if date.strftime('%Y-%m-%d') else 'NULL'},
+            {f"'{research_group.ultimo_envio}'" if research_group.ultimo_envio else 'NULL'},
             {f"'{research_group.situacao}'" if research_group.situacao else 'NULL'}),"""
 
     script_sql = f"""
