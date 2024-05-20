@@ -120,12 +120,17 @@ def graduate_program_basic_query(institution_id: UUID4):
         """
     registry = adm_database.select(script_sql)
 
+    qtd_discentes = pd.DataFrame(
+        registry, columns=["graduate_program_id", "qtd_discente"]
+    )
+
     data_frame = pd.merge(
         data_frame,
-        pd.DataFrame(registry, columns=["graduate_program_id", "qtr_discente"]),
+        qtd_discentes,
         how="left",
         on="graduate_program_id",
     )
+
     return data_frame.to_dict(orient="records")
 
 
