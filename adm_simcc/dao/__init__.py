@@ -1,6 +1,9 @@
 import os
-
 import psycopg2
+import psycopg2.extras
+
+# Garantir que ele consiga converter UUID's
+psycopg2.extras.register_uuid()
 
 
 class Connection:
@@ -41,25 +44,23 @@ class Connection:
         if self.connection:
             self.connection.close()
 
-    def select(self, script_sql: str, rows: int = None):
+    def select(self, script_sql: str, parameters: tuple = None):
         self.__connect()
-        self.cursor.execute(script_sql)
-        if rows:
-            query = self.cursor.fetchmany(rows)
-        else:
-            query = self.cursor.fetchall()
+        self.cursor.execute(script_sql, parameters)
+        query = self.cursor.fetchall()
         self.__close()
         return query
 
-    def exec(self, script_sql: str):
+    def exec(self, script_sql: str, parameters: tuple = None):
         self.__connect()
         try:
-            self.cursor.execute(script_sql)
+            self.cursor.execute(script_sql, parameters)
             self.connection.commit()
         except (Exception, psycopg2.DatabaseError) as E:
-            print("[Error]", E)
             self.connection.rollback()
+            print(f"[Erro]\n\n{E}")
+        except psycopg2.errors.UniqueViolation as E:
+            self.connection.rollback()
+            return E
+        finally:
             self.__close()
-            print(E)
-            raise E
-        self.__close()

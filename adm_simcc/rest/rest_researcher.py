@@ -7,8 +7,7 @@ from ..dao import dao_researcher
 from ..models.researcher import ListResearchers
 
 
-rest_researcher = Blueprint(
-    "rest_researcher", __name__, url_prefix="/ResearcherRest")
+rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/ResearcherRest")
 
 
 @rest_researcher.route("/Insert", methods=["POST"])
@@ -31,12 +30,17 @@ def researcher_delete():
 
 @rest_researcher.route("/Query", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def basic_query():
+def researcher_basic_query():
     institution_id = request.args.get("institution_id")
     researcher_name = request.args.get("name")
     rows = request.args.get("count")
+    lattes_id = request.args.get("lattes_id")
+
     researchers = dao_researcher.researcher_basic_query(
-        institution_id, researcher_name, rows
+        institution_id=institution_id,
+        researcher_name=researcher_name,
+        rows=rows,
+        lattes_id=lattes_id,
     )
     return jsonify(researchers)
 

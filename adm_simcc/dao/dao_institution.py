@@ -3,20 +3,21 @@ from pydantic import UUID4
 
 from ..dao import Connection
 from ..models.institution import ListInstitutions
-from ..models.researcher_group import ListResearcherGroup
-from psycopg2 import Error
 
 adm_database = Connection()
 
 
 def institution_insert(ListInstitutions: ListInstitutions):
-    values = str()
+    values_str = str()
+    values_list = list()
     for institution in ListInstitutions.institution_list:
-        values += f"""(
-            '{institution.institution_id}',
-            '{institution.name}',
-            '{institution.acronym}',
-            '{institution.lattes_id}'),"""
+        values_str += f"""( %s, %s, %s, %s),"""
+        values_list += [
+            institution.institution_id,
+            institution.name,
+            institution.acronym,
+            institution.lattes_id,
+        ]
 
     # Criação do script de insert.
     # Unifiquei em um unico comando para facilitar
@@ -24,9 +25,9 @@ def institution_insert(ListInstitutions: ListInstitutions):
     script_sql = f"""
         INSERT INTO public.institution
         (institution_id, name, acronym, lattes_id)
-        VALUES {values[:-1]};
+        VALUES {values_str[:-1]};
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(script_sql, values_list)
 
 
 def institution_full_query(institution_id: UUID4 = None):

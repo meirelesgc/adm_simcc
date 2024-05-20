@@ -1,46 +1,60 @@
 import pandas as pd
-from pydantic import UUID4
-from psycopg2 import Error
 
 from ..dao import Connection
 from ..models.student import Student, ListStudent
+from ..dao import dao_researcher
 
 adm_database = Connection()
 
 
 def student_insert(ListStudent: ListStudent):
-    base_values = graduate_program_values = str()
+    script_sql = str()
+    values = list()
     for student in ListStudent.student_list:
-        base_values += f"""(
-            '{student.student_id}',
-            '{student.name}',
-            '{student.lattes_id}',
-            '{student.institution_id}'),"""
+        main_data_base_id = dao_researcher.researcher_basic_query(lattes_id=student.lattes_id)  # fmt: skip
+        if not main_data_base_id:
+            script_sql += f"""
+            INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
+            VALUES (%s, %s, %s, %s);
+            """
+            values += [
+                student.student_id,
+                student.name,
+                student.lattes_id,
+                student.institution_id,
+            ]
+        else:
+            student.student_id = main_data_base_id[0]["researcher_id"]
 
-        graduate_program_values += f"""(
-            '{student.graduate_program_id}',
-            '{student.student_id}',
-            '{student.year}',
-            'DISCENTE'),"""
-
-    script_sql = f"""
-        INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
-        VALUES {base_values[:-1]};
-
-        INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
-        VALUES {graduate_program_values[:-1]};
+        script_sql += f"""
+        INSERT INTO public.graduate_program_student (graduate_program_id, researcher_id, year)
+        VALUES (%s, %s, %s);
         """
+        values += [
+            student.graduate_program_id,
+            student.student_id,
+            student.year,
+        ]
 
-    adm_database.exec(script_sql)
+    return adm_database.exec(script_sql, values)
 
 
-def student_basic_query(graduate_program_id: str = None, institution_id: str = None):
+def student_basic_query(
+    graduate_program_id: str = None, institution_id: str = None, lattes_id: str = None
+):
+
+    if lattes_id:
+        filter_lattes_id = f"AND r.lattes_id = '{lattes_id}'"
+    else:
+        filter_lattes_id = str()
+
     if graduate_program_id:
         filter_graduate_program = (
-            f"AND gpr.graduate_program_id = '{graduate_program_id}'"
+            f"AND gps.graduate_program_id = '{graduate_program_id}'"
         )
     else:
         filter_graduate_program = str()
+
     if institution_id:
         filter_institution = f"AND r.institution_id = '{institution_id}'"
     else:
@@ -49,18 +63,18 @@ def student_basic_query(graduate_program_id: str = None, institution_id: str = N
     script_sql = f"""
         SELECT
             r.name,
-            r.lattes_id,
-            gpr.type_
+            r.lattes_id
         FROM
-            graduate_program_researcher gpr
+            graduate_program_student gps
         JOIN researcher r ON
-        r.researcher_id = gpr.researcher_id
-        WHERE
-            gpr.type_ = 'DISCENTE'
+        r.researcher_id = gps.researcher_id
+        WHERE 
+            gps.graduate_program_id IS NOT NULL
             {filter_graduate_program}
             {filter_institution}
-
+            {filter_lattes_id};
     """
+    print(script_sql)
     registry = adm_database.select(script_sql)
 
     data_frame = pd.DataFrame(
@@ -68,7 +82,6 @@ def student_basic_query(graduate_program_id: str = None, institution_id: str = N
         columns=[
             "name",
             "lattes_id",
-            "type_",
         ],
     )
 
@@ -77,7 +90,7 @@ def student_basic_query(graduate_program_id: str = None, institution_id: str = N
 
 def student_delete(student_id):
     script_sql = f"""
-        DELETE FROM graduate_program_researcher WHERE researcher_id = '{student_id}';
+        DELETE FROM graduate_program_student WHERE researcher_id = '{student_id}';
         DELETE FROM researcher WHERE researcher_id = '{student_id}';
         """
     adm_database.exec(script_sql)

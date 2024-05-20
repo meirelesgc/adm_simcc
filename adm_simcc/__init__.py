@@ -1,7 +1,5 @@
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify
 from http import HTTPStatus
-
-from adm_simcc.rest import rest_researcher_group
 
 
 def create_app():

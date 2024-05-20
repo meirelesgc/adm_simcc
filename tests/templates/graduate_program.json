@@ -8,12 +8,8 @@
         "type": "Mestrado",
         "rating": "5",
         "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a78",
-        "state": "BA",
         "city": "Salvador",
-        "region": "Nordeste",
-        "instituicao": "Universidade Exemplo",
         "url_image": "http://exemplo.com/imagem.jpg",
-        "sigla": "UE",
         "description": "Este é um programa de pós-graduação de exemplo.",
         "visible": true
     },
@@ -26,12 +22,8 @@
         "type": "Mestrado",
         "rating": "5",
         "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a78",
-        "state": "BA",
         "city": "Salvador",
-        "region": "Nordeste",
-        "instituicao": "Universidade Exemplo",
         "url_image": "http://exemplo.com/imagem.jpg",
-        "sigla": "UE",
         "description": "Este é um programa de pós-graduação de exemplo.",
         "visible": true
     },
@@ -44,12 +36,8 @@
         "type": "Mestrado",
         "rating": "5",
         "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a79",
-        "state": "BA",
         "city": "Salvador",
-        "region": "Nordeste",
-        "instituicao": "Universidade Exemplo",
         "url_image": "http://exemplo.com/imagem.jpg",
-        "sigla": "UE",
         "description": "Este é um programa de pós-graduação de exemplo.",
         "visible": true
     }

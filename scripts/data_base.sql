@@ -4,6 +4,7 @@ LIMIT = -1 IS_TEMPLATE = FALSE;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE TYPE relationship AS ENUM ('COLABORADOR', 'PERMANENTE');
 
 CREATE TABLE institution(
       institution_id uuid DEFAULT uuid_generate_v4(),
@@ -50,14 +51,24 @@ CREATE TABLE graduate_program_researcher(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       year INTEGER,
-      type_ varchar(100),
+      type_ relationship,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (graduate_program_id, researcher_id, year),
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
 );
-CREATE TABLE IF NOT EXISTS research_group (
+CREATE TABLE graduate_program_student(
+      graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      year INTEGER,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (graduate_program_id, researcher_id, year),
+      FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
+      FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
+);
+CREATE TABLE research_group (
     research_group_id uuid NOT NULL DEFAULT uuid_generate_v4(),
     research_group_name VARCHAR(255),
     researcher_id uuid,

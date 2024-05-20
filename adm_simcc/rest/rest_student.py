@@ -1,11 +1,12 @@
+from pydantic import UUID4
+from http import HTTPStatus
+
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from ..dao import dao_student
 from ..models.student import ListStudent, Student
 
-from pydantic import UUID4
-from http import HTTPStatus
 
 rest_student = Blueprint("rest_student", __name__, url_prefix="/studentRest")
 
@@ -42,6 +43,5 @@ def student_delete():
 def student_basic_query():
     institution_id = request.args.get("institution_id")
     graduate_program_id = request.args.get("graduate_program_id")
-    students = dao_student.student_basic_query(
-        graduate_program_id, institution_id)
+    students = dao_student.student_basic_query(graduate_program_id, institution_id)
     return jsonify(students), HTTPStatus.OK
