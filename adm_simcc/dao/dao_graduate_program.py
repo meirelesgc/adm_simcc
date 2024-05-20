@@ -144,6 +144,9 @@ def graduate_program_basic_query(institution_id: UUID4):
 
 def graduate_program_delete(graudate_program_id: UUID4):
     script_sql = f"""
+        DELETE FROM graduate_program_student
+        WHERE graduate_program_id = '{graudate_program_id}';
+       
         DELETE FROM graduate_program_researcher
         WHERE graduate_program_id = '{graudate_program_id}';
 
