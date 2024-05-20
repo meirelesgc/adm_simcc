@@ -42,7 +42,7 @@ def researcher_basic_query():
         rows=rows,
         lattes_id=lattes_id,
     )
-    return jsonify(researchers)
+    return jsonify(researchers), HTTPStatus.OK
 
 
 @rest_researcher.route("/Query/Count", methods=["GET"])

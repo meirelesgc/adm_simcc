@@ -44,14 +44,17 @@ class Connection:
         if self.connection:
             self.connection.close()
 
-    def select(self, script_sql: str, parameters: tuple = None):
+    def select(self, script_sql: str, parameters: list = list()):
         self.__connect()
-        self.cursor.execute(script_sql, parameters)
-        query = self.cursor.fetchall()
+        try:
+            self.cursor.execute(script_sql, parameters)
+            query = self.cursor.fetchall()
+        except psycopg2.errors.UniqueViolation as E:
+            print(E.pgcode)
         self.__close()
         return query
 
-    def exec(self, script_sql: str, parameters: tuple = None):
+    def exec(self, script_sql: str, parameters: list = list()):
         self.__connect()
         try:
             self.cursor.execute(script_sql, parameters)
@@ -59,8 +62,5 @@ class Connection:
         except (Exception, psycopg2.DatabaseError) as E:
             self.connection.rollback()
             print(f"[Erro]\n\n{E}")
-        except psycopg2.errors.UniqueViolation as E:
-            self.connection.rollback()
-            return E
         finally:
             self.__close()

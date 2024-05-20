@@ -1,5 +1,5 @@
-from adm_simcc.dao import Connection
 import pandas as pd
+from adm_simcc.dao import Connection
 
 adm_database = Connection()
 mig_database = Connection(database='cimatec_v7')
@@ -24,7 +24,7 @@ def build_script_sql_researcher(data_frame):
 
         name = Data["name"].replace("'", "''")
         lattes_id = Data["lattes_id"]
-        code = 'a43e881a-f174-4bea-b1c6-072c304dd0ab'
+        code = '7db28b4f-e53f-4626-81b6-44e8531e388c'
         insert_data += f"('{name}', '{lattes_id}', '{code}'),"
 
     return f"""
@@ -36,7 +36,7 @@ def build_script_sql_researcher(data_frame):
     ]
 
 
-def get_actual_graduate_program(migrate_db=str()):
+def get_actual_graduate_program():
 
     sql_script = """
         SELECT
@@ -46,7 +46,7 @@ def get_actual_graduate_program(migrate_db=str()):
             modality,
             type,
             rating,
-            institution_id,
+            '7db28b4f-e53f-4626-81b6-44e8531e388c',
             state,
             city,
             instituicao,
@@ -110,7 +110,7 @@ def build_script_sql_graduate_program(data_frame):
     ]
 
 
-def get_actual_graduate_program_researcher(migrate_db=str()):
+def get_actual_graduate_program_researcher():
     sql_script = """
         SELECT
             gp.code,
@@ -124,12 +124,28 @@ def get_actual_graduate_program_researcher(migrate_db=str()):
         JOIN researcher r
         ON r.id = gpr.researcher_id;
         """
-    registry = mig_database(sql_script)
+    registry = mig_database.select(sql_script)
 
     data_frame = pd.DataFrame(
         registry, columns=["code", "lattes_id", "year", "type_"])
     return data_frame
 
+def get_actual_graduate_program_student():
+    sql_script = """
+        SELECT
+            gp.code,
+            gps.lattes_id,
+            gps.year
+        FROM
+            graduate_program_student gps
+        JOIN graduate_program gp
+        ON gps.graduate_program_id = gp.graduate_program_id
+        """
+    registry = mig_database.select(sql_script)
+
+    data_frame = pd.DataFrame(
+        registry, columns=["code", "lattes_id", "year"])
+    return data_frame
 
 def build_script_sql_graduate_program_researcher(Series):
 
@@ -143,9 +159,21 @@ def build_script_sql_graduate_program_researcher(Series):
         """
     return script_sql
 
+def build_script_sql_graduate_program_student(Series, Index):
+
+    script_sql = f"""
+        INSERT INTO graduate_program_student (graduate_program_id, researcher_id, year)
+        SELECT graduate_program_id, r.researcher_id, '{Series['year']}'
+        FROM graduate_program
+        JOIN researcher r
+        ON r.lattes_id = '{Series['lattes_id']}'
+        WHERE code = '{Series['code']}';
+        """
+    return script_sql
+
 
 if __name__ == "__main__":
-
+    
     if int(input('Importar os pesquisadores?\n[1-Sim / 0-Não]: ')):
         data_frame = get_researchers()
 
@@ -163,9 +191,16 @@ if __name__ == "__main__":
 
     if int(input('Importar os pesquisadores da pós-graduação?\n[1-Sim / 0-Não]: ')):
         data_frame_graduate_program_researcher = get_actual_graduate_program_researcher()
-
+    
         for Index, Data in data_frame_graduate_program_researcher.iterrows():
 
             script_sql = build_script_sql_graduate_program_researcher(Data)
+            adm_database.exec(script_sql)
 
-            adm_database.exect(script_sql)
+    if int(input('Importar os discentes da pós-graduação?\n[1-Sim / 0-Não]: ')):
+        data_frame_graduate_program_student = get_actual_graduate_program_student()
+        for Index, Data in data_frame_graduate_program_student.iterrows():
+            
+            script_sql = build_script_sql_graduate_program_student(Data, Index)
+            adm_database.exec(script_sql)
+

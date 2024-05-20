@@ -2,7 +2,6 @@ import os
 import pandas as pd
 
 from pydantic import UUID4
-from psycopg2 import Error
 
 from ..dao import Connection
 from ..models.researcher import ListResearchers
@@ -75,15 +74,14 @@ def researcher_basic_query(
         FROM
             researcher r
         WHERE
-            r.researcher_id IS NOT NULL
+            r.researcher_id NOT IN (SELECT researcher_id FROM public.graduate_program_student)
             {filter_institution}
             {filter_name}
             {filter_lattes_id}
             ORDER by created_at DESC
             {filter_limit}
         """
-
-    registry = adm_database.select(script_sql=script_sql)
+    registry = adm_database.select(script_sql)
 
     data_frame = pd.DataFrame(
         registry,
@@ -95,23 +93,13 @@ def researcher_basic_query(
             r.last_update
         FROM
             researcher r
-        WHERE
-            r.id NOT IN (
-            SELECT
-                researcher_id
-            FROM
-                graduate_program_researcher
-            WHERE
-                type_ = 'DISCENTE')
-            {filter_institution}
         """
 
-    registry = simcc_database.select(script_sql)
-
+    registry = simcc_database.select(script_sql=script_sql)
     data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
     data_frame = pd.merge(data_frame, data_frame_simcc, how="left", on="lattes_id")
 
-    return data_frame.to_dict(orient="records")
+    return data_frame.fillna("Não esta atualizado").to_dict(orient="records")
 
 
 def researcher_count(institution_id: UUID4 = None):
