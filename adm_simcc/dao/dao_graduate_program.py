@@ -131,6 +131,8 @@ def graduate_program_basic_query(institution_id: UUID4):
         on="graduate_program_id",
     )
 
+    data_frame = data_frame.fillna(0)
+
     return data_frame.to_dict(orient="records")
 
 
