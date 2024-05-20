@@ -74,7 +74,6 @@ def graduate_program_basic_query(institution_id: UUID4):
             gp.created_at,
             gp.updated_at,
             COUNT(CASE WHEN gr.type_ = 'PERMANENTE' THEN 1 END) as qtd_permanente,
-            COUNT(CASE WHEN gr.type_ = 'DISCENTE' THEN 1 END) as qtd_discente,
             COUNT(CASE WHEN gr.type_ = 'COLABORADOR' THEN 1 END) as qtd_colaborador
         FROM
             graduate_program gp
@@ -83,7 +82,7 @@ def graduate_program_basic_query(institution_id: UUID4):
         WHERE
             gp.institution_id = '{institution_id}'
         GROUP BY
-            gp.graduate_program_id
+            gp.graduate_program_id, gp
         """
 
     registry = adm_database.select(script_sql)
@@ -106,11 +105,27 @@ def graduate_program_basic_query(institution_id: UUID4):
             "created_at",
             "updated_at",
             "qtd_permanente",
-            "qtd_discente",
             "qtd_colaborador",
         ],
     )
 
+    script_sql = f"""
+        SELECT 
+            graduate_program_id,
+            COUNT(researcher_id) as qtr_discente
+        FROM 
+            graduate_program_student 
+        GROUP BY 
+            graduate_program_id
+        """
+    registry = adm_database.select(script_sql)
+
+    data_frame = pd.merge(
+        data_frame,
+        pd.DataFrame(registry, columns=["graduate_program_id", "qtr_discente"]),
+        how="left",
+        on="graduate_program_id",
+    )
     return data_frame.to_dict(orient="records")
 
 
@@ -122,10 +137,8 @@ def graduate_program_delete(graudate_program_id: UUID4):
         DELETE FROM graduate_program
         WHERE graduate_program_id = '{graudate_program_id}';
         """
-    try:
-        adm_database.exec(script_sql)
-    except Error as erro:
-        raise erro
+
+    adm_database.exec(script_sql)
 
 
 def graduate_program_fix(Graduate_program: GraduateProgram):
