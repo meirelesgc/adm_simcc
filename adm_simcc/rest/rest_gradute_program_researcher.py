@@ -9,7 +9,7 @@ from ..dao import dao_graduate_program_researcher as dao
 rest_graduate_program_researcher = Blueprint(
     "rest_graduate_program_researcher",
     __name__,
-    url_prefix="/graduateProgramResearcherRest",
+    url_prefix="/GraduateProgramResearcherRest",
 )
 
 
