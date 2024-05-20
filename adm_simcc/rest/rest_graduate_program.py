@@ -17,7 +17,7 @@ def graduate_program_insert():
     graduate_program_list = request.get_json()
     list_instance = ListGraduateProgram(graduate_program_list=graduate_program_list)
     dao.graduate_program_insert(list_instance)
-    return jsonify({"message", "ok"}), HTTPStatus.CREATED
+    return jsonify({"message": "ok"}), HTTPStatus.CREATED
 
 
 @rest_graduate_program.route("/Update", methods=["POST"])
