@@ -1,11 +1,9 @@
-from pydantic import BaseModel, Field, AliasChoices
-from pydantic_br import CPF
+from pydantic import BaseModel
 
 
 class ResearcherGroup(BaseModel):
     nome_grupo: str
     nome_lider: str
-    cpf: CPF
     area: str
     ultimo_envio: str
     situacao: str
