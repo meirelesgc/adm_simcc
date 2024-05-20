@@ -13,15 +13,10 @@ def research_group_insert(ListResearcherGroup: ListResearcherGroup):
         researcher_name = research_group.nome_lider
         researcher_id = dao_researcher.researcher_query_name(researcher_name)
 
-        institution_name = research_group.instituicao
-        institution_id = dao_institution.institution_query_name(institution_name)
-        if institution_id is None:
-            return
-
         values += f"""(
             {f"'{research_group.nome_grupo}'" if research_group.nome_grupo else 'NULL'},
             {f"'{researcher_id}'" if researcher_id else 'NULL'},
-            {f"'{institution_id}'"},
+            {f"'{research_group.institution_id}'"},
             {f"'{research_group.area}'" if research_group.area else 'NULL'},
             {f"'{research_group.ultimo_envio}'" if research_group.ultimo_envio else 'NULL'},
             {f"'{research_group.situacao}'" if research_group.situacao else 'NULL'}),"""

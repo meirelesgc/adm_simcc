@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID4
 
 
 class ResearcherGroup(BaseModel):
@@ -7,7 +7,7 @@ class ResearcherGroup(BaseModel):
     area: str
     ultimo_envio: str
     situacao: str
-    instituicao: str
+    institution_id: UUID4
 
 
 class ListResearcherGroup(BaseModel):
