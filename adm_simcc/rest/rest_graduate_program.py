@@ -25,7 +25,7 @@ def graduate_program_insert():
 def graduate_program_update():
     graduate_program_id = request.args.get("graduate_program_id")
     dao.graduate_program_update(graduate_program_id)
-    return jsonify({"message", "ok"}), HTTPStatus.OK
+    return jsonify({"message": "ok"}), HTTPStatus.OK
 
 
 @rest_graduate_program.route("/Fix", methods=["POST"])

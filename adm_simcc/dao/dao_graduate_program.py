@@ -130,8 +130,7 @@ def graduate_program_basic_query(institution_id: UUID4):
         how="left",
         on="graduate_program_id",
     )
-
-    data_frame = data_frame.fillna(0)
+    data_frame = data_frame.infer_objects(copy=False).fillna(0)
 
     return data_frame.to_dict(orient="records")
 

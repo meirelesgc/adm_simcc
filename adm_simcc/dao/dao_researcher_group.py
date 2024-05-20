@@ -16,7 +16,7 @@ def research_group_insert(ListResearcherGroup: ListResearcherGroup):
         institution_name = research_group.instituicao
         institution_id = dao_institution.institution_query_name(institution_name)
         if institution_id is None:
-            raise {"error": "Universidade nao reconhecida"}
+            return
 
         date = datetime.strptime(research_group.ultimo_envio, "%d/%m/%Y")
         values += f"""(
