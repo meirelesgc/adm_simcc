@@ -19,3 +19,8 @@ class Weights(BaseModel):
     PATENT_GRANTED: str
     PATENT_NOT_GRANTED: str
     REPORT: str
+    F1: float = 0
+    F2: float = 0
+    F3: float = 0
+    F4: float = 0
+    F5: float = 0
