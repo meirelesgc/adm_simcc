@@ -40,6 +40,7 @@ def insert_ind_prod(weights: Weights):
             WHERE institution_id = '{weights.institution_id}';
         """
         adm_database.exec(script_sql=script_sql)
+        return
 
     script_sql = f"""
         INSERT INTO public.weights(
