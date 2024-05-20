@@ -11,13 +11,7 @@ def institution_insert(ListInstitutions: ListInstitutions):
     values_str = str()
     values_list = list()
     for institution in ListInstitutions.institution_list:
-        values_str += f"""( %s, %s, %s, %s),"""
-        values_list += [
-            institution.institution_id,
-            institution.name,
-            institution.acronym,
-            institution.lattes_id,
-        ]
+        values_str += f"""( '{institution.institution_id}', '{institution.name}', '{institution.acronym}', '{institution.lattes_id}'),"""
 
     # Criação do script de insert.
     # Unifiquei em um unico comando para facilitar
@@ -27,7 +21,7 @@ def institution_insert(ListInstitutions: ListInstitutions):
         (institution_id, name, acronym, lattes_id)
         VALUES {values_str[:-1]};
         """
-    adm_database.exec(script_sql, values_list)
+    adm_database.exec(script_sql)
 
 
 def institution_full_query(institution_id: UUID4 = None):

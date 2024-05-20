@@ -9,34 +9,22 @@ adm_database = Connection()
 
 def student_insert(ListStudent: ListStudent):
     script_sql = str()
-    values = list()
     for student in ListStudent.student_list:
         main_data_base_id = dao_researcher.researcher_basic_query(lattes_id=student.lattes_id)  # fmt: skip
         if not main_data_base_id:
             script_sql += f"""
             INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
-            VALUES (%s, %s, %s, %s);
+            VALUES ('{student.student_id}', '{student.name}', '{student.lattes_id}', '{student.institution_id}');
             """
-            values += [
-                student.student_id,
-                student.name,
-                student.lattes_id,
-                student.institution_id,
-            ]
         else:
             student.student_id = main_data_base_id[0]["researcher_id"]
 
         script_sql += f"""
         INSERT INTO public.graduate_program_student (graduate_program_id, researcher_id, year)
-        VALUES (%s, %s, %s);
+        VALUES ('{student.graduate_program_id}', '{student.student_id}', '{student.year}');
         """
-        values += [
-            student.graduate_program_id,
-            student.student_id,
-            student.year,
-        ]
 
-    return adm_database.exec(script_sql, values)
+    return adm_database.exec(script_sql)
 
 
 def student_basic_query(

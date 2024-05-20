@@ -44,17 +44,17 @@ class Connection:
         if self.connection:
             self.connection.close()
 
-    def select(self, script_sql: str, parameters: list = list()):
+    def select(self, script_sql: str):
         self.__connect()
         try:
-            self.cursor.execute(script_sql, parameters)
+            self.cursor.execute(script_sql)
             query = self.cursor.fetchall()
         except psycopg2.errors.UniqueViolation as E:
             print(E.pgcode)
         self.__close()
         return query
 
-    def exec(self, script_sql: str, parameters: list = list()):
+    def exec(self, script_sql: str, parameters: list = None):
         self.__connect()
         try:
             self.cursor.execute(script_sql, parameters)
