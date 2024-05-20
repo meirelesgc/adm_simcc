@@ -1,4 +1,3 @@
-from pydantic import UUID4
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
@@ -33,7 +32,6 @@ def student_update():
 @cross_origin(origin="*", headers=["Content-Type"])
 def student_delete():
     student_id = request.args.get("student_id")
-    student_id = UUID4(student_id)
     dao_student.student_delete(student_id)
     return jsonify(), HTTPStatus.NO_CONTENT
 

@@ -25,6 +25,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             '{graduate_program.institution_id}',
             '{graduate_program.city}',
             '{graduate_program.url_image}',
+            '{graduate_program.sigla}',
             '{graduate_program.description}',
             '{graduate_program.visible}'),"""
 
@@ -43,6 +44,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             institution_id,
             city,
             url_image,
+            sigla,
             description,
             visible)
             VALUES {values[:-1]};
@@ -72,6 +74,7 @@ def graduate_program_basic_query(institution_id: UUID4):
             gp.institution_id,
             gp.description,
             gp.url_image,
+            gp.sigla,
             gp.city,
             gp.visible,
             gp.created_at,
@@ -103,6 +106,7 @@ def graduate_program_basic_query(institution_id: UUID4):
             "institution_id",
             "description",
             "url_image",
+            "sigla",
             "city",
             "visible",
             "created_at",
