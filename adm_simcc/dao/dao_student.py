@@ -51,7 +51,8 @@ def student_basic_query(
     script_sql = f"""
         SELECT
             r.name,
-            r.lattes_id
+            r.lattes_id,
+            'DISCENTE' as type_
         FROM
             graduate_program_student gps
         JOIN researcher r ON
@@ -62,7 +63,6 @@ def student_basic_query(
             {filter_institution}
             {filter_lattes_id};
     """
-    print(script_sql)
     registry = adm_database.select(script_sql)
 
     data_frame = pd.DataFrame(
@@ -70,6 +70,7 @@ def student_basic_query(
         columns=[
             "name",
             "lattes_id",
+            "type_",
         ],
     )
 
