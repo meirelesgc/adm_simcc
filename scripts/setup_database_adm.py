@@ -24,7 +24,7 @@ def build_script_sql_researcher(data_frame):
 
         name = Data["name"].replace("'", "''")
         lattes_id = Data["lattes_id"]
-        code = '7db28b4f-e53f-4626-81b6-44e8531e388c'
+        code = '27213ddc-8234-409a-bba5-9f8d631965be'
         insert_data += f"('{name}', '{lattes_id}', '{code}'),"
 
     return f"""
@@ -46,7 +46,7 @@ def get_actual_graduate_program():
             modality,
             type,
             rating,
-            '7db28b4f-e53f-4626-81b6-44e8531e388c',
+            '27213ddc-8234-409a-bba5-9f8d631965be',
             state,
             city,
             instituicao,
