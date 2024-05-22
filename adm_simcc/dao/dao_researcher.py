@@ -56,7 +56,7 @@ def researcher_basic_query(
     if researcher_name:
         researcher_name = researcher_name.replace("'", "''")
         filter_name = f"""
-            AND similarity(unaccent(LOWER('{researcher_name}')), unaccent(LOWER(r.name))) > 0.5
+            AND name ILIKE '{researcher_name}%'
             """
     if rows:
         filter_limit = f"LIMIT {rows}"
