@@ -13,7 +13,10 @@ simcc_database = Connection(database=os.environ["SIMCC_DATABASE"])
 def researcher_insert(ListResearchers: ListResearchers):
 
     values = str()
+
     for researcher in ListResearchers.researcher_list:
+        if researcher_basic_query(lattes_id=researcher.lattes_id):
+            return 400
         values += f"""(
             '{researcher.researcher_id}',
             '{researcher.name}',
@@ -29,6 +32,7 @@ def researcher_insert(ListResearchers: ListResearchers):
         VALUES {values[:-1]};
         """
     adm_database.exec(script_sql)
+    return 200
 
 
 def researcher_delete(researcher_id: UUID4):

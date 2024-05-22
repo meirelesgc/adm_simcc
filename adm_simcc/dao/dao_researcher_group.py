@@ -1,7 +1,6 @@
 import pandas as pd
-from ..dao import Connection, dao_institution, dao_researcher
+from ..dao import Connection, dao_researcher
 from ..models.researcher_group import ListResearcherGroup
-from datetime import datetime
 
 adm_database = Connection()
 

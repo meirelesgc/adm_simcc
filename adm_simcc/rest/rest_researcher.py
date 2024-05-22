@@ -14,8 +14,14 @@ rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/Researcher
 def researcher_insert():
     researcher_list = request.get_json()
     list_instance = ListResearchers(researcher_list=researcher_list)
-    dao_researcher.researcher_insert(list_instance)
-    return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    response = dao_researcher.researcher_insert(list_instance)
+    if response == 200:
+        return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    if response == 400:
+        return (
+            jsonify({"message": "Entidade ja cadastrada no banco"}),
+            HTTPStatus.BAD_REQUEST,
+        )
 
 
 @rest_researcher.route("/Delete", methods=["DELETE"])
