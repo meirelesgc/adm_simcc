@@ -1,10 +1,10 @@
+import psycopg2
+from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
-from http import HTTPStatus
 
 from ..dao import dao_researcher
 from ..models.researcher import ListResearchers
-
 
 rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/ResearcherRest")
 
@@ -12,10 +12,13 @@ rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/Researcher
 @rest_researcher.route("/Insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def researcher_insert():
-    researcher_list = request.get_json()
-    list_instance = ListResearchers(researcher_list=researcher_list)
-    dao_researcher.researcher_insert(list_instance)
-    return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    try:
+        researcher_list = request.get_json()
+        list_instance = ListResearchers(researcher_list=researcher_list)
+        dao_researcher.researcher_insert(list_instance)
+        return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    except psycopg2.errors.UniqueViolation:
+        return jsonify({"message": "pesquisador ja cadastrado"}), HTTPStatus.BAD_REQUEST
 
 
 @rest_researcher.route("/Delete", methods=["DELETE"])

@@ -1,5 +1,5 @@
+import psycopg2
 from http import HTTPStatus
-
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
@@ -13,10 +13,13 @@ rest_student = Blueprint("rest_student", __name__, url_prefix="/studentRest")
 @rest_student.route("/insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def student_insert():
-    student_list = request.get_json()
-    list_instance = ListStudent(student_list=student_list)
-    dao_student.student_insert(list_instance)
-    return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    try:
+        student_list = request.get_json()
+        list_instance = ListStudent(student_list=student_list)
+        dao_student.student_insert(list_instance)
+        return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    except psycopg2.errors.UniqueViolation:
+        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.BAD_REQUEST
 
 
 @rest_student.route("/update", methods=["POST"])

@@ -49,18 +49,19 @@ class Connection:
         try:
             self.cursor.execute(script_sql)
             query = self.cursor.fetchall()
+            return query
         except psycopg2.errors.InvalidTextRepresentation as E:
             print(f"[Erro]\n- Possivelmente de Djavan\n{E.pgcode}")
-        except psycopg2.errors.UniqueViolation as E:
-            print(E.pgcode)
         self.__close()
-        return query
 
     def exec(self, script_sql: str):
         self.__connect()
         try:
             self.cursor.execute(script_sql)
             self.connection.commit()
+        except psycopg2.errors.UniqueViolation as E:
+            print(E.pgcode)
+            raise psycopg2.errors.UniqueViolation
         except (Exception, psycopg2.DatabaseError) as E:
             self.connection.rollback()
             print(f"[Erro]\n\n{E}")

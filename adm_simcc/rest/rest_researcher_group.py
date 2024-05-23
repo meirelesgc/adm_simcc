@@ -1,3 +1,4 @@
+import psycopg2
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
@@ -15,10 +16,16 @@ rest_researcher_group = Blueprint(
 @rest_researcher_group.route("/Insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def research_group_insert():
-    researcher_groups_list = request.get_json()
-    instance = ListResearcherGroup(researcher_groups_list=researcher_groups_list)
-    dao_researcher_group.research_group_insert(instance)
-    return jsonify(), HTTPStatus.OK
+    try:
+        researcher_groups_list = request.get_json()
+        instance = ListResearcherGroup(researcher_groups_list=researcher_groups_list)
+        dao_researcher_group.research_group_insert(instance)
+        return jsonify(), HTTPStatus.OK
+    except psycopg2.errors.UniqueViolation:
+        return (
+            jsonify({"message": "grupo de pesquisa já cadastrado"}),
+            HTTPStatus.BAD_REQUEST,
+        )
 
 
 @rest_researcher_group.route("/Query", methods=["GET"])
