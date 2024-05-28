@@ -22,7 +22,7 @@ def graduate_program_insert():
     except psycopg2.errors.UniqueViolation:
         return (
             jsonify({"message": "programa de pos já cadastrado"}),
-            HTTPStatus.BAD_REQUEST,
+            HTTPStatus.CONFLICT,
         )
 
 

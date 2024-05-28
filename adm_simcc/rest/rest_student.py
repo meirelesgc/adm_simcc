@@ -19,7 +19,7 @@ def student_insert():
         dao_student.student_insert(list_instance)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.BAD_REQUEST
+        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
 
 
 @rest_student.route("/update", methods=["POST"])
@@ -34,8 +34,10 @@ def student_update():
 @rest_student.route("/delete", methods=["DELETE"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def student_delete():
-    student_id = request.args.get("student_id")
-    dao_student.student_delete(student_id)
+    student = request.get_json()
+    lattes_id = student[0]["lattes_id"]
+    graduate_program_id = student[0]["graduate_program_id"]
+    dao_student.student_delete(lattes_id, graduate_program_id)
     return jsonify(), HTTPStatus.NO_CONTENT
 
 

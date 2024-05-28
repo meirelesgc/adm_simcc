@@ -24,7 +24,7 @@ def research_group_insert():
     except psycopg2.errors.UniqueViolation:
         return (
             jsonify({"message": "grupo de pesquisa já cadastrado"}),
-            HTTPStatus.BAD_REQUEST,
+            HTTPStatus.CONFLICT,
         )
 
 

@@ -24,7 +24,7 @@ def graduate_program_researcher_insert():
     except psycopg2.errors.UniqueViolation:
         return (
             jsonify({"message": "pesquisador já cadastrado no programa"}),
-            HTTPStatus.BAD_REQUEST,
+            HTTPStatus.CONFLICT,
         )
 
 

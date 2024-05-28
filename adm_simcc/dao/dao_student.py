@@ -77,10 +77,15 @@ def student_basic_query(
     return data_frame.to_dict(orient="records")
 
 
-def student_delete(student_id):
+def student_delete(student_id, graduate_program):
     script_sql = f"""
-        DELETE FROM graduate_program_student WHERE researcher_id = '{student_id}';
-        DELETE FROM researcher WHERE researcher_id = '{student_id}';
+        DELETE FROM graduate_program_student gs
+        USING researcher r
+        WHERE gs.researcher_id = r.researcher_id
+            AND r.lattes_id = '{student_id}'
+            AND gs.graduate_program_id = '{graduate_program}';
+        
+        DELETE FROM researcher WHERE lattes_id = '{student_id}';
         """
     adm_database.exec(script_sql)
 

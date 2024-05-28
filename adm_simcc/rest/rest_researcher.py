@@ -18,7 +18,7 @@ def researcher_insert():
         dao_researcher.researcher_insert(list_instance)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "pesquisador ja cadastrado"}), HTTPStatus.BAD_REQUEST
+        return jsonify({"message": "pesquisador ja cadastrado"}), HTTPStatus.CONFLICT
 
 
 @rest_researcher.route("/Delete", methods=["DELETE"])

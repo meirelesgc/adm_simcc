@@ -21,7 +21,7 @@ def institution_insert():
         dao_institution.institution_insert(list_instance)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "instituição já cadastrado"}), HTTPStatus.BAD_REQUEST
+        return jsonify({"message": "instituição já cadastrado"}), HTTPStatus.CONFLICT
 
 
 @rest_institution.route("/Query", methods=["GET"])
