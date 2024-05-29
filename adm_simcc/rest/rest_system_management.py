@@ -11,18 +11,17 @@ rest_sys = Blueprint("rest_system_management", __name__, url_prefix="/sys")
 @rest_sys.route("/requestUpdate", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def requestUpdate():
-    with open(os.environ["HOP_LOG_PATH"], "r") as archive:
-        line = archive.readlines()
-        if line[-1].strip() != "ok":
-            return jsonify({"message": line[-1].strip()}), HTTPStatus.OK
+    if line := read_log(os.environ["HOP_LOG_PATH"]):
+        return jsonify({"message": line}), HTTPStatus.OK
+    else:
+        subprocess.Popen(["/usr/local/sbin/Jade-Extrator-Routine.sh",],shell=True,)  # fmt: skip
+        return jsonify({"message": "processo de carga iniciado"}), HTTPStatus.OK
+
+
+def read_log(path):
+    with open(path, "r", encoding="utf-8") as archive:
+        lines = archive.readlines()
+        if lines:
+            return lines[-1].strip()
         else:
-            subprocess.Popen(
-                [
-                    "/usr/local/sbin/Jade-Extrator-Routine.sh",
-                ],
-                shell=True,
-            )
-            return (
-                jsonify({"message": "A carga dos pesquisadores começou!"}),
-                HTTPStatus.OK,
-            )
+            return None
