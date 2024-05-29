@@ -10,7 +10,7 @@ rest_sys = Blueprint("rest_system_management", __name__, url_prefix="/sys")
 
 @rest_sys.route("/checkHop", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def requestUpdate():
+def checkHop():
     line = read_log(os.environ["HOP_LOG_PATH"])
     if line and line != "ok":
         return jsonify({"message": line}), HTTPStatus.OK
@@ -25,8 +25,8 @@ def requestUpdate():
     line = read_log(os.environ["HOP_LOG_PATH"])
     if line and line != "ok":
         return jsonify({"message": "hop em uso"}), HTTPStatus.OK
-    elif onHop["state"]:
-        subprocess.Popen(["/usr/local/sbin/Jade-Extrator-Routine.sh",],shell=True,)  # fmt: skip
+    elif onHop[0]["state"]:
+        subprocess.Popen(["/usr/local/sbin/Jade-Extrator-Routine-Testes.sh",],shell=True,)  # fmt: skip
         return jsonify({"message": "processo de carga iniciado"}), HTTPStatus.OK
 
 
