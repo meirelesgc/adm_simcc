@@ -11,18 +11,13 @@ rest_sys = Blueprint("rest_system_management", __name__, url_prefix="/sys")
 @cross_origin(origin="*", headers=["Content-Type"])
 def requestUpdate():
     with open(os.environ["HOP_LOG_PATH"], "r") as archive:
-        if line := archive.readlines():
+        line = archive.readlines()
+        if line[-1] != "...":
             return jsonify({"message": line[-1].strip()}), HTTPStatus.OK
         else:
             subprocess.Popen(
                 [
-                    "/home/ejorge/hop/hop-run.sh",
-                    "-r",
-                    "local",
-                    "-j",
-                    "Jade-Extrator-Hop",
-                    "-f",
-                    "${PROJECT_HOME}/metadata/dataset/workflow/ImportGraduation.hwf",
+                    "/usr/local/sbin/Jade-Extrator-Routine.sh",
                 ],
                 shell=True,
             )

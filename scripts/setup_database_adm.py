@@ -1,8 +1,7 @@
 import pandas as pd
 from adm_simcc.dao import Connection
 
-adm_database = Connection()
-mig_database = Connection(database='cimatec_v7')
+
 
 def get_researchers():
     sql_script = """
@@ -173,6 +172,9 @@ def build_script_sql_graduate_program_student(Series, Index):
 
 
 if __name__ == "__main__":
+    adm_database = Connection()
+    mig_database_name = str(input('Extrair os dados de que banco? '))
+    mig_database = Connection(database=mig_database_name)
     
     if int(input('Importar os pesquisadores?\n[1-Sim / 0-Não]: ')):
         data_frame = get_researchers()

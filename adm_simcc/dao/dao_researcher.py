@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from zeep import Client
 
 from pydantic import UUID4
 
@@ -8,6 +9,7 @@ from ..models.researcher import ListResearchers
 
 adm_database = Connection()
 simcc_database = Connection(database=os.environ["SIMCC_DATABASE"])
+CNPq = Client("http://servicosweb.cnpq.br/srvcurriculo/WSCurriculo?wsdl")
 
 
 def researcher_insert(ListResearchers: ListResearchers):
@@ -35,6 +37,9 @@ def researcher_insert(ListResearchers: ListResearchers):
 def researcher_delete(researcher_id: UUID4):
     script_sql = f"""
         DELETE FROM graduate_program_researcher
+        WHERE researcher_id = '{researcher_id}';
+
+        DELETE FROM graduate_program_student
         WHERE researcher_id = '{researcher_id}';
 
         DELETE FROM researcher
@@ -124,7 +129,7 @@ def researcher_query_name(researcher_name: str):
     FROM
         researcher as r
     WHERE
-        similarity(unaccent(LOWER('{researcher_name.replace("'", "''")}')), unaccent(LOWER(r.name))) > 0.8
+        similarity(unaccent(LOWER('{researcher_name.replace("'", "''")}')), unaccent(LOWER(r.name))) > 0.4
     LIMIT 1;
     """
 
