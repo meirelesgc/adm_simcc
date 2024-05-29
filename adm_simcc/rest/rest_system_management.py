@@ -1,8 +1,9 @@
-from http import HTTPStatus
-from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
 import os
 import subprocess
+
+from http import HTTPStatus
+from flask import Blueprint, jsonify
+from flask_cors import cross_origin
 
 rest_sys = Blueprint("rest_system_management", __name__, url_prefix="/sys")
 
@@ -12,7 +13,7 @@ rest_sys = Blueprint("rest_system_management", __name__, url_prefix="/sys")
 def requestUpdate():
     with open(os.environ["HOP_LOG_PATH"], "r") as archive:
         line = archive.readlines()
-        if line[-1] != "...":
+        if line[-1].strip() != "ok":
             return jsonify({"message": line[-1].strip()}), HTTPStatus.OK
         else:
             subprocess.Popen(
