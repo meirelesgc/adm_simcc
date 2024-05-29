@@ -23,10 +23,10 @@ def checkHop():
 def requestUpdate():
     onHop = request.get_json()
     line = read_log(os.environ["HOP_LOG_PATH"])
-    if line and line != "ok":
-        return jsonify({"message": "hop em uso"}), HTTPStatus.OK
+    if line or line != "ok":
+        return jsonify({"message": "hop em uso"}), HTTPStatus.LOCKED
     elif onHop[0]["state"]:
-        subprocess.Popen(["/usr/local/sbin/Jade-Extrator-Routine-Testes.sh",],shell=True,)  # fmt: skip
+        subprocess.Popen(["/usr/local/sbin/Jade-Extrator-Routine-Tests.sh",],shell=True,)  # fmt: skip
         return jsonify({"message": "processo de carga iniciado"}), HTTPStatus.OK
 
 
