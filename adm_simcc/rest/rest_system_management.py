@@ -11,7 +11,8 @@ rest_sys = Blueprint("rest_system_management", __name__, url_prefix="/sys")
 @rest_sys.route("/requestUpdate", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def requestUpdate():
-    if line := read_log(os.environ["HOP_LOG_PATH"]):
+    line = read_log(os.environ["HOP_LOG_PATH"])
+    if line != "ok":
         return jsonify({"message": line}), HTTPStatus.OK
     else:
         subprocess.Popen(["/usr/local/sbin/Jade-Extrator-Routine.sh",],shell=True,)  # fmt: skip
