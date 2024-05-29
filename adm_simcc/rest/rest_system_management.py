@@ -15,10 +15,10 @@ def checkHop():
     if line and line != "ok":
         return jsonify({"message": line}), HTTPStatus.OK
     else:
-        return jsonify({"message": "hop em modo de espera"}), HTTPStatus.OK
+        return jsonify({"message": "hop em modo de espera"}), HTTPStatus.LOCKED
 
 
-@rest_sys.route("/requestUpdate", methods=["GET"])
+@rest_sys.route("/requestUpdate", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def requestUpdate():
     onHop = request.get_json()
