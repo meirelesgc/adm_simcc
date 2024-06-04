@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
+from flask_cors import CORS
 from http import HTTPStatus
 
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     from .rest.rest_graduate_program import rest_graduate_program
     from .rest.rest_gradute_program_researcher import rest_graduate_program_researcher

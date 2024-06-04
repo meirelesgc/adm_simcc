@@ -26,7 +26,9 @@ def requestUpdate():
     if line or line != "ok":
         return jsonify({"message": "hop em uso"}), HTTPStatus.LOCKED
     elif onHop[0]["state"]:
-        subprocess.Popen(["/usr/local/sbin/Jade-Extrator-Routine-Tests.sh",],shell=True,)  # fmt: skip
+        with open("/home/ejorge/simcc/queue", "w") as archive:
+            archive.write("start")
+        subprocess.Popen(["/home/ejorge/simcc/executar-hop.sh",],shell=True,)  # fmt: skip
         return jsonify({"message": "processo de carga iniciado"}), HTTPStatus.OK
 
 

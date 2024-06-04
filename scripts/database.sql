@@ -1,6 +1,3 @@
-CREATE DATABASE adm_simcc WITH OWNER = postgres ENCODING = 'UTF8' LC_COLLATE = 'pt_BR.UTF-8' LC_CTYPE = 'pt_BR.UTF-8' TABLESPACE = pg_default CONNECTION
-LIMIT = -1 IS_TEMPLATE = FALSE;
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE EXTENSION IF NOT EXISTS unaccent;
@@ -15,6 +12,7 @@ CREATE TABLE institution(
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (institution_id)
 );
+
 CREATE TABLE researcher(
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       name VARCHAR(150) NOT NULL,
@@ -25,6 +23,7 @@ CREATE TABLE researcher(
       PRIMARY KEY (researcher_id),
       FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
 );
+
 CREATE TABLE graduate_program(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       code VARCHAR(100),
@@ -47,6 +46,7 @@ CREATE TABLE graduate_program(
       PRIMARY KEY (graduate_program_id),
       FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
 );
+
 CREATE TABLE graduate_program_researcher(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -58,6 +58,7 @@ CREATE TABLE graduate_program_researcher(
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
 );
+
 CREATE TABLE graduate_program_student(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -68,6 +69,7 @@ CREATE TABLE graduate_program_student(
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
 );
+
 CREATE TABLE research_group (
     research_group_id uuid NOT NULL DEFAULT uuid_generate_v4(),
     research_group_name VARCHAR(255),
@@ -81,6 +83,7 @@ CREATE TABLE research_group (
     CONSTRAINT fk_researcher_id FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id),
     CONSTRAINT fk_institution_id FOREIGN KEY (institution_id) REFERENCES institution(institution_id)
 );
+
 CREATE TABLE public.weights
 (
     institution_id uuid DEFAULT uuid_generate_v4(),
