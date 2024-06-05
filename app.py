@@ -1,5 +1,4 @@
 from adm_simcc import create_app
-import os
 
 app = create_app()
 
