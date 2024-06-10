@@ -1,8 +1,6 @@
 import pandas as pd
 from adm_simcc.dao import Connection
 
-
-
 def get_researchers():
     sql_script = """
         SELECT
@@ -205,4 +203,3 @@ if __name__ == "__main__":
             
             script_sql = build_script_sql_graduate_program_student(Data, Index)
             adm_database.exec(script_sql)
-

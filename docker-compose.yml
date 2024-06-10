@@ -12,6 +12,15 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
       - ./scripts/database.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  pg-admin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=geu_costa@outlook.com
+      - PGADMIN_DEFAULT_PASSWORD=987456
+      - PGADMIN_LISTEN_PORT=5050
 
+    ports:
+      - "5050:5050"
 volumes:
   data:

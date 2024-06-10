@@ -49,10 +49,11 @@ class Connection:
         try:
             self.cursor.execute(script_sql)
             query = self.cursor.fetchall()
-            return query
         except psycopg2.errors.InvalidTextRepresentation as E:
-            print(f"[Erro]\n- Possivelmente de Djavan\n{E.pgcode}")
-        self.__close()
+            print(f"[Erro\n- Possivelmente de Djavan\n{E.pgcode}")
+        finally:
+            self.__close()
+        return query
 
     def exec(self, script_sql: str):
         self.__connect()
