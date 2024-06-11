@@ -20,7 +20,6 @@ class Connection:
         self.host = host
         self.password = password
         self.port = port
-
         self.connection = None
         self.cursor = None
 

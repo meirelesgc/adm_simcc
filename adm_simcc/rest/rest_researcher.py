@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from ..dao import dao_researcher
-from ..models.researcher import ListResearchers
+from ..models.researcher import ListResearchers, ListSubsidies
 
 rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/ResearcherRest")
 
@@ -52,3 +52,20 @@ def researcher_count():
     institution_id = request.args.get("institution_id")
     researchers_count = dao_researcher.researcher_count(institution_id)
     return jsonify(researchers_count)
+
+
+@rest_researcher.route("/InsertGrant", methods=["POST"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def researcher_insert_grant():
+    grant_list = request.get_json()
+    list_instance = ListSubsidies(grant_list=grant_list)
+    dao_researcher.researcher_insert_grant(list_instance)
+    return jsonify({"message": "ok"}), HTTPStatus.CREATED
+
+
+@rest_researcher.route("/Query/Subsidy")
+@cross_origin(origin="*", headers=["Content-Type"])
+def researcher_query_grant():
+    institution_id = request.args.get("institution_id")
+    researchers_list = dao_researcher.researcher_query_grant(institution_id)
+    return jsonify(researchers_list), HTTPStatus.OK
