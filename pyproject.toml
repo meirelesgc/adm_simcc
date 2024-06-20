@@ -6,7 +6,7 @@ authors = ["meirelescg <geu_costa@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9.2"
+python = ">=3.9.2,<3.9.7 || >3.9.7,<4.0.0"
 flask = "^3.0.3"
 flask-cors = "^4.0.0"
 pandas = "^2.2.2"
@@ -16,6 +16,7 @@ pydantic = "^2.7.1"
 httpie = "^3.2.2"
 zeep = "^4.2.1"
 python-dotenv = "^1.0.1"
+streamlit = "^1.35.0"
 
 
 

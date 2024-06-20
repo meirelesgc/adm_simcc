@@ -1,12 +1,24 @@
-from pydantic import UUID4, BaseModel
+from dataclasses import dataclass, asdict
+from uuid import uuid4
 
 
-class Institution(BaseModel):
-    institution_id: UUID4
+@dataclass
+class Institution:
+    institution_id: uuid4
     name: str
     acronym: str
     lattes_id: str
 
+    def get_json(self):
+        return asdict(self)
 
-class ListInstitutions(BaseModel):
+
+@dataclass
+class ListInstitutions:
     institution_list: list[Institution]
+
+    def add_institution(self, institution: Institution):
+        self.institutions.append(institution)
+
+    def get_json(self):
+        return [inst.get_json() for inst in self.institutions]
