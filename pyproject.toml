@@ -15,8 +15,8 @@ psycopg2-binary = "^2.9.9"
 pydantic = "^2.7.1"
 httpie = "^3.2.2"
 zeep = "^4.2.1"
-python-dotenv = "^1.0.1"
 streamlit = "^1.35.0"
+python-dotenv = "^1.0.1"
 
 
 
@@ -46,5 +46,5 @@ addopts = '-p no:warnings'
 
 [tool.taskipy.tasks]
 run = 'gunicorn --certfile=$CERT_FILE --keyfile=$KEY_FILE -b 0.0.0.0:5000 app:app --reload'
-test = 'pytest -s -x --cov=adm_simcc -vv'
+test = 'pytest -x --cov=adm_simcc/rest -vv'
 post_test = 'coverage html'

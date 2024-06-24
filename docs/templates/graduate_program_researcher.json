@@ -1,0 +1,26 @@
+[
+    {
+        "graduate_program_id": "7678fb32-6b9e-4e1e-a9c7-e6651758fda0",
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f9bb",
+        "year": 2024,
+        "type_": "PERMANENTE"
+    },
+    {
+        "graduate_program_id": "7678fb32-6b9e-4e1e-a9c7-e6651758fda0",
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f8bb",
+        "year": 2024,
+        "type_": "COLABORADOR"
+    },
+    {
+        "graduate_program_id": "8a8f50d1-c31a-407c-81a1-179357ae15d0",
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f8bb",
+        "year": 2024,
+        "type_": "PERMANENTE"
+    },
+    {
+        "graduate_program_id": "22cc326c-c58f-4cdb-b690-5e588f65f831",
+        "researcher_id": "128c6fbf-513f-4bc0-9854-0961df01f8bb",
+        "year": 2024,
+        "type_": "PERMANENTE"
+    }
+]

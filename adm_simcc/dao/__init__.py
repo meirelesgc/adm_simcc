@@ -9,11 +9,11 @@ psycopg2.extras.register_uuid()
 class Connection:
     def __init__(
         self,
-        database: str = os.environ["ADM_DATABASE"],
-        user: str = os.environ["ADM_USER"],
-        host: str = os.environ["ADM_HOST"],
-        password: str = os.environ["ADM_PASSWORD"],
-        port: int = os.environ["ADM_PORT"],
+        database: str = os.getenv("ADM_DATABASE", "postgres"),
+        user: str = os.getenv("ADM_USER", "postgres"),
+        password: str = os.getenv("ADM_PASSWORD", "postgres"),
+        host: str = os.getenv("ADM_HOST", "localhost"),
+        port: int = os.getenv("ADM_PORT", "5432"),
     ):
         self.database = database
         self.user = user
@@ -63,7 +63,7 @@ class Connection:
             print(E.pgcode)
             raise psycopg2.errors.UniqueViolation
         except (Exception, psycopg2.DatabaseError) as E:
-            self.connection.rollback()
             print(f"[Erro]\n\n{E}")
+            self.connection.rollback()
         finally:
             self.__close()

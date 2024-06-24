@@ -1,14 +1,13 @@
 import os
 import pandas as pd
 from zeep import Client
-
 from pydantic import UUID4
 
 from ..dao import Connection
 from ..models.researcher import ListResearchers, ListSubsidies
 
 adm_database = Connection()
-simcc_database = Connection(database=os.environ["SIMCC_DATABASE"])
+# simcc_database = Connection(database=os.environ["SIMCC_DATABASE"])
 CNPq = Client("http://servicosweb.cnpq.br/srvcurriculo/WSCurriculo?wsdl")
 
 
@@ -121,10 +120,10 @@ def researcher_basic_query(
             researcher r
         """
 
-    registry = simcc_database.select(script_sql=script_sql)
-    data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
-    data_frame = pd.merge(data_frame, data_frame_simcc, how="left", on="lattes_id")
-
+    # registry = simcc_database.select(script_sql=script_sql)
+    # data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
+    # data_frame = pd.merge(data_frame, data_frame_simcc, how="left", on="lattes_id")
+    data_frame = data_frame.drop(columns=["created_at"])
     return data_frame.fillna("Não esta atualizado").to_dict(orient="records")
 
 
@@ -183,6 +182,7 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
     values = str()
 
     for subsidy in ListSubsidies.grant_list:
+
         values += f"""(
                 '{researcher_search_id(subsidy.id_lattes)}', 
                 '{subsidy.cod_modalidade}', 
@@ -205,9 +205,8 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
             institute_name, 
             aid_quantity, 
             scholarship_quantity)
-            VALUES {values[:-1]};
+        VALUES {values[:-1]};
         """
-
     adm_database.exec(script_sql)
 
 
@@ -216,12 +215,11 @@ def researcher_query_grant(institution_id):
     filter_institution = str()
     if institution_id:
         filter_institution = f"""
-                AND r.institution_id = '{institution_id}'
+                WHERE r.institution_id = '{institution_id}'
                 """
 
     script_sql = f"""
         SELECT 
-            s.id, 
             s.researcher_id,
             r.name,
             s.modality_code, 
@@ -235,9 +233,7 @@ def researcher_query_grant(institution_id):
         FROM 
             subsidy s
             LEFT JOIN researcher r ON s.researcher_id = r.researcher_id
-        WHERE
-            1 = 1
-            {filter_institution}
+        {filter_institution}
         """
 
     registry = adm_database.select(script_sql)
@@ -245,7 +241,6 @@ def researcher_query_grant(institution_id):
     data_frame = pd.DataFrame(
         registry,
         columns=[
-            "id",
             "researcher_id",
             "name",
             "modality_code",

@@ -111,3 +111,17 @@ CREATE TABLE public.weights
     f4 numeric(10,3) DEFAULT 0,
     f5 numeric(10,3) DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS public.subsidy
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    researcher_id uuid NOT NULL,
+    modality_code character varying(50) ,
+    modality_name character varying(255) ,
+    call_title character varying(255) ,
+    category_level_code character varying(50) ,
+    funding_program_name character varying(255) ,
+    institute_name character varying(255) ,
+    aid_quantity integer,
+    scholarship_quantity integer
+)

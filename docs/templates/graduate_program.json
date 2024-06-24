@@ -1,0 +1,44 @@
+[
+    {
+        "graduate_program_id": "7678fb32-6b9e-4e1e-a9c7-e6651758fda0",
+        "code": "EX123",
+        "name": "Programa 4",
+        "area": "Ciências Exatas",
+        "modality": "Presencial",
+        "type": "Mestrado",
+        "rating": "5",
+        "institution_id": "68125729-c357-4830-ba4d-ec3ca757c323",
+        "city": "Salvador",
+        "url_image": "http://exemplo.com/imagem.jpg",
+        "description": "Este é um programa de pós-graduação de exemplo.",
+        "visible": true
+    },
+    {
+        "graduate_program_id": "8a8f50d1-c31a-407c-81a1-179357ae15d0",
+        "code": "EX123",
+        "name": "Programa 5",
+        "area": "Ciências Exatas",
+        "modality": "Presencial",
+        "type": "Mestrado",
+        "rating": "5",
+        "institution_id": "68125729-c357-4830-ba4d-ec3ca757c323",
+        "city": "Salvador",
+        "url_image": "http://exemplo.com/imagem.jpg",
+        "description": "Este é um programa de pós-graduação de exemplo.",
+        "visible": true
+    },
+    {
+        "graduate_program_id": "22cc326c-c58f-4cdb-b690-5e588f65f831",
+        "code": "EX123",
+        "name": "Programa 6",
+        "area": "Ciências Exatas",
+        "modality": "Presencial",
+        "type": "Mestrado",
+        "rating": "5",
+        "institution_id": "b4874009-284f-4cd6-88fb-d481efcd2a79",
+        "city": "Salvador",
+        "url_image": "http://exemplo.com/imagem.jpg",
+        "description": "Este é um programa de pós-graduação de exemplo.",
+        "visible": true
+    }
+]
