@@ -14,13 +14,13 @@ CNPq = Client("http://servicosweb.cnpq.br/srvcurriculo/WSCurriculo?wsdl")
 def researcher_insert(ListResearchers: ListResearchers):
 
     values = str()
-
+    parameters = list()
     for researcher in ListResearchers.researcher_list:
-        values += f"""(
-            '{researcher.researcher_id}',
-            '{researcher.name}',
-            '{researcher.lattes_id}',
-            '{researcher.institution_id}'),"""
+        values += """(%s, %s, %s, %s),"""
+        parameters.extend([researcher.researcher_id])
+        parameters.extend([researcher.name])
+        parameters.extend([researcher.lattes_id])
+        parameters.extend([researcher.institution_id])
 
     # Criação do script de insert.
     # Unifiquei em um unico comando para facilitar
@@ -30,21 +30,22 @@ def researcher_insert(ListResearchers: ListResearchers):
         (researcher_id, name, lattes_id, institution_id)
         VALUES {values[:-1]};
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(script_sql, parameters)
 
 
 def researcher_delete(researcher_id: UUID4):
-    script_sql = f"""
+    parameters = [researcher_id, researcher_id, researcher_id]
+    script_sql = """
         DELETE FROM graduate_program_researcher
-        WHERE researcher_id = '{researcher_id}';
+        WHERE researcher_id = %s;
 
         DELETE FROM graduate_program_student
-        WHERE researcher_id = '{researcher_id}';
+        WHERE researcher_id = %s;
 
         DELETE FROM researcher
-        WHERE researcher_id = '{researcher_id}';
+        WHERE researcher_id = %s;
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(script_sql, parameters)
 
 
 def researcher_basic_query(
@@ -53,23 +54,29 @@ def researcher_basic_query(
     rows: int = None,
     lattes_id: str = None,
 ):
+    parameters = list()
     filter_name = filter_limit = filter_institution = filter_lattes_id = str()
+
     if institution_id:
-        filter_institution = f"""
-            AND r.institution_id = '{institution_id}'
+        filter_institution = """
+            AND r.institution_id = %s
             """
+        parameters.extend([institution_id])
+
     if researcher_name:
-        researcher_name = researcher_name.replace("'", "''")
-        filter_name = f"""
-            AND name ILIKE '{researcher_name}%'
+        filter_name = """
+            AND name ILIKE %s
             """
+        parameters.extend([researcher_name])
     if rows:
-        filter_limit = f"LIMIT {rows}"
+        filter_limit = "LIMIT %s"
+        parameters.extend([rows])
 
     if lattes_id:
-        filter_lattes_id = f"AND lattes_id = '{lattes_id}'"
+        filter_lattes_id = "AND lattes_id = %s"
+        parameters.extend([lattes_id])
 
-    script_sql = f"""
+    script_sql = f"""   
         SELECT DISTINCT
             r.researcher_id,
             r.name,
@@ -99,7 +106,7 @@ def researcher_basic_query(
             r.created_at DESC
             {filter_limit};
         """
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(script_sql, parameters)
 
     data_frame = pd.DataFrame(
         registry,
@@ -128,13 +135,15 @@ def researcher_basic_query(
 
 
 def researcher_count(institution_id: UUID4 = None):
+    parameters = list()
     filter_institution = str()
     if institution_id:
-        filter_institution = f"WHERE institution_id = '{institution_id}'"
+        filter_institution = "WHERE institution_id = %s"
+        parameters.extend([institution_id])
 
     script_sql = f"SELECT COUNT(*) FROM researcher {filter_institution}"
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(script_sql, parameters)
 
     # psycopg2 retorna uma lista de truplas,
     # quero apenas o primeiro valor da primeira lista
@@ -142,17 +151,18 @@ def researcher_count(institution_id: UUID4 = None):
 
 
 def researcher_query_name(researcher_name: str):
-    script_sql = f"""
+    parameters = [researcher_name]
+    script_sql = """
     SELECT
         researcher_id
     FROM
         researcher as r
     WHERE
-        similarity(unaccent(LOWER('{researcher_name.replace("'", "''")}')), unaccent(LOWER(r.name))) > 0.4
+        similarity(unaccent(LOWER(%s)), unaccent(LOWER(r.name))) > 0.4
     LIMIT 1;
     """
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(script_sql, parameters)
 
     if registry:
         return registry[0][0]
@@ -161,15 +171,16 @@ def researcher_query_name(researcher_name: str):
 
 
 def researcher_search_id(lattes_id):
-    script_sql = f"""
+    parameters = [lattes_id]
+    script_sql = """
         SELECT
             researcher_id 
         FROM
             researcher
         WHERE
-            lattes_id = '{lattes_id}'
+            lattes_id = %s
         """
-    researcher_id = adm_database.select(script_sql)
+    researcher_id = adm_database.select(script_sql, parameters)
 
     if researcher_id:
         return researcher_id[0][0]
@@ -178,21 +189,20 @@ def researcher_search_id(lattes_id):
 
 
 def researcher_insert_grant(ListSubsidies: ListSubsidies):
-
+    parameters = list()
     values = str()
 
     for subsidy in ListSubsidies.grant_list:
-
-        values += f"""(
-                '{researcher_search_id(subsidy.id_lattes)}', 
-                '{subsidy.cod_modalidade}', 
-                '{subsidy.nome_modalidade}', 
-                '{subsidy.titulo_chamada}', 
-                '{subsidy.cod_categoria_nivel}', 
-                '{subsidy.nome_programa_fomento}', 
-                '{subsidy.nome_instituto}', 
-                '{subsidy.quant_auxilio}',
-                '{subsidy.quant_bolsa}'),"""
+        values += f"""(%s, %s, %s, %s, %s, %s, %s, %s, %s),"""
+        parameters.extend([researcher_search_id(subsidy.id_lattes)])
+        parameters.extend([subsidy.cod_modalidade])
+        parameters.extend([subsidy.nome_modalidade])
+        parameters.extend([subsidy.titulo_chamada])
+        parameters.extend([subsidy.cod_categoria_nivel])
+        parameters.extend([subsidy.nome_programa_fomento])
+        parameters.extend([subsidy.nome_instituto])
+        parameters.extend([subsidy.quant_auxilio])
+        parameters.extend([subsidy.quant_bolsa])
 
     script_sql = f"""
         INSERT INTO public.subsidy(
@@ -207,16 +217,17 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
             scholarship_quantity)
         VALUES {values[:-1]};
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(script_sql, parameters)
 
 
 def researcher_query_grant(institution_id):
-
+    parameters = list()
     filter_institution = str()
     if institution_id:
-        filter_institution = f"""
-                WHERE r.institution_id = '{institution_id}'
+        filter_institution = """
+                WHERE r.institution_id = %s
                 """
+        parameters.extend([institution_id])
 
     script_sql = f"""
         SELECT 
@@ -236,7 +247,7 @@ def researcher_query_grant(institution_id):
         {filter_institution}
         """
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(script_sql, parameters)
 
     data_frame = pd.DataFrame(
         registry,

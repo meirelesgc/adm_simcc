@@ -43,10 +43,10 @@ class Connection:
         if self.connection:
             self.connection.close()
 
-    def select(self, script_sql: str):
+    def select(self, script_sql: str, parameters: list = []):
         self.__connect()
         try:
-            self.cursor.execute(script_sql)
+            self.cursor.execute(script_sql, parameters)
             query = self.cursor.fetchall()
         except psycopg2.errors.InvalidTextRepresentation as E:
             print(f"[Erro\n- Possivelmente de Djavan\n{E.pgcode}")
@@ -54,10 +54,10 @@ class Connection:
             self.__close()
         return query
 
-    def exec(self, script_sql: str):
+    def exec(self, script_sql: str, parameters: list = []):
         self.__connect()
         try:
-            self.cursor.execute(script_sql)
+            self.cursor.execute(script_sql, parameters)
             self.connection.commit()
         except psycopg2.errors.UniqueViolation as E:
             print(E.pgcode)
