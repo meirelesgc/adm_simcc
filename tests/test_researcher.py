@@ -73,41 +73,41 @@ def test_delete_researcher(client, researcher):
 
 def test_count_researchers_no_filters(client, researcher):
     endpoint = f"/ResearcherRest/Query/Count"
-    responce = client.get(endpoint)
+    response = client.get(endpoint)
 
-    assert responce.status_code == HTTPStatus.OK
-    assert responce.json == 3
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == 3
 
 
 def test_count_researchers_with_filters(client, researcher):
     endpoint = f"/ResearcherRest/Query/Count?institution_id={researcher[2]['institution_id']}"  # fmt: skip
-    responce = client.get(endpoint)
+    response = client.get(endpoint)
 
-    assert responce.status_code == HTTPStatus.OK
-    assert responce.json == 3
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == 3
 
 
 def test_insert_single_subsidie(client, researcher):
     subsidie = SubsidiesFactory.create_batch(1, id_lattes=researcher[2]["lattes_id"])
 
-    responce = client.post("/ResearcherRest/InsertGrant", json=subsidie)
+    response = client.post("/ResearcherRest/InsertGrant", json=subsidie)
 
-    assert responce.status_code == HTTPStatus.CREATED
+    assert response.status_code == HTTPStatus.CREATED
 
 
 def test_insert_some_subsidie(client, researcher):
     subsidie = SubsidiesFactory.create_batch(3, id_lattes=researcher[2]["lattes_id"])
 
-    responce = client.post("/ResearcherRest/InsertGrant", json=subsidie)
+    response = client.post("/ResearcherRest/InsertGrant", json=subsidie)
 
-    assert responce.status_code == HTTPStatus.CREATED
+    assert response.status_code == HTTPStatus.CREATED
 
 
 def test_query_subsidies_no_filters(client, researcher):
     subsidie = SubsidiesFactory.create_batch(1, id_lattes=researcher[2]["lattes_id"])
-    responce = client.post("/ResearcherRest/InsertGrant", json=subsidie)
+    response = client.post("/ResearcherRest/InsertGrant", json=subsidie)
 
-    responce = client.get("/ResearcherRest/Query/Subsidy")
+    response = client.get("/ResearcherRest/Query/Subsidy")
     data = {
         "researcher_id": researcher[2]["researcher_id"],
         "name": researcher[2]["name"],
@@ -120,14 +120,14 @@ def test_query_subsidies_no_filters(client, researcher):
         "aid_quantity": subsidie[0]["quant_auxilio"],
         "scholarship_quantity": subsidie[0]["quant_bolsa"],
     }
-    assert data in responce.json
+    assert data in response.json
 
 
 def test_query_subsidies_with_filters(client, researcher):
     subsidie = SubsidiesFactory.create_batch(1, id_lattes=researcher[2]["lattes_id"])
-    responce = client.post("/ResearcherRest/InsertGrant", json=subsidie)
+    response = client.post("/ResearcherRest/InsertGrant", json=subsidie)
     endpoint = f"/ResearcherRest/Query/Subsidy?institution_id={researcher[2]['institution_id']}"
-    responce = client.get(endpoint)
+    response = client.get(endpoint)
     data = {
         "researcher_id": researcher[2]["researcher_id"],
         "name": researcher[2]["name"],
@@ -140,4 +140,4 @@ def test_query_subsidies_with_filters(client, researcher):
         "aid_quantity": subsidie[0]["quant_auxilio"],
         "scholarship_quantity": subsidie[0]["quant_bolsa"],
     }
-    assert data in responce.json
+    assert data in response.json

@@ -77,8 +77,6 @@ def graduate_program_basic_query(institution_id: UUID4):
             gp.sigla,
             gp.city,
             gp.visible,
-            gp.created_at,
-            gp.updated_at,
             COUNT(CASE WHEN gr.type_ = 'PERMANENTE' THEN 1 END) as qtd_permanente,
             COUNT(CASE WHEN gr.type_ = 'COLABORADOR' THEN 1 END) as qtd_colaborador
         FROM
@@ -109,8 +107,6 @@ def graduate_program_basic_query(institution_id: UUID4):
             "sigla",
             "city",
             "visible",
-            "created_at",
-            "updated_at",
             "qtd_permanente",
             "qtd_colaborador",
         ],
