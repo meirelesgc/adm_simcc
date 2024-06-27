@@ -12,57 +12,40 @@ adm_database = Connection()
 
 
 def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
-    values = str()
-    for graduate_program in ListGraduateProgram.graduate_program_list:
-        values += f"""(
-            '{graduate_program.graduate_program_id}',
-            '{graduate_program.code}',
-            '{graduate_program.name}',
-            '{graduate_program.area}',
-            '{graduate_program.modality}',
-            '{graduate_program.type}',
-            '{graduate_program.rating}',
-            '{graduate_program.institution_id}',
-            '{graduate_program.city}',
-            '{graduate_program.url_image}',
-            '{graduate_program.sigla}',
-            '{graduate_program.description}',
-            '{graduate_program.visible}'),"""
+    parameters = list()
 
-    # Criação do script de insert.
-    # Unifiquei em um unico comando para facilitar
-    # o retorno da mensagem de erro
-    script_sql = f"""
-        INSERT INTO public.graduate_program(
-            graduate_program_id,
-            code,
-            name,
-            area,
-            modality,
-            type,
-            rating,
-            institution_id,
-            city,
-            url_image,
-            sigla,
-            description,
-            visible)
-            VALUES {values[:-1]};
+    # fmt: off
+    for program in ListGraduateProgram.graduate_program_list:
+        parameters.append((
+            program.graduate_program_id, program.code, program.name,
+            program.area, program.modality, program.type, program.rating,
+            program.institution_id, program.city, program.url_image,
+            program.sigla, program.description, program.visible
+        ))
+    # fmt: on
+
+    script_sql = """
+        INSERT INTO public.graduate_program
+        (graduate_program_id, code, name, area, modality, type, rating,
+        institution_id, city, url_image, sigla, description, visible)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
-    adm_database.exec(script_sql)
+    adm_database.execmany(script_sql, parameters)
 
 
 def graduate_program_update(graduate_program_id: UUID4):
-    script_sql = f"""
+    parameters = [graduate_program_id]
+    script_sql = """
         UPDATE graduate_program
         SET visible = NOT visible
-        WHERE graduate_program_id = '{graduate_program_id}';
+        WHERE graduate_program_id = %s;
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(script_sql, parameters)
 
 
 def graduate_program_basic_query(institution_id: UUID4):
-    script_sql = f"""
+    parameters = [institution_id]
+    script_sql = """
         SELECT
             gp.graduate_program_id,
             gp.code,
@@ -84,12 +67,12 @@ def graduate_program_basic_query(institution_id: UUID4):
         LEFT JOIN
             graduate_program_researcher gr ON gp.graduate_program_id = gr.graduate_program_id
         WHERE
-            gp.institution_id = '{institution_id}'
+            gp.institution_id = %s
         GROUP BY
             gp.graduate_program_id, gp
         """
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(script_sql, parameters)
 
     data_frame = pd.DataFrame(
         registry,
@@ -139,50 +122,52 @@ def graduate_program_basic_query(institution_id: UUID4):
 
 
 def graduate_program_delete(graudate_program_id: UUID4):
-    script_sql = f"""
+    parameters = [graudate_program_id, graudate_program_id, graudate_program_id]
+    script_sql = """
         DELETE FROM graduate_program_student
-        WHERE graduate_program_id = '{graudate_program_id}';
+        WHERE graduate_program_id = %s;
        
         DELETE FROM graduate_program_researcher
-        WHERE graduate_program_id = '{graudate_program_id}';
+        WHERE graduate_program_id = %s;
 
         DELETE FROM graduate_program
-        WHERE graduate_program_id = '{graudate_program_id}';
+        WHERE graduate_program_id = %s;
         """
 
-    adm_database.exec(script_sql)
+    adm_database.exec(script_sql, parameters)
 
 
 def graduate_program_fix(Graduate_program: GraduateProgram):
-    script_sql = f"""
-        UPDATE graduate_program
-        SET
-            code = '{Graduate_program.code}',
-            name = '{Graduate_program.name}',
-            area = '{Graduate_program.area}',
-            modality = '{Graduate_program.modality}',
-            type = '{Graduate_program.type}',
-            rating = '{Graduate_program.rating}',
-            institution_id = '{Graduate_program.institution_id}',
-            city = '{Graduate_program.city}',
-            url_image = '{Graduate_program.url_image}',
-            sigla = '{Graduate_program.sigla}',
-            description = '{Graduate_program.description}',
-            visible = '{Graduate_program.visible}'
-        WHERE
-            graduate_program_id = '{Graduate_program.graduate_program_id}';
+    # fmt: off
+    parameters = [
+        Graduate_program.code, Graduate_program.name, Graduate_program.area,
+        Graduate_program.modality, Graduate_program.type, 
+        Graduate_program.rating, Graduate_program.institution_id, 
+        Graduate_program.city, Graduate_program.url_image, 
+        Graduate_program.sigla, Graduate_program.description, 
+        Graduate_program.visible, Graduate_program.graduate_program_id,
+    ]
+    # fmt: on
+    script_sql = """
+        UPDATE graduate_program SET
+        code = %s, name = %s, area = %s, modality = %s, type = %s, 
+        rating = %s, institution_id = %s, city = %s, url_image = %s,
+        sigla = %s, description = %s, visible = %s
+        WHERE graduate_program_id = %s;
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(script_sql, parameters)
 
 
 def graduate_program_count(institution_id: UUID4 = None):
+    parameters = list()
     filter_institution = str()
     if institution_id:
-        filter_institution = f"WHERE institution_id = '{institution_id}'"
+        filter_institution = "WHERE institution_id = %s"
+        parameters.extend([institution_id])
 
     script_sql = f"SELECT COUNT(*) FROM graduate_program {filter_institution}"
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(script_sql, parameters)
 
     # psycopg2 retorna uma lista de truplas,
     # quero apenas o primeiro valor da primeira lista

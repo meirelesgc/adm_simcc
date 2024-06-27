@@ -67,3 +67,17 @@ class Connection:
             self.connection.rollback()
         finally:
             self.__close()
+
+    def execmany(self, script_sql: str, parameters: list = []):
+        self.__connect()
+        try:
+            self.cursor.executemany(script_sql, parameters)
+            self.connection.commit()
+        except psycopg2.errors.UniqueViolation as E:
+            print(E.pgcode)
+            raise psycopg2.errors.UniqueViolation
+        except (Exception, psycopg2.DatabaseError) as E:
+            print(f"[Erro]\n\n{E}")
+            self.connection.rollback()
+        finally:
+            self.__close()

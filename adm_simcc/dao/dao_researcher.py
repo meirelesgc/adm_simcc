@@ -13,14 +13,14 @@ CNPq = Client("http://servicosweb.cnpq.br/srvcurriculo/WSCurriculo?wsdl")
 
 def researcher_insert(ListResearchers: ListResearchers):
 
-    values = str()
     parameters = list()
+    # fmt: off
     for researcher in ListResearchers.researcher_list:
-        values += """(%s, %s, %s, %s),"""
-        parameters.extend([researcher.researcher_id])
-        parameters.extend([researcher.name])
-        parameters.extend([researcher.lattes_id])
-        parameters.extend([researcher.institution_id])
+        parameters.append((
+            researcher.researcher_id, researcher.name, researcher.lattes_id,
+            researcher.institution_id
+        ))
+    # fmt: on
 
     # Criação do script de insert.
     # Unifiquei em um unico comando para facilitar
@@ -28,9 +28,9 @@ def researcher_insert(ListResearchers: ListResearchers):
     script_sql = f"""
         INSERT INTO researcher
         (researcher_id, name, lattes_id, institution_id)
-        VALUES {values[:-1]};
+        VALUES (%s, %s, %s, %s);
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.execmany(script_sql, parameters)
 
 
 def researcher_delete(researcher_id: UUID4):
