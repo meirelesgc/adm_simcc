@@ -3,8 +3,9 @@ from http import HTTPStatus
 
 
 def test_insert_single_researcher(client, institution):
-    institution_id = institution[0]["institution_id"]
-    researcher = ResearcherFactory.create_batch(1, institution_id=institution_id)
+    researcher = ResearcherFactory.create_batch(
+        1, institution_id=institution[0]["institution_id"]
+    )
 
     response = client.post("/ResearcherRest/Insert", json=researcher)
 
@@ -12,8 +13,9 @@ def test_insert_single_researcher(client, institution):
 
 
 def test_insert_some_researchers(client, institution):
-    institution_id = institution[0]["institution_id"]
-    researcher = ResearcherFactory.create_batch(3, institution_id=institution_id)
+    researcher = ResearcherFactory.create_batch(
+        3, institution_id=institution[0]["institution_id"]
+    )
 
     response = client.post("/ResearcherRest/Insert", json=researcher)
 
@@ -21,8 +23,9 @@ def test_insert_some_researchers(client, institution):
 
 
 def test_violate_unique_constrain_researcher(client, institution):
-    institution_id = institution[0]["institution_id"]
-    researcher = ResearcherFactory.create_batch(1, institution_id=institution_id)
+    researcher = ResearcherFactory.create_batch(
+        1, institution_id=institution[0]["institution_id"]
+    )
 
     response = client.post("/ResearcherRest/Insert", json=researcher)
     response = client.post("/ResearcherRest/Insert", json=researcher)
@@ -126,8 +129,10 @@ def test_query_subsidies_no_filters(client, researcher):
 def test_query_subsidies_with_filters(client, researcher):
     subsidie = SubsidiesFactory.create_batch(1, id_lattes=researcher[2]["lattes_id"])
     response = client.post("/ResearcherRest/InsertGrant", json=subsidie)
+
     endpoint = f"/ResearcherRest/Query/Subsidy?institution_id={researcher[2]['institution_id']}"
     response = client.get(endpoint)
+
     data = {
         "researcher_id": researcher[2]["researcher_id"],
         "name": researcher[2]["name"],
