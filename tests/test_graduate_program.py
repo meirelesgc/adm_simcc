@@ -1,6 +1,5 @@
 from tests.factories.graduate_program_factory import GraduateProgramFactory
 from http import HTTPStatus
-from uuid import uuid4
 
 
 def test_insert_single_graduate_program(client, institution):

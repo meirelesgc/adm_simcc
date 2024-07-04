@@ -84,7 +84,7 @@ def graduate_program_researcher_basic_query(
 ):
 
     if type_:
-        type_filter = f"AND type = '{type_}'"
+        type_filter = f"AND type_ = '{type_}'"
     else:
         type_filter = "AND type_ IN ('PERMANENTE', 'COLABORADOR')"
 
