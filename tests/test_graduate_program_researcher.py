@@ -129,7 +129,9 @@ def test_query_graduate_program_researcher_with_filter(
     assert not response.json
 
 
-def test_query_count_graduate_program_researcher(client, researcher, graduate_program):
+def test_count_graduate_program_researcher_no_filter(
+    client, researcher, graduate_program
+):
     gp_researcher = [
         {
             "graduate_program_id": graduate_program[0]["graduate_program_id"],
@@ -140,5 +142,38 @@ def test_query_count_graduate_program_researcher(client, researcher, graduate_pr
     ]
     response = client.post("/GraduateProgramResearcherRest/Insert", json=gp_researcher)
     endpoint = f"/GraduateProgramResearcherRest/Query/Count"
+    response = client.get(endpoint)
+    assert response.json == 1
+
+
+def test_count_graduate_program_researcher_with_institution_filter(
+    client, researcher, graduate_program
+):
+    gp_researcher = [
+        {
+            "graduate_program_id": graduate_program[0]["graduate_program_id"],
+            "researcher_id": researcher[0]["researcher_id"],
+            "year": 0000,
+            "type_": "COLABORADOR",
+        }
+    ]
+    response = client.post("/GraduateProgramResearcherRest/Insert", json=gp_researcher)
+    endpoint = f"/GraduateProgramResearcherRest/Query/Count?institution_id={researcher[0]["institution_id"]}"
+    response = client.get(endpoint)
+    assert response.json == 1
+
+def test_count_graduate_program_researcher_with_program_filter(
+    client, researcher, graduate_program
+):
+    gp_researcher = [
+        {
+            "graduate_program_id": graduate_program[0]["graduate_program_id"],
+            "researcher_id": researcher[0]["researcher_id"],
+            "year": 0000,
+            "type_": "COLABORADOR",
+        }
+    ]
+    response = client.post("/GraduateProgramResearcherRest/Insert", json=gp_researcher)
+    endpoint = f"/GraduateProgramResearcherRest/Query/Count?graduate_program_id={graduate_program[0]["graduate_program_id"]}"
     response = client.get(endpoint)
     assert response.json == 1
