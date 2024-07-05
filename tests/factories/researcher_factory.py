@@ -17,6 +17,16 @@ class ResearcherFactory(factory.Factory):
     institution_id = factory.LazyFunction(lambda: str(uuid.uuid4()))
 
 
+class FullResearcherFactory(ResearcherFactory):
+    subsidies = [
+        {
+            "category_level_code": None,
+            "modality_code": None,
+            "subsidy_id": None,
+        }
+    ]
+
+
 class SubsidiesFactory(factory.Factory):
     class Meta:
         model = dict

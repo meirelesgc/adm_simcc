@@ -74,9 +74,9 @@ CREATE TABLE graduate_program_student(
 
 CREATE TABLE research_group (
     research_group_id uuid NOT NULL DEFAULT uuid_generate_v4(),
-    research_group_name VARCHAR(255),
+    research_group_name VARCHAR(255) UNIQUE,
     researcher_id uuid,
-    institution_id uuid,
+    institution_id uuid NOT NULL,
     area VARCHAR(255),
     last_date_sent DATE,
     situation VARCHAR(50),

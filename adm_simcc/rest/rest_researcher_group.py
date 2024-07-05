@@ -20,10 +20,10 @@ def research_group_insert():
         researcher_groups_list = request.get_json()
         instance = ListResearcherGroup(researcher_groups_list=researcher_groups_list)
         dao_researcher_group.research_group_insert(instance)
-        return jsonify(), HTTPStatus.OK
+        return jsonify(), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
         return (
-            jsonify({"message": "grupo de pesquisa já cadastrado"}),
+            jsonify({"message": "grupo de pesquisa duplicado"}),
             HTTPStatus.CONFLICT,
         )
 
@@ -58,4 +58,4 @@ def research_group_update():
     institution_id = dao_institution.institution_query_name(institution_name)
     dao_researcher_group.research_group_delete(institution_id)
     dao_researcher_group.research_group_insert(instance)
-    return jsonify("ok"), HTTPStatus.OK
+    return jsonify("Dados atualizados com sucesso!"), HTTPStatus.OK
