@@ -4,7 +4,7 @@ from pydantic import UUID4, BaseModel
 class Student(BaseModel):
     student_id: UUID4
     name: str
-    lattes_id: int
+    lattes_id: str
     institution_id: UUID4
     graduate_program_id: UUID4
     year: int
