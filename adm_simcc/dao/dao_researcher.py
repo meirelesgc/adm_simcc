@@ -206,20 +206,23 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
             )
         )
 
-    script_sql = f"""
-        INSERT INTO public.subsidy(
-            researcher_id, 
-            modality_code, 
-            modality_name, 
-            call_title, 
-            category_level_code, 
-            funding_program_name, 
-            institute_name, 
-            aid_quantity, 
-            scholarship_quantity)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-        """
-    adm_database.execmany(script_sql, parameters)
+        script_sql = f"""
+            INSERT INTO public.subsidy(
+                researcher_id, 
+                modality_code, 
+                modality_name, 
+                call_title, 
+                category_level_code, 
+                funding_program_name, 
+                institute_name, 
+                aid_quantity, 
+                scholarship_quantity)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+            """
+        try:
+            adm_database.execmany(script_sql, parameters)
+        except:
+            print(parameters)
 
 
 def researcher_query_grant(institution_id):

@@ -31,7 +31,7 @@ class Subsidies(BaseModel):
     nome_programa_fomento: str
     nome_instituto: str
     quant_auxilio: str
-    quant_bolsa: str
+    quant_bolsa: int
 
 
 class ListSubsidies(BaseModel):
