@@ -190,19 +190,21 @@ def researcher_search_id(lattes_id):
 
 def researcher_insert_grant(ListSubsidies: ListSubsidies):
     parameters = list()
-    values = str()
 
     for subsidy in ListSubsidies.grant_list:
-        values += f"""(%s, %s, %s, %s, %s, %s, %s, %s, %s),"""
-        parameters.extend([researcher_search_id(subsidy.id_lattes)])
-        parameters.extend([subsidy.cod_modalidade])
-        parameters.extend([subsidy.nome_modalidade])
-        parameters.extend([subsidy.titulo_chamada])
-        parameters.extend([subsidy.cod_categoria_nivel])
-        parameters.extend([subsidy.nome_programa_fomento])
-        parameters.extend([subsidy.nome_instituto])
-        parameters.extend([subsidy.quant_auxilio])
-        parameters.extend([subsidy.quant_bolsa])
+        parameters.append(
+            (
+                researcher_search_id(subsidy.id_lattes),
+                subsidy.cod_modalidade,
+                subsidy.nome_modalidade,
+                subsidy.titulo_chamada,
+                subsidy.cod_categoria_nivel,
+                subsidy.nome_programa_fomento,
+                subsidy.nome_instituto,
+                subsidy.quant_auxilio,
+                subsidy.quant_bolsa,
+            )
+        )
 
     script_sql = f"""
         INSERT INTO public.subsidy(
@@ -215,9 +217,9 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
             institute_name, 
             aid_quantity, 
             scholarship_quantity)
-        VALUES {values[:-1]};
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.execmany(script_sql, parameters)
 
 
 def researcher_query_grant(institution_id):

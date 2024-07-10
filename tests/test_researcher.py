@@ -120,8 +120,8 @@ def test_query_subsidies_no_filters(client, researcher):
         "category_level_code": subsidie[0]["cod_categoria_nivel"],
         "funding_program_name": subsidie[0]["nome_programa_fomento"],
         "institute_name": subsidie[0]["nome_instituto"],
-        "aid_quantity": subsidie[0]["quant_auxilio"],
-        "scholarship_quantity": subsidie[0]["quant_bolsa"],
+        "aid_quantity": str(subsidie[0]["quant_auxilio"]),
+        "scholarship_quantity": str(subsidie[0]["quant_bolsa"]),
     }
     assert data in response.json
 

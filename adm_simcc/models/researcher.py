@@ -30,8 +30,8 @@ class Subsidies(BaseModel):
     cod_categoria_nivel: str
     nome_programa_fomento: str
     nome_instituto: str
-    quant_auxilio: int = 0
-    quant_bolsa: int = 0
+    quant_auxilio: str
+    quant_bolsa: str
 
 
 class ListSubsidies(BaseModel):
