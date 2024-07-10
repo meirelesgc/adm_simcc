@@ -40,5 +40,26 @@
         "nome_instituto": "CENTRO UNIVERSITÁRIO SENAI CIMATEC CIMATEC",
         "quant_auxilio": 0,
         "quant_bolsa": 1
+    },
+    {
+        "id": "771",
+        "id_lattes": "9973021912226739",
+        "nome_beneficiario": "Adriano Alonso Veloso",
+        "cpf_beneficiario": "***.336.476-**",
+        "nome_pais": "Brasil",
+        "nome_regiao": "Sudeste",
+        "nome_uf": "Minas Gerais",
+        "nome_cidade": "Belo Horizonte",
+        "nome_grande_area": "Ciências Exatas e da Terra",
+        "nome_area": "Ciência da Computação",
+        "nome_sub_area": "Sistemas de Computação",
+        "cod_modalidade": "PQ",
+        "nome_modalidade": "Produtividade em Pesquisa",
+        "titulo_chamada": "Chamada CNPq Nº 09/2023 - Bolsas de Produtividade em Pesquisa PQ/PQ-Sr",
+        "cod_categoria_nivel": "2",
+        "nome_programa_fomento": "Programas Básicos",
+        "nome_instituto": "Universidade Federal de Minas Gerais UFMG",
+        "quant_auxilio": "",
+        "quant_bolsa": 1
     }
 ]
