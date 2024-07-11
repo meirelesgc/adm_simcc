@@ -195,7 +195,7 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
     for subsidy in ListSubsidies.grant_list:
         researcher_id = researcher_search_id(subsidy.id_lattes)
         if not researcher_id:
-            untracket_researchers += subsidy
+            untracket_researchers.append(subsidy.model_dump())
             continue
         # fmt: off
         parameters.append((
