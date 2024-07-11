@@ -60,8 +60,8 @@ def researcher_count():
 def researcher_insert_grant():
     grant_list = request.get_json()
     list_instance = ListSubsidies(grant_list=grant_list)
-    dao_researcher.researcher_insert_grant(list_instance)
-    return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    untracket_researchers = dao_researcher.researcher_insert_grant(list_instance)
+    return jsonify({"not found": untracket_researchers}), HTTPStatus.CREATED
 
 
 @rest_researcher.route("/Query/Subsidy", methods=["GET"])

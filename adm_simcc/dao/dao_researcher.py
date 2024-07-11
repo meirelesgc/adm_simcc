@@ -167,7 +167,7 @@ def researcher_query_name(researcher_name: str):
     if registry:
         return registry[0][0]
     else:
-        return None
+        return str()
 
 
 def researcher_search_id(lattes_id):
@@ -190,12 +190,16 @@ def researcher_search_id(lattes_id):
 
 def researcher_insert_grant(ListSubsidies: ListSubsidies):
     parameters = list()
+    untracket_researchers = list()
 
     for subsidy in ListSubsidies.grant_list:
-
+        researcher_id = researcher_search_id(subsidy.id_lattes)
+        if not researcher_id:
+            untracket_researchers += subsidy
+            continue
         # fmt: off
         parameters.append((
-                researcher_search_id(subsidy.id_lattes), subsidy.cod_modalidade,
+                researcher_id, subsidy.cod_modalidade,
                 subsidy.nome_modalidade, subsidy.titulo_chamada, 
                 subsidy.cod_categoria_nivel, subsidy.nome_programa_fomento,
                 subsidy.nome_instituto, subsidy.quant_auxilio, subsidy.quant_bolsa,
@@ -216,6 +220,7 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
     adm_database.execmany(script_sql, parameters)
+    return untracket_researchers
 
 
 def researcher_query_grant(institution_id):
