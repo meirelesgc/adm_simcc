@@ -46,5 +46,5 @@ addopts = '-p no:warnings'
 
 [tool.taskipy.tasks]
 run = 'gunicorn --certfile=$CERT_FILE --keyfile=$KEY_FILE -b 0.0.0.0:5000 app:app --reload'
-test = 'pytest -x --cov=adm_simcc/rest -vv'
+test = 'pytest -x -s --cov=adm_simcc/rest -vv'
 post_test = 'coverage html'

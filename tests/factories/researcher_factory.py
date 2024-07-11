@@ -77,4 +77,4 @@ class SubsidiesFactory(factory.Factory):
     nome_programa_fomento = factory.LazyAttribute(lambda _: faker.company())
     nome_instituto = factory.LazyAttribute(lambda _: faker.company())
     quant_auxilio = factory.LazyAttribute(lambda _: str(randint(1000, 5000)))
-    quant_bolsa = factory.LazyAttribute(lambda _: str(randint(1, 5)))
+    quant_bolsa = factory.LazyAttribute(lambda _: randint(1, 5))

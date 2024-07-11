@@ -115,7 +115,7 @@ CREATE TABLE public.weights
 CREATE TABLE IF NOT EXISTS public.subsidy
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
-    researcher_id uuid NOT NULL,
+    researcher_id uuid,
     modality_code character varying(50) ,
     modality_name character varying(255) ,
     call_title character varying(255) ,

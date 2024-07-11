@@ -17,7 +17,7 @@
         "cod_categoria_nivel": "2",
         "nome_programa_fomento": "Programa Tecnológico Social",
         "nome_instituto": "CENTRO UNIVERSITÁRIO SENAI CIMATEC CIMATEC",
-        "quant_auxilio": 0,
+        "quant_auxilio": "0",
         "quant_bolsa": 1
     },
     {
@@ -38,7 +38,7 @@
         "cod_categoria_nivel": "1D",
         "nome_programa_fomento": "Programa Tecnológico de Produção e Serviços",
         "nome_instituto": "CENTRO UNIVERSITÁRIO SENAI CIMATEC CIMATEC",
-        "quant_auxilio": 0,
+        "quant_auxilio": "0",
         "quant_bolsa": 1
     }
 ]

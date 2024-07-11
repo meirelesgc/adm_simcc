@@ -185,44 +185,37 @@ def researcher_search_id(lattes_id):
     if researcher_id:
         return researcher_id[0][0]
     else:
-        return ...
+        return str()
 
 
 def researcher_insert_grant(ListSubsidies: ListSubsidies):
     parameters = list()
 
     for subsidy in ListSubsidies.grant_list:
-        parameters.append(
-            (
-                researcher_search_id(subsidy.id_lattes),
-                subsidy.cod_modalidade,
-                subsidy.nome_modalidade,
-                subsidy.titulo_chamada,
-                subsidy.cod_categoria_nivel,
-                subsidy.nome_programa_fomento,
-                subsidy.nome_instituto,
-                subsidy.quant_auxilio,
-                subsidy.quant_bolsa,
-            )
-        )
 
-        script_sql = f"""
-            INSERT INTO public.subsidy(
-                researcher_id, 
-                modality_code, 
-                modality_name, 
-                call_title, 
-                category_level_code, 
-                funding_program_name, 
-                institute_name, 
-                aid_quantity, 
-                scholarship_quantity)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-            """
-        try:
-            adm_database.execmany(script_sql, parameters)
-        except:
-            print(parameters)
+        # fmt: off
+        parameters.append((
+                researcher_search_id(subsidy.id_lattes), subsidy.cod_modalidade,
+                subsidy.nome_modalidade, subsidy.titulo_chamada, 
+                subsidy.cod_categoria_nivel, subsidy.nome_programa_fomento,
+                subsidy.nome_instituto, subsidy.quant_auxilio, subsidy.quant_bolsa,
+            ))
+        # fmt: on
+
+    script_sql = f"""
+        INSERT INTO public.subsidy(
+            researcher_id,
+            modality_code,
+            modality_name,
+            call_title,
+            category_level_code,
+            funding_program_name,
+            institute_name,
+            aid_quantity,
+            scholarship_quantity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+    """
+    adm_database.execmany(script_sql, parameters)
 
 
 def researcher_query_grant(institution_id):
