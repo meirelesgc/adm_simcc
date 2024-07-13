@@ -1,7 +1,7 @@
 import pandas as pd
 
 from ..dao import Connection
-from ..models.student import Student, ListStudent
+from ..models.student import GraduateProgramStudent, ListStudent
 from ..dao import dao_researcher
 
 
@@ -90,7 +90,7 @@ def student_delete(student_id, graduate_program):
     adm_database.exec(script_sql)
 
 
-def student_update(student: Student):
+def student_update(student: GraduateProgramStudent):
     script_sql = f"""
         UPDATE public.researcher
         SET

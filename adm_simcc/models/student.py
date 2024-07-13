@@ -1,7 +1,7 @@
 from pydantic import UUID4, BaseModel
 
 
-class Student(BaseModel):
+class GraduateProgramStudent(BaseModel):
     student_id: UUID4
     name: str
     lattes_id: str
@@ -11,4 +11,4 @@ class Student(BaseModel):
 
 
 class ListStudent(BaseModel):
-    student_list: list[Student]
+    student_list: list[GraduateProgramStudent]
