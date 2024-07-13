@@ -122,6 +122,6 @@ CREATE TABLE IF NOT EXISTS public.subsidy
     category_level_code character varying(50) ,
     funding_program_name character varying(255) ,
     institute_name character varying(255) ,
-    aid_quantity integer,
+    aid_quantity character varying(255),
     scholarship_quantity integer
 )

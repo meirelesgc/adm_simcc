@@ -56,16 +56,15 @@ def student_basic_query(
             'DISCENTE' as type_
         FROM
             graduate_program_student gps
-        JOIN researcher r ON
+        LEFT JOIN researcher r ON
         r.researcher_id = gps.researcher_id
         WHERE 
-            gps.graduate_program_id IS NOT NULL
+            1 = 1
             {filter_graduate_program}
             {filter_institution}
             {filter_lattes_id};
     """
     registry = adm_database.select(script_sql)
-
     data_frame = pd.DataFrame(
         registry,
         columns=[
