@@ -22,9 +22,6 @@ def researcher_insert(ListResearchers: ListResearchers):
         ))
     # fmt: on
 
-    # Criação do script de insert.
-    # Unifiquei em um unico comando para facilitar
-    # o retorno da mensagem de erro
     script_sql = f"""
         INSERT INTO researcher
         (researcher_id, name, lattes_id, institution_id)
@@ -61,20 +58,20 @@ def researcher_basic_query(
         filter_institution = """
             AND r.institution_id = %s
             """
-        parameters.extend([institution_id])
+        parameters += [institution_id]
 
     if researcher_name:
         filter_name = """
             AND name ILIKE %s
             """
-        parameters.extend([researcher_name])
+        parameters += [researcher_name]
     if rows:
         filter_limit = "LIMIT %s"
-        parameters.extend([rows])
+        parameters += [rows]
 
     if lattes_id:
         filter_lattes_id = "AND lattes_id = %s"
-        parameters.extend([lattes_id])
+        parameters += [lattes_id]
 
     script_sql = f"""   
         SELECT DISTINCT
