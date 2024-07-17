@@ -1,14 +1,14 @@
 import pandas as pd
 
 from ..dao import Connection
-from ..models.student import GraduateProgramStudent, ListStudent
+from ..models.student import GraduateProgramStudent, ListGraduateProgramStudent
 from ..dao import dao_researcher
 
 
 adm_database = Connection()
 
 
-def student_insert(ListStudent: ListStudent):
+def student_insert(ListStudent: ListGraduateProgramStudent):
     script_sql = str()
     for student in ListStudent.student_list:
         main_data_base_id = dao_researcher.researcher_basic_query(lattes_id=student.lattes_id)  # fmt: skip

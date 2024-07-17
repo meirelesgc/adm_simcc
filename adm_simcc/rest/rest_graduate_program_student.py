@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 
 from ..dao import dao_graduate_program_student
-from ..models.student import ListStudent, GraduateProgramStudent
+from ..models.student import ListGraduateProgramStudent, GraduateProgramStudent
 
 
 rest_graduate_program_student = Blueprint(
@@ -14,10 +14,10 @@ rest_graduate_program_student = Blueprint(
 
 @rest_graduate_program_student.route("/insert", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def student_insert():
+def graduate_program_student_insert():
     try:
         student_list = request.get_json()
-        list_instance = ListStudent(student_list=student_list)
+        list_instance = ListGraduateProgramStudent(student_list=student_list)
         dao_graduate_program_student.student_insert(list_instance)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
@@ -26,7 +26,7 @@ def student_insert():
 
 @rest_graduate_program_student.route("/update", methods=["POST"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def student_update():
+def graduate_program_student_update():
     student = request.get_json()
     instance = GraduateProgramStudent(**student[0])
     dao_graduate_program_student.student_update(instance)
@@ -35,7 +35,7 @@ def student_update():
 
 @rest_graduate_program_student.route("/delete", methods=["DELETE"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def student_delete():
+def graduate_program_student_delete():
     student = request.get_json()
     lattes_id = student[0]["lattes_id"]
     graduate_program_id = student[0]["graduate_program_id"]
@@ -45,7 +45,7 @@ def student_delete():
 
 @rest_graduate_program_student.route("/query", methods=["GET"])
 @cross_origin(origin="*", headers=["Content-Type"])
-def student_basic_query():
+def graduate_program_student_basic_query():
     institution_id = request.args.get("institution_id")
     graduate_program_id = request.args.get("graduate_program_id")
     students = dao_graduate_program_student.student_basic_query(

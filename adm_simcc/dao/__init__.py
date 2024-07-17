@@ -65,6 +65,7 @@ class Connection:
         except (Exception, psycopg2.DatabaseError) as E:
             print(f"[Erro]\n\n{E}")
             self.connection.rollback()
+            raise E
         finally:
             self.__close()
 
@@ -79,5 +80,6 @@ class Connection:
         except (Exception, psycopg2.DatabaseError) as E:
             print(f"[Erro]\n\n{E}")
             self.connection.rollback()
+            raise E
         finally:
             self.__close()

@@ -10,5 +10,5 @@ class GraduateProgramStudent(BaseModel):
     year: int
 
 
-class ListStudent(BaseModel):
+class ListGraduateProgramStudent(BaseModel):
     student_list: list[GraduateProgramStudent]

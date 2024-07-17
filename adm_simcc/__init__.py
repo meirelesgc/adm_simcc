@@ -5,8 +5,6 @@ from http import HTTPStatus
 
 def create_app():
     app = Flask(__name__)
-    app.config["CORS_HEADERS"] = "Content-Type"
-    CORS(app, resources={r"/*": {"origins": "*"}})
 
     from .rest.rest_graduate_program import rest_graduate_program
     from .rest.rest_gradute_program_researcher import rest_graduate_program_researcher
@@ -16,6 +14,7 @@ def create_app():
     from .rest.rest_researcher import rest_researcher
     from .rest.rest_researcher_group import rest_researcher_group
     from .rest.rest_system_management import rest_sys
+    from .rest.rest_teacher import rest_teacher
 
     app.register_blueprint(rest_researcher_group)
     app.register_blueprint(rest_institution)
@@ -25,6 +24,7 @@ def create_app():
     app.register_blueprint(rest_graduate_program_student)
     app.register_blueprint(rest_ind_prod)
     app.register_blueprint(rest_sys)
+    app.register_blueprint(rest_teacher)
 
     @app.route("/", methods=["GET"])
     def home():
