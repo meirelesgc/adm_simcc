@@ -1,7 +1,6 @@
 import psycopg2
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
 
 from ..dao import dao_researcher
 from ..models.researcher import ListResearchers, ListSubsidies

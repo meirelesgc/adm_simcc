@@ -150,3 +150,15 @@ CREATE TABLE ufmg_technician (
       data_prog DATE,
       semester character varying(6)
 );
+CREATE TABLE ufmg_departamento (
+      dep_id VARCHAR(10),
+      org_cod VARCHAR(3),
+      dep_nom VARCHAR(100),
+      dep_des VARCHAR(500),
+      dep_email VARCHAR(100),
+      dep_site VARCHAR(100),
+      dep_sigla VARCHAR(30),
+      dep_tel VARCHAR(20),
+      img_data BYTEA,
+      PRIMARY KEY (dep_id)
+);
