@@ -2,6 +2,7 @@ import os
 import psycopg2
 import psycopg2.extras
 
+
 # Garantir que ele consiga converter UUID's
 psycopg2.extras.register_uuid()
 
@@ -33,9 +34,8 @@ class Connection:
                 port=self.port,
             )
             self.cursor = self.connection.cursor()
-
-        except psycopg2.Error as E:
-            print("Erro ao conectar ao banco de dados:", E)
+        except psycopg2.Error as e:
+            print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
 
     def __close(self):
         if self.cursor:
@@ -45,11 +45,14 @@ class Connection:
 
     def select(self, script_sql: str, parameters: list = []):
         self.__connect()
+        query = None
         try:
             self.cursor.execute(script_sql, parameters)
             query = self.cursor.fetchall()
-        except psycopg2.errors.InvalidTextRepresentation as E:
-            print(f"[Erro\n- Possivelmente de Djavan\n{E.pgcode}")
+        except psycopg2.errors.InvalidTextRepresentation as e:
+            print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
+        except Exception as e:
+            print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
         finally:
             self.__close()
         return query
@@ -59,13 +62,14 @@ class Connection:
         try:
             self.cursor.execute(script_sql, parameters)
             self.connection.commit()
-        except psycopg2.errors.UniqueViolation as E:
-            print(E.pgcode)
-            raise psycopg2.errors.UniqueViolation
-        except (Exception, psycopg2.DatabaseError) as E:
-            print(f"[Erro]\n\n{E}")
+        except psycopg2.errors.UniqueViolation as e:
+            print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
             self.connection.rollback()
-            raise E
+            raise
+        except (Exception, psycopg2.DatabaseError) as e:
+            print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
+            self.connection.rollback()
+            raise
         finally:
             self.__close()
 
@@ -74,12 +78,13 @@ class Connection:
         try:
             self.cursor.executemany(script_sql, parameters)
             self.connection.commit()
-        except psycopg2.errors.UniqueViolation as E:
-            print(E.pgcode)
-            raise psycopg2.errors.UniqueViolation
-        except (Exception, psycopg2.DatabaseError) as E:
-            print(f"[Erro]\n\n{E}")
+        except psycopg2.errors.UniqueViolation as e:
+            print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
             self.connection.rollback()
-            raise E
+            raise
+        except (Exception, psycopg2.DatabaseError) as e:
+            print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
+            self.connection.rollback()
+            raise
         finally:
             self.__close()

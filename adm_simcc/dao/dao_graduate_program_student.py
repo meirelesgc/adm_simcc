@@ -21,7 +21,7 @@ def student_insert(ListStudent: ListGraduateProgramStudent):
             student.student_id = main_data_base_id[0]["researcher_id"]
 
         script_sql += f"""
-        INSERT INTO public.graduate_program_student (graduate_program_id, researcher_id, year)
+        INSERT INTO graduate_program_student (graduate_program_id, researcher_id, year)
         VALUES ('{student.graduate_program_id}', '{student.student_id}', '{student.year}');
         """
 
@@ -92,7 +92,7 @@ def student_delete(student_id, graduate_program):
 
 def student_update(student: GraduateProgramStudent):
     script_sql = f"""
-        UPDATE public.researcher
+        UPDATE researcher
         SET
             researcher_id = '{student.student_id}',
             name = '{student.name}',

@@ -25,7 +25,7 @@ def graduate_program_researcher_insert(
     # fmt: on
 
     script_sql = f"""
-        INSERT INTO public.graduate_program_researcher(
+        INSERT INTO graduate_program_researcher(
         graduate_program_id, researcher_id, year, type_)
         VALUES (%s, %s, %s, %s);
         """

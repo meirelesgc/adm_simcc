@@ -14,7 +14,7 @@ def insert_ind_prod(weights: Weights):
 
     if adm_database.select(script_sql=script_sql)[0][0]:
         script_sql = f"""
-            UPDATE public.weights
+            UPDATE weights
             SET
                 a1 = {weights.A1},
                 a2 = {weights.A2},
@@ -43,7 +43,7 @@ def insert_ind_prod(weights: Weights):
         return
 
     script_sql = f"""
-        INSERT INTO public.weights(
+        INSERT INTO weights(
             institution_id,
             a1,
             a2,
@@ -111,7 +111,7 @@ def ind_prod_basic_query(institution_id):
             patent_not_granted,
             report
         FROM
-            public.weights
+            weights
         WHERE institution_id = '{institution_id}';
         """
     registry = adm_database.select(script_sql)
@@ -149,7 +149,7 @@ def ind_prod_basic_query(institution_id):
 
 def ind_prod_delete(weight_id: UUID4):
     script_sql = f"""
-        DELETE FROM public.weights
+        DELETE FROM weights
         WHERE weight_id = '{weight_id}';
         """
     adm_database.exec(script_sql)

@@ -13,7 +13,6 @@ rest_institution = Blueprint(
 
 
 @rest_institution.route("/Insert", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def institution_insert():
     try:
         list_institutions = request.get_json()
@@ -25,7 +24,6 @@ def institution_insert():
 
 
 @rest_institution.route("/Query", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def institution_basic_query():
     institution_id = request.args.get("institution_id")
     institutions = dao_institution.institution_basic_query(institution_id)
@@ -33,7 +31,6 @@ def institution_basic_query():
 
 
 @rest_institution.route("/Query/Count", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def institution_full_query():
     institution_id = request.args.get("institution_id")
     institutions = dao_institution.institution_full_query(institution_id)

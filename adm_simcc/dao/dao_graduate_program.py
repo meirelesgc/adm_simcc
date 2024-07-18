@@ -25,7 +25,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
     # fmt: on
 
     script_sql = """
-        INSERT INTO public.graduate_program
+        INSERT INTO graduate_program
         (graduate_program_id, code, name, area, modality, type, rating,
         institution_id, city, url_image, sigla, description, visible)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);

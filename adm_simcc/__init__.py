@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from http import HTTPStatus
 
 
@@ -15,6 +15,7 @@ def create_app():
     from .rest.rest_researcher_group import rest_researcher_group
     from .rest.rest_system_management import rest_sys
     from .rest.rest_teacher import rest_teacher
+    from .rest.rest_technician import rest_technician
 
     app.register_blueprint(rest_researcher_group)
     app.register_blueprint(rest_institution)
@@ -25,6 +26,9 @@ def create_app():
     app.register_blueprint(rest_ind_prod)
     app.register_blueprint(rest_sys)
     app.register_blueprint(rest_teacher)
+    app.register_blueprint(rest_technician)
+
+    CORS(app)
 
     @app.route("/", methods=["GET"])
     def home():

@@ -16,7 +16,7 @@ def institution_insert(ListInstitutions: ListInstitutions):
     # Unifiquei em um unico comando para facilitar
     # o retorno da mensagem de erro
     script_sql = f"""
-        INSERT INTO public.institution
+        INSERT INTO institution
         (institution_id, name, acronym, lattes_id)
         VALUES {values_str[:-1]};
         """

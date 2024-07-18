@@ -12,7 +12,6 @@ rest_graduate_program = Blueprint(
 
 
 @rest_graduate_program.route("/Insert", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_insert():
     try:
         graduate_program_list = request.get_json()
@@ -27,7 +26,6 @@ def graduate_program_insert():
 
 
 @rest_graduate_program.route("/Update", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_update():
     graduate_program_id = request.args.get("graduate_program_id")
     dao.graduate_program_update(graduate_program_id)
@@ -35,7 +33,6 @@ def graduate_program_update():
 
 
 @rest_graduate_program.route("/Fix", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_fix():
     graduate_program = request.get_json()
     instance = GraduateProgram(**graduate_program[0])
@@ -44,7 +41,6 @@ def graduate_program_fix():
 
 
 @rest_graduate_program.route("/Delete", methods=["DELETE"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_delete():
     graduate_program_id = request.args.get("graduate_program_id")
     dao.graduate_program_delete(graduate_program_id)
@@ -52,7 +48,6 @@ def graduate_program_delete():
 
 
 @rest_graduate_program.route("/Query", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_basic_query():
     institution_id = request.args.get("institution_id")
     graduate_programs = dao.graduate_program_basic_query(institution_id)
@@ -60,7 +55,6 @@ def graduate_program_basic_query():
 
 
 @rest_graduate_program.route("/Query/Count", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_count():
     institution_id = request.args.get("institution_id")
     graduate_program_count = dao.graduate_program_count(institution_id)

@@ -13,7 +13,6 @@ rest_graduate_program_student = Blueprint(
 
 
 @rest_graduate_program_student.route("/insert", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_student_insert():
     try:
         student_list = request.get_json()
@@ -25,7 +24,6 @@ def graduate_program_student_insert():
 
 
 @rest_graduate_program_student.route("/update", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_student_update():
     student = request.get_json()
     instance = GraduateProgramStudent(**student[0])
@@ -34,7 +32,6 @@ def graduate_program_student_update():
 
 
 @rest_graduate_program_student.route("/delete", methods=["DELETE"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_student_delete():
     student = request.get_json()
     lattes_id = student[0]["lattes_id"]
@@ -44,7 +41,6 @@ def graduate_program_student_delete():
 
 
 @rest_graduate_program_student.route("/query", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_student_basic_query():
     institution_id = request.args.get("institution_id")
     graduate_program_id = request.args.get("graduate_program_id")

@@ -14,7 +14,6 @@ rest_researcher_group = Blueprint(
 
 
 @rest_researcher_group.route("/Insert", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def research_group_insert():
     try:
         researcher_groups_list = request.get_json()
@@ -29,7 +28,6 @@ def research_group_insert():
 
 
 @rest_researcher_group.route("/Query", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def research_group_basic_query():
     institution_id = request.args.get("institution_id")
     research_group_id = request.args.get("research_group_id")
@@ -41,7 +39,6 @@ def research_group_basic_query():
 
 
 @rest_researcher_group.route("/Delete", methods=["DELETE"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def research_group_delete():
     research_group_id = request.args.get("research_group_id")
     institution_id = request.args.get("institution_id")
@@ -50,7 +47,6 @@ def research_group_delete():
 
 
 @rest_researcher_group.route("/Update", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def research_group_update():
     researcher_groups_list = request.get_json()
     instance = ListResearcherGroup(researcher_groups_list=researcher_groups_list)

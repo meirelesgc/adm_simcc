@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 from zeep import Client
 from pydantic import UUID4
@@ -12,7 +11,6 @@ CNPq = Client("http://servicosweb.cnpq.br/srvcurriculo/WSCurriculo?wsdl")
 
 
 def researcher_insert(ListResearchers: ListResearchers):
-
     parameters = list()
     # fmt: off
     for researcher in ListResearchers.researcher_list:
@@ -89,7 +87,7 @@ def researcher_basic_query(
             researcher r
         LEFT JOIN subsidy s ON s.researcher_id = r.researcher_id 
         WHERE
-            r.researcher_id NOT IN (SELECT researcher_id FROM public.graduate_program_student)
+            r.researcher_id NOT IN (SELECT researcher_id FROM graduate_program_student)
             {filter_institution}
             {filter_name}
             {filter_lattes_id}
@@ -204,7 +202,7 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
         # fmt: on
 
     script_sql = f"""
-        INSERT INTO public.subsidy(
+        INSERT INTO subsidy(
             researcher_id,
             modality_code,
             modality_name,

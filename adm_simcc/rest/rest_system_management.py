@@ -8,14 +8,12 @@ rest_sys = Blueprint("rest_system_management", __name__, url_prefix="/sys")
 
 
 @rest_sys.route("/checkHop", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def checkHop():
     line = dao_system.check_load()
     return jsonify({"message": line}), HTTPStatus.OK
 
 
 @rest_sys.route("/requestUpdate", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def requestUpdate():
     onHop = request.get_json()
     if onHop[0]["state"]:

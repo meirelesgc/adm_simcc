@@ -14,7 +14,6 @@ rest_graduate_program_researcher = Blueprint(
 
 
 @rest_graduate_program_researcher.route("/Insert", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_researcher_insert():
     try:
         list_instance = request.get_json()
@@ -29,7 +28,6 @@ def graduate_program_researcher_insert():
 
 
 @rest_graduate_program_researcher.route("/Delete", methods=["DELETE"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_researcher_delete():
     researcher = request.get_json()
     researcher_id = researcher[0]["lattes_id"]
@@ -39,7 +37,6 @@ def graduate_program_researcher_delete():
 
 
 @rest_graduate_program_researcher.route("/Query", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_researcher_basic_query():
     graduate_program_id = request.args.get("graduate_program_id")
     type_ = request.args.get("type")
@@ -50,7 +47,6 @@ def graduate_program_researcher_basic_query():
 
 
 @rest_graduate_program_researcher.route("/Query/Count", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def graduate_program_researcher_count():
     institution_id = request.args.get("institution_id")
     graduate_program_id = request.args.get("graduate_program_id")

@@ -11,7 +11,6 @@ rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/Researcher
 
 
 @rest_researcher.route("/Insert", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def researcher_insert():
     try:
         researcher_list = request.get_json()
@@ -23,7 +22,6 @@ def researcher_insert():
 
 
 @rest_researcher.route("/Delete", methods=["DELETE"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def researcher_delete():
     researcher_id = request.args.get("researcher_id")
     dao_researcher.researcher_delete(researcher_id)
@@ -31,7 +29,6 @@ def researcher_delete():
 
 
 @rest_researcher.route("/Query", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def researcher_basic_query():
     institution_id = request.args.get("institution_id")
     researcher_name = request.args.get("name")
@@ -48,7 +45,6 @@ def researcher_basic_query():
 
 
 @rest_researcher.route("/Query/Count", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def researcher_count():
     institution_id = request.args.get("institution_id")
     researchers_count = dao_researcher.researcher_count(institution_id)
@@ -56,7 +52,6 @@ def researcher_count():
 
 
 @rest_researcher.route("/InsertGrant", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def researcher_insert_grant():
     grant_list = request.get_json()
     list_instance = ListSubsidies(grant_list=grant_list)
@@ -65,7 +60,6 @@ def researcher_insert_grant():
 
 
 @rest_researcher.route("/Query/Subsidy", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def researcher_query_grant():
     institution_id = request.args.get("institution_id")
     researchers_list = dao_researcher.researcher_query_grant(institution_id)

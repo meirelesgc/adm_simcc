@@ -8,7 +8,6 @@ rest_ind_prod = Blueprint("rest_ind_prod", __name__, url_prefix="/indprod")
 
 
 @rest_ind_prod.route("/insert", methods=["POST"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def ind_prod_insert():
     weights_list = request.get_json()
     if weights_list:
@@ -18,7 +17,6 @@ def ind_prod_insert():
 
 
 @rest_ind_prod.route("/delete", methods=["DELETE"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def ind_prod_delete():
     weight_id = request.args.get("weight_id")
     dao_ind_prod.ind_prod_delete(weight_id)
@@ -26,7 +24,6 @@ def ind_prod_delete():
 
 
 @rest_ind_prod.route("/query", methods=["GET"])
-@cross_origin(origin="*", headers=["Content-Type"])
 def ind_prod_basic_query():
     institution_id = request.args.get("institution_id")
     jsonWeights = dao_ind_prod.ind_prod_basic_query(institution_id)
