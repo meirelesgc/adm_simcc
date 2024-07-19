@@ -36,3 +36,12 @@ class Subsidies(BaseModel):
 
 class ListSubsidies(BaseModel):
     grant_list: list[Subsidies]
+
+
+class ResearcherDepartament(BaseModel):
+    dep_id: int
+    researcher_id: UUID4
+
+
+class ListResearcherDepartament(BaseModel):
+    researcher_departament: list[ResearcherDepartament]

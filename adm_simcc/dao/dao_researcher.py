@@ -3,7 +3,11 @@ from zeep import Client
 from pydantic import UUID4
 
 from ..dao import Connection
-from ..models.researcher import ListResearchers, ListSubsidies
+from ..models.researcher import (
+    ListResearchers,
+    ListSubsidies,
+    ListResearcherDepartament,
+)
 
 adm_database = Connection()
 # simcc_database = Connection(database=os.environ["SIMCC_DATABASE"])
@@ -197,7 +201,8 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
                 researcher_id, subsidy.cod_modalidade,
                 subsidy.nome_modalidade, subsidy.titulo_chamada, 
                 subsidy.cod_categoria_nivel, subsidy.nome_programa_fomento,
-                subsidy.nome_instituto, subsidy.quant_auxilio, subsidy.quant_bolsa,
+                subsidy.nome_instituto, subsidy.quant_auxilio, 
+                subsidy.quant_bolsa,
             ))
         # fmt: on
 
@@ -260,6 +265,51 @@ def researcher_query_grant(institution_id):
             "institute_name",
             "aid_quantity",
             "scholarship_quantity",
+        ],
+    )
+
+    return data_frame.to_dict(orient="records")
+
+
+def researcher_departament_insert(ListResearcherDepartament: ListResearcherDepartament):
+    parameters = list()
+
+    for researcher in ListResearcherDepartament.researcher_departament:
+        parameters.append((researcher.dep_id, researcher.researcher_id))
+
+    script_sql = """
+        INSERT INTO departament_researcher (dep_id, researcher_id)
+        VALUES (%s, %s);
+        """
+    adm_database.execmany(script_sql, parameters)
+
+
+def researcher_departament_basic_query(researcher_id):
+
+    script_sql = """   
+        SELECT 
+            dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
+            dep_tel
+        FROM 
+            ufmg_departament dp
+            LEFT JOIN departament_researcher dpr ON dpr.dep_id = dp.dep_id
+        WHERE
+            dpr.researcher_id = %s;
+        """
+
+    reg = adm_database.select(script_sql, researcher_id)
+
+    data_frame = pd.DataFrame(
+        reg,
+        columns=[
+            "dep_id",
+            "org_cod",
+            "dep_nom",
+            "dep_des",
+            "dep_email",
+            "dep_site",
+            "dep_sigla",
+            "dep_tel",
         ],
     )
 

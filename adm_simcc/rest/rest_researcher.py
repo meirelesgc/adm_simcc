@@ -3,7 +3,11 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
 from ..dao import dao_researcher
-from ..models.researcher import ListResearchers, ListSubsidies
+from ..models.researcher import (
+    ListResearchers,
+    ListSubsidies,
+    ListResearcherDepartament,
+)
 
 
 rest_researcher = Blueprint("rest_researcher", __name__, url_prefix="/ResearcherRest")
@@ -63,3 +67,27 @@ def researcher_query_grant():
     institution_id = request.args.get("institution_id")
     researchers_list = dao_researcher.researcher_query_grant(institution_id)
     return jsonify(researchers_list), HTTPStatus.OK
+
+
+@rest_researcher.route("/departament", methods=["POST"])
+def researcher_departament_insert():
+    try:
+        researchers = request.get_json()
+        researchers = ListResearcherDepartament(researcher_departament=researchers)
+        dao_researcher.researcher_departament_insert(researchers)
+    except psycopg2.errors.UniqueViolation:
+        return (
+            jsonify({"message": "pesquisador ja cadastrado neste departamento"}),
+            HTTPStatus.CONFLICT,
+        )
+
+
+@rest_researcher.route("/departament", methods=["GET"])
+def researcher_departament_basic_query():
+    dep_id = request.args.get("dep_id")
+    researcher_id = request.args.get("researcher_id")
+
+    researchers = dao_researcher.researcher_departament_basic_query(
+        researcher_id, dep_id
+    )
+    return jsonify(researchers), HTTPStatus.OK

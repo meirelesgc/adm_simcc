@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS graduate_program(
       FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
 );
 CREATE TABLE IF NOT EXISTS graduate_program_researcher(
-      graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
-      researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      graduate_program_id uuid NOT NULL,
+      researcher_id uuid NOT NULL,
       year INTEGER,
       type_ relationship,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -115,8 +115,8 @@ CREATE TABLE IF NOT EXISTS subsidy (
       aid_quantity character varying(255),
       scholarship_quantity integer
 );
-CREATE TABLE ufmg_teacher (
-      matric INT UNIQUE,
+CREATE TABLE IF NOT EXISTS ufmg_teacher (
+      matric INT,
       inscUFMG INT,
       nome character varying(200),
       genero character varying(40),
@@ -132,7 +132,7 @@ CREATE TABLE ufmg_teacher (
       semester character varying(6),
       PRIMARY KEY (matric, semester)
 );
-CREATE TABLE ufmg_technician (
+CREATE TABLE IF NOT EXISTS ufmg_technician (
       matric INT UNIQUE,
       ins_ufmg VARCHAR(255),
       nome VARCHAR(255),
@@ -150,7 +150,7 @@ CREATE TABLE ufmg_technician (
       data_prog DATE,
       semester character varying(6)
 );
-CREATE TABLE ufmg_departamento (
+CREATE TABLE IF NOT EXISTS ufmg_departament (
       dep_id VARCHAR(10),
       org_cod VARCHAR(3),
       dep_nom VARCHAR(100),
@@ -161,4 +161,11 @@ CREATE TABLE ufmg_departamento (
       dep_tel VARCHAR(20),
       img_data BYTEA,
       PRIMARY KEY (dep_id)
+);
+CREATE TABLE IF NOT EXISTS departament_researcher (
+      dep_id VARCHAR(10),
+      researcher_id uuid NOT NULL,
+      PRIMARY KEY (dep_id, researcher_id),
+      FOREIGN KEY (dep_id) REFERENCES ufmg_departament (dep_id),
+      FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id)
 );

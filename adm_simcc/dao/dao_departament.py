@@ -22,7 +22,7 @@ def departament_insert(departaments, file):
         # fmt: on
 
     script_sql = """
-        INSERT INTO ufmg_departamento
+        INSERT INTO ufmg_departament
             (dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
             dep_tel) 
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -45,7 +45,7 @@ def departament_basic_query():
             dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
             dep_tel
         FROM 
-            ufmg_departamento;
+            ufmg_departament;
         """
     reg = adm_database.select(script_sql)
 
