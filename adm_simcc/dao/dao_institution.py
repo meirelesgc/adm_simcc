@@ -34,7 +34,7 @@ def institution_full_query(institution_id: UUID4 = None):
             i.name AS name,
             i.institution_id,
             COUNT(DISTINCT gp.graduate_program_id) AS count_gp,
-            COUNT(DISTINCTgpr.researcher_id) AS count_gpr,
+            COUNT(DISTINCT gpr.researcher_id) AS count_gpr,
             COUNT(DISTINCT r.researcher_id) as count_r
         FROM
             institution i
