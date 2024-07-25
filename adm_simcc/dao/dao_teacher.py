@@ -46,7 +46,7 @@ def reacher_basic_query(year, semester):
             """
     else:
         filter_semester = """
-            WHERE semester = (SELECT MAX(semester) FROM ufmg_docente)
+            WHERE semester = (SELECT MAX(semester) FROM ufmg_teacher)
             """
 
     script_sql = f"""
