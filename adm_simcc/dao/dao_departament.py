@@ -10,15 +10,16 @@ def departament_insert(departaments, file):
 
     for i, departament in enumerate(departaments):
         # fmt: off
-        parameters.append((
-            departament["dep_id"], departament["org_cod"], departament["dep_nom"], 
-            departament["dep_des"], departament["dep_email"], departament["dep_site"],
-            departament["dep_sigla"], departament["dep_tel"], psycopg2.Binary(file[f'img_data_{i}'].read()) if f'img_data_{i}' in file else None,
-            # -- update values
-            departament["org_cod"], departament["dep_nom"], departament["dep_des"],
-            departament["dep_email"], departament["dep_site"], departament["dep_sigla"], 
-            departament["dep_tel"], psycopg2.Binary(file[f'img_data_{i}'].read()) if f'img_data_{i}' in file else None,
-        ))
+        with file[f'img_data_{i}'].read() as image:
+            parameters.append((
+                departament["dep_id"], departament["org_cod"], departament["dep_nom"], 
+                departament["dep_des"], departament["dep_email"], departament["dep_site"],
+                departament["dep_sigla"], departament["dep_tel"], psycopg2.Binary(image),
+                # -- update values
+                departament["org_cod"], departament["dep_nom"], departament["dep_des"],
+                departament["dep_email"], departament["dep_site"], departament["dep_sigla"], 
+                departament["dep_tel"], psycopg2.Binary(image),
+            ))
         # fmt: on
 
     script_sql = """

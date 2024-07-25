@@ -23,5 +23,6 @@ def technician_insert():
 def technician_basic_query():
     year = request.args.get("year")
     semester = request.args.get("semester")
-    technicians = dao_technician.technician_basic_query(year, semester)
-    return jsonify({"message": "ok"}), HTTPStatus.OK
+    departament = request.args.get("departament")
+    technicians = dao_technician.technician_basic_query(year, semester, departament)
+    return jsonify(technicians), HTTPStatus.OK

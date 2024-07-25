@@ -34,9 +34,11 @@ def technician_insert(ListTechnician: ListTechnician):
     adm_database.execmany(script_sql, parameters)
 
 
-def technician_basic_query(year, semester):
+def technician_basic_query(year, semester, departament):
 
     parameters = list()
+    filter_departament = str()
+
     if year or semester:
         parameters.append(f"{year}.{semester}")
         filter_semester = """
@@ -47,6 +49,10 @@ def technician_basic_query(year, semester):
             WHERE semester = (SELECT MAX(semester) FROM ufmg_technician)
             """
 
+    if departament:
+        filter_semester = """
+            AND
+            """
     script_sql = f"""
         SELECT 
             matric, ins_ufmg, nome, genero, deno_sit, rt, classe, cargo, nivel, ref, 
