@@ -51,10 +51,11 @@ def departament_basic_query():
             "img_data",
         ],
     )
-
     for index, data in data_frame.iterrows():
-        data_frame.loc[index]["img_data"] = base64.b64decode(
-            data_frame.loc[index]["img_data"]
-        ).decode("utf-8")
+
+        data_frame.iloc[index]["img_data"] = [
+            base64.b64encode(item).decode("utf-8")
+            for item in data_frame.iloc[index]["img_data"]
+        ]
 
     return data_frame.to_dict(orient="records")
