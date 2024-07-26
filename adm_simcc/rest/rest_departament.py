@@ -27,7 +27,7 @@ def departament_delete():
     return jsonify("OK"), HTTPStatus.NO_CONTENT
 
 
-@rest_departament.route("/departamentos", methods=["PUT"])
+@rest_departament.route("/departamentos/update", methods=["POST"])
 def departament_update():
     departament = request.form.to_dict()
     departaments_file = request.files
