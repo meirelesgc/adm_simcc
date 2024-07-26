@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class Technician(BaseModel):
-    matric: int
-    ins_ufmg: int
+    matric: str
+    ins_ufmg: str
     nome: str
     genero: str
     deno_sit: str
@@ -18,8 +18,8 @@ class Technician(BaseModel):
     detalhe_setor: str
     dting_org: datetime
     data_prog: datetime
-    year_charge: int
-    semester: int
+    year_charge: str
+    semester: str
 
     @field_validator("dting_org", mode="before")
     def parse_dting_org(cls, value):

@@ -52,7 +52,6 @@ def departament_basic_query():
         ],
     )
 
-    data_frame["img_data"] = data_frame["img_data"].apply(base64.b64decode)
-    data_frame["img_data"] = data_frame["img_data"].decode("utf-8")
+    data_frame["img_data"] = base64.b64decode(data_frame["img_data"]).decode("utf-8")
 
     return data_frame.to_dict(orient="records")
