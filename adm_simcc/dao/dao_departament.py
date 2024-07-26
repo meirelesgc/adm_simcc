@@ -51,7 +51,11 @@ def departament_basic_query():
     result = list()
     for row in reg:
         row_dict = dict(zip(columns, row))
-        row_dict["img_data"] = base64.b64encode(row_dict["img_data"]).decode("utf-8")
+        row_dict["img_data"] = (
+            base64.b64encode(row_dict["img_data"]).decode("utf-8")
+            if row_dict["img_data"]
+            else None
+        )
         result.append(row_dict)
 
     return result
