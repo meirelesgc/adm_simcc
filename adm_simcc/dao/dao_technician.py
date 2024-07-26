@@ -18,11 +18,11 @@ def technician_insert(ListTechnician: ListTechnician):
     for technician in ListTechnician.list_technician:
         # fmt: off
         parameters.append((
-            technician.matric, technician.ins_ufmg, technician.nome, 
-            technician.genero, technician.deno_sit, technician.rt,
+            technician.matric, technician.insUFMG, technician.nome, 
+            technician.genero, technician.denoSit, technician.rt,
             technician.classe, technician.cargo, technician.nivel, 
             technician.ref, technician.titulacao, technician.setor,
-            technician.detalhe_setor, technician.dting_org, technician.data_prog,
+            technician.detalheSetor, technician.dtIngOrg, technician.dataProg,
             f"{year}.{semester}"
         ))
         # fmt: on
