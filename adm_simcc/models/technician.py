@@ -4,10 +4,10 @@ from datetime import datetime
 
 class Technician(BaseModel):
     matric: str
-    ins_ufmg: str
+    insUFMG: str
     nome: str
     genero: str
-    deno_sit: str
+    denoSit: str
     rt: str
     classe: str
     cargo: str
@@ -15,9 +15,9 @@ class Technician(BaseModel):
     ref: str
     titulacao: str
     setor: str
-    detalhe_setor: str
-    dting_org: datetime
-    data_prog: datetime
+    detalheSetor: str
+    dtYngOrg: datetime
+    dataProg: datetime
     year_charge: str
     semester: str
 

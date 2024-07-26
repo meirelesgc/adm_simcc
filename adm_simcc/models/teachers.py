@@ -3,21 +3,21 @@ from datetime import datetime
 
 
 class Teacher(BaseModel):
-    matric: int
-    inscUFMG: int
+    matric: str
+    inscUFMG: str
     nome: str
     genero: str
     situacao: str
     rt: str
-    clas: int
+    clas: str
     cargo: str
     classe: str
-    ref: int
+    ref: str
     titulacao: str
     entradaNaUFMG: datetime
     progressao: datetime
-    year_charge: int
-    semester: int
+    year_charge: str
+    semester: str
 
     @field_validator("entradaNaUFMG", mode="before")
     def parse_entradaNaUFMG(cls, value):
