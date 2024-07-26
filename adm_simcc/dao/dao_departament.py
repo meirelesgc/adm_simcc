@@ -59,3 +59,11 @@ def departament_basic_query():
         result.append(row_dict)
 
     return result
+
+
+def departament_delete(dep_id):
+    script_sql = """
+        DELETE FROM UFMG.departament
+        WHERE dep_id = %s;
+        """
+    adm_database.exec(script_sql, [dep_id])
