@@ -67,3 +67,30 @@ def departament_delete(dep_id):
         WHERE dep_id = %s;
         """
     adm_database.exec(script_sql, [dep_id])
+
+
+def departament_update(departament, file):
+    parameters = list()
+
+    # fmt: off
+    parameters =[
+        departament["org_cod"], departament["dep_nom"], 
+        departament["dep_des"], departament["dep_email"], 
+        departament["dep_site"], departament["dep_sigla"], 
+        departament["dep_tel"], psycopg2.Binary(file["img_data"].read()), 
+        departament["dep_id"],
+    ]
+    # fmt: on
+    script_sql = """
+        UPDATE UFMG.departament
+        SET org_cod = %s, 
+            dep_nom = %s, 
+            dep_des = %s, 
+            dep_email = %s, 
+            dep_site = %s, 
+            dep_sigla = %s,
+            dep_tel = %s, 
+            img_data = %s
+        WHERE dep_id = %s, 
+        """
+    adm_database.exec(script_sql, parameters)

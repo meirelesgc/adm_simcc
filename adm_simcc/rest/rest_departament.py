@@ -23,5 +23,13 @@ def departament_basic_query():
 @rest_departament.route("/departamentos", methods=["DELETE"])
 def departament_delete():
     dep_id = request.args.get("dep_id")
-    dao_departament.departament_delete("dep_id")
+    dao_departament.departament_delete(dep_id)
     return jsonify("OK"), HTTPStatus.NO_CONTENT
+
+
+@rest_departament.route("/departamentos", methods=["PUT"])
+def departament_delete():
+    departament = request.form.to_dict()
+    departaments_file = request.files
+    dao_departament.departament_update(departament, departaments_file)
+    return jsonify("OK"), HTTPStatus.OK
