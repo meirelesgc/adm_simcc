@@ -1,6 +1,7 @@
 import pandas as pd
 from ..dao import Connection
 import psycopg2
+import base64
 
 adm_database = Connection()
 
@@ -8,37 +9,22 @@ adm_database = Connection()
 def departament_insert(departaments, file):
     parameters = list()
 
-    for i, departament in enumerate(departaments):
-        # fmt: off
-        with file[f'img_data_{i}'].read() as image:
-            parameters.append((
-                departament["dep_id"], departament["org_cod"], departament["dep_nom"], 
-                departament["dep_des"], departament["dep_email"], departament["dep_site"],
-                departament["dep_sigla"], departament["dep_tel"], psycopg2.Binary(image),
-                # -- update values
-                departament["org_cod"], departament["dep_nom"], departament["dep_des"],
-                departament["dep_email"], departament["dep_site"], departament["dep_sigla"], 
-                departament["dep_tel"], psycopg2.Binary(image),
-            ))
-        # fmt: on
-
+    # fmt: off
+    parameters =[
+        departaments["dep_id"], departaments["org_cod"],
+        departaments["dep_nom"], departaments["dep_des"],
+        departaments["dep_email"], departaments["dep_site"],
+        departaments["dep_sigla"], departaments["dep_tel"],
+        psycopg2.Binary(file["img_data"].read())
+    ]
+    # fmt: on
     script_sql = """
-        INSERT INTO ufmg_departament
-            (dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
-            dep_tel, img_data) 
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ON DUPLICATE KEY UPDATE
-            org_cod = %s, 
-            dep_nom = %s,
-            dep_des = %s, 
-            dep_email = %s, 
-            dep_site = %s, 
-            dep_sigla = %s, 
-            dep_tel = %s, 
-            img_data = %s
-            """
-
-    adm_database.execmany(script_sql, parameters)
+        INSERT INTO UFMG.departament
+            (dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla,
+             dep_tel, img_data)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+    adm_database.exec(script_sql, parameters)
 
 
 def departament_basic_query():
@@ -47,7 +33,7 @@ def departament_basic_query():
             dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
             dep_tel, img_data
         FROM 
-            ufmg_departament;
+            UFMG.departament;
         """
     reg = adm_database.select(script_sql)
 
@@ -65,5 +51,8 @@ def departament_basic_query():
             "img_data",
         ],
     )
+
+    data_frame["img_data"] = data_frame["img_data"].apply(base64.b64decode)
+    data_frame["img_data"] = data_frame["img_data"].decode("utf-8")
 
     return data_frame.to_dict(orient="records")

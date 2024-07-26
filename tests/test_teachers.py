@@ -21,6 +21,16 @@ def test_violate_unique_teacher(client):
     assert response.status_code == HTTPStatus.CONFLICT
 
 
+def test_insert_teacher_existing_researcher(client, researcher):
+    teacher = TeacherFactory.create_batch(1, nome=researcher[0]["name"])
+    response = client.post("/docentes", json=teacher)
+
+    assert response.status_code == HTTPStatus.CREATED
+    from pprint import pprint
+
+    pprint(client.get("/docentes").json)
+
+
 def test_get_teacher_no_filter(client):
     teacher = TeacherFactory.create_batch(1)
     response = client.post("/docentes", json=teacher)

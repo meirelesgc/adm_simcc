@@ -13,7 +13,7 @@ def teacher_insert():
     try:
         teachers = request.get_json()
         teachers = ListTeachers(list_teachers=teachers)
-        dao_teacher.teacher_insert(teachers)
+        dao_teacher.ufmg_researcher_insert(teachers)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
         return jsonify({"message": "Docente já cadastrado"}), HTTPStatus.CONFLICT

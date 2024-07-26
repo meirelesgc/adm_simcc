@@ -1,6 +1,5 @@
 from factory import Factory, LazyFunction, Sequence, Faker, LazyAttribute
 from uuid import uuid4
-from datetime import datetime
 from faker import Factory as FakerFactory
 
 faker = FakerFactory.create()

@@ -16,4 +16,5 @@ def departament_insert():
 
 @rest_departament.route("/departamentos", methods=["GET"])
 def departament_basic_query():
-    return dao_departament.departament_basic_query(), HTTPStatus.OK
+    departaments = dao_departament.departament_basic_query()
+    return jsonify(departaments), HTTPStatus.OK

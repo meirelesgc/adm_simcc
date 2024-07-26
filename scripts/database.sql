@@ -3,17 +3,17 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE EXTENSION IF NOT EXISTS unaccent;
 CREATE TYPE relationship AS ENUM ('COLABORADOR', 'PERMANENTE');
 CREATE TYPE hop_status AS ENUM ('PADRÃO', 'CARGA SOLICITADA', 'EM PROCESSAMENTO');
-CREATE TABLE IF NOT EXISTS institution(
+CREATE TABLE IF NOT EXISTS public.institution(
       institution_id uuid DEFAULT uuid_generate_v4(),
       name VARCHAR(255) NOT NULL,
       acronym VARCHAR(50) UNIQUE,
-      lattes_id CHAR(12),
+      lattes_id CHAR(16),
       load_status hop_status NOT NULL DEFAULT 'PADRÃO',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (institution_id)
 );
-CREATE TABLE IF NOT EXISTS researcher(
+CREATE TABLE IF NOT EXISTS public.researcher(
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       name VARCHAR(150) NOT NULL,
       lattes_id VARCHAR(20) UNIQUE,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS researcher(
       PRIMARY KEY (researcher_id),
       FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
 );
-CREATE TABLE IF NOT EXISTS graduate_program(
+CREATE TABLE IF NOT EXISTS public.graduate_program(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       code VARCHAR(100),
       name VARCHAR(100) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS graduate_program(
       PRIMARY KEY (graduate_program_id),
       FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
 );
-CREATE TABLE IF NOT EXISTS graduate_program_researcher(
+CREATE TABLE IF NOT EXISTS public.graduate_program_researcher(
       graduate_program_id uuid NOT NULL,
       researcher_id uuid NOT NULL,
       year INTEGER,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS graduate_program_researcher(
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
 );
-CREATE TABLE IF NOT EXISTS graduate_program_student(
+CREATE TABLE IF NOT EXISTS public.graduate_program_student(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       year INTEGER,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS graduate_program_student(
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
 );
-CREATE TABLE IF NOT EXISTS research_group (
+CREATE TABLE IF NOT EXISTS public.research_group (
       research_group_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       research_group_name VARCHAR(255) UNIQUE,
       researcher_id uuid,
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS research_group (
       CONSTRAINT fk_researcher_id FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id),
       CONSTRAINT fk_institution_id FOREIGN KEY (institution_id) REFERENCES institution(institution_id)
 );
-CREATE TABLE IF NOT EXISTS weights (
+CREATE TABLE IF NOT EXISTS public.weights (
       institution_id uuid DEFAULT uuid_generate_v4(),
       a1 numeric(10, 3),
       a2 numeric(10, 3),
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS weights (
       f4 numeric(10, 3) DEFAULT 0,
       f5 numeric(10, 3) DEFAULT 0
 );
-CREATE TABLE IF NOT EXISTS subsidy (
+CREATE TABLE IF NOT EXISTS public.subsidy (
       id uuid NOT NULL DEFAULT uuid_generate_v4(),
       researcher_id uuid,
       modality_code character varying(50),
@@ -115,24 +115,28 @@ CREATE TABLE IF NOT EXISTS subsidy (
       aid_quantity character varying(255),
       scholarship_quantity integer
 );
-CREATE TABLE IF NOT EXISTS ufmg_teacher (
-      matric INT,
-      inscUFMG INT,
+CREATE SCHEMA IF NOT EXISTS UFMG;
+CREATE TABLE IF NOT EXISTS UFMG.researcher (
+      id uuid,
+      researcher_id uuid,
+      matric character varying(200),
+      inscUFMG character varying(200),
       nome character varying(200),
       genero character varying(40),
       situacao character varying(40),
       rt character varying(40),
-      clas INT,
+      clas character varying(200),
       cargo character varying(40),
       classe character varying(40),
-      ref INT,
+      ref character varying(200),
       titulacao character varying(40),
       entradaNaUFMG DATE,
       progressao DATE,
       semester character varying(6),
-      PRIMARY KEY (matric, semester)
+      PRIMARY KEY (matric, semester),
+      FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );
-CREATE TABLE IF NOT EXISTS ufmg_technician (
+CREATE TABLE IF NOT EXISTS UFMG.technician (
       matric INT UNIQUE,
       ins_ufmg VARCHAR(255),
       nome VARCHAR(255),
@@ -150,7 +154,7 @@ CREATE TABLE IF NOT EXISTS ufmg_technician (
       data_prog DATE,
       semester character varying(6)
 );
-CREATE TABLE IF NOT EXISTS ufmg_departament (
+CREATE TABLE IF NOT EXISTS UFMG.departament (
       dep_id VARCHAR(10),
       org_cod VARCHAR(3),
       dep_nom VARCHAR(100),
@@ -162,10 +166,10 @@ CREATE TABLE IF NOT EXISTS ufmg_departament (
       img_data BYTEA,
       PRIMARY KEY (dep_id)
 );
-CREATE TABLE IF NOT EXISTS departament_researcher (
+CREATE TABLE IF NOT EXISTS UFMG.departament_researcher (
       dep_id VARCHAR(10),
       researcher_id uuid NOT NULL,
       PRIMARY KEY (dep_id, researcher_id),
-      FOREIGN KEY (dep_id) REFERENCES ufmg_departament (dep_id),
-      FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id)
+      FOREIGN KEY (dep_id) REFERENCES UFMG.departament (dep_id),
+      FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );

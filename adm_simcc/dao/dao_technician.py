@@ -7,7 +7,7 @@ adm_database = Connection()
 
 def technician_insert(ListTechnician: ListTechnician):
     script_sql = """
-        DELETE FROM ufmg_technician
+        DELETE FROM UFMG.technician
         WHERE semester = %s;
         """
     year = ListTechnician.list_technician[0].year_charge
@@ -27,7 +27,7 @@ def technician_insert(ListTechnician: ListTechnician):
         ))
         # fmt: on
     script_sql = """
-    INSERT INTO ufmg_technician
+    INSERT INTO UFMG.technician
     (matric, ins_ufmg, nome, genero, deno_sit, rt, classe, cargo, nivel, ref, 
     titulacao, setor, detalhe_setor, dting_org, data_prog, semester)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
@@ -46,7 +46,7 @@ def technician_basic_query(year, semester, departament):
             """
     else:
         filter_semester = """
-            WHERE semester = (SELECT MAX(semester) FROM ufmg_technician)
+            WHERE semester = (SELECT MAX(semester) FROM UFMG.technician)
             """
 
     if departament:
@@ -58,7 +58,7 @@ def technician_basic_query(year, semester, departament):
             matric, ins_ufmg, nome, genero, deno_sit, rt, classe, cargo, nivel, ref, 
             titulacao, setor, detalhe_setor, dting_org, data_prog, semester
         FROM
-            ufmg_technician
+            UFMG.technician
         {filter_semester}
         """
 

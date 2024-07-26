@@ -5,9 +5,10 @@ from ..models.teachers import ListTeachers
 adm_database = Connection()
 
 
-def teacher_insert(ListTeachers: ListTeachers):
+def ufmg_researcher_insert(ListTeachers: ListTeachers):
+
     script_sql = """
-        DELETE FROM ufmg_teacher
+        DELETE FROM UFMG.researcher
         WHERE semester = %s;
         """
     year = ListTeachers.list_teachers[0].year_charge
@@ -17,9 +18,19 @@ def teacher_insert(ListTeachers: ListTeachers):
     parameters = list()
 
     for teacher in ListTeachers.list_teachers:
+        script_sql = """
+            SELECT researcher_id FROM researcher
+            WHERE ts_rank(to_tsvector(unaccent(LOWER(name))), websearch_to_tsquery(%s)) > 0.04
+            LIMIT 1;
+            """
+
+        researcher_id = adm_database.select(script_sql, [teacher.nome])
+        if researcher_id:
+            researcher_id = researcher_id[0][0]
+
         # fmt: off
         parameters.append((
-            teacher.matric, teacher.inscUFMG,
+            researcher_id if researcher_id else None, teacher.matric, teacher.inscUFMG,
             teacher.nome, teacher.genero, teacher.situacao, teacher.rt,
             teacher.clas, teacher.cargo, teacher.classe,
             teacher.ref, teacher.titulacao, teacher.entradaNaUFMG,
@@ -28,10 +39,10 @@ def teacher_insert(ListTeachers: ListTeachers):
         # fmt: on
 
     script_sql = """
-        INSERT INTO ufmg_teacher
-        (matric, inscUFMG, nome, genero, situacao, rt, clas, cargo, classe, ref,
-        titulacao, entradaNaUFMG, progressao, semester) 
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        INSERT INTO UFMG.researcher
+        (researcher_id, matric, inscUFMG, nome, genero, situacao, rt, clas, 
+        cargo, classe, ref, titulacao, entradaNaUFMG, progressao, semester) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
 
     adm_database.execmany(script_sql, parameters)
@@ -46,16 +57,16 @@ def reacher_basic_query(year, semester):
             """
     else:
         filter_semester = """
-            WHERE semester = (SELECT MAX(semester) FROM ufmg_teacher)
+            WHERE semester = (SELECT MAX(semester) FROM UFMG.researcher)
             """
 
     script_sql = f"""
         SELECT 
-            matric, inscUFMG, nome, genero, situacao, rt, 
+            id, researcher_id, matric, inscUFMG, nome, genero, situacao, rt, 
             clas, cargo, classe, ref, titulacao, entradaNaUFMG,
             progressao, semester
         FROM
-            ufmg_teacher
+            UFMG.researcher
         {filter_semester}
         """
 
@@ -64,6 +75,8 @@ def reacher_basic_query(year, semester):
     data_frame = pd.DataFrame(
         registry,
         columns=[
+            "id",
+            "researcher_id",
             "matric",
             "inscUFMG",
             "nome",
