@@ -71,17 +71,21 @@ def departament_delete(dep_id):
 
 def departament_update(departament, file):
     parameters = list()
-
+    filter_image = str()
     # fmt: off
-    parameters =[
+    parameters = [
         departament["org_cod"], departament["dep_nom"], 
         departament["dep_des"], departament["dep_email"], 
         departament["dep_site"], departament["dep_sigla"], 
-        departament["dep_tel"], psycopg2.Binary(file["img_data"].read()), 
-        departament["dep_id"],
+        departament["dep_tel"], departament["dep_id"],
     ]
+    if file:
+        image = psycopg2.Binary(file["img_data"].read())
+        filter_image = "img_data = %s,"
+        parameters.insert(7, image)
+
     # fmt: on
-    script_sql = """
+    script_sql = f"""
         UPDATE UFMG.departament
         SET org_cod = %s, 
             dep_nom = %s, 
@@ -89,8 +93,8 @@ def departament_update(departament, file):
             dep_email = %s, 
             dep_site = %s, 
             dep_sigla = %s,
-            dep_tel = %s, 
-            img_data = %s
+            {filter_image}
+            dep_tel = %s
         WHERE dep_id = %s, 
         """
     adm_database.exec(script_sql, parameters)

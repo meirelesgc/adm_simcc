@@ -28,7 +28,7 @@ def departament_delete():
 
 
 @rest_departament.route("/departamentos", methods=["PUT"])
-def departament_delete():
+def departament_update():
     departament = request.form.to_dict()
     departaments_file = request.files
     dao_departament.departament_update(departament, departaments_file)
