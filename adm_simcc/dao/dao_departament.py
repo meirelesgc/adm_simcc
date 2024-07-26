@@ -37,26 +37,21 @@ def departament_basic_query():
         """
     reg = adm_database.select(script_sql)
 
-    data_frame = pd.DataFrame(
-        reg,
-        columns=[
-            "dep_id",
-            "org_cod",
-            "dep_nom",
-            "dep_des",
-            "dep_email",
-            "dep_site",
-            "dep_sigla",
-            "dep_tel",
-            "img_data",
-        ],
-    )
-    for index, data in data_frame.iterrows():
+    columns = [
+        "dep_id",
+        "org_cod",
+        "dep_nom",
+        "dep_des",
+        "dep_email",
+        "dep_site",
+        "dep_sigla",
+        "dep_tel",
+        "img_data",
+    ]
+    result = list()
+    for row in reg:
+        row_dict = dict(zip(columns, row))
+        row_dict["img_data"] = base64.b64encode(row_dict["img_data"]).decode("utf-8")
+        result.append(row_dict)
 
-        data_frame.iloc[index]["img_data"] = str().join(
-            base64.b64encode(item).decode("utf-8")
-            for item in data_frame.iloc[index]["img_data"]
-        )
-        data_frame
-
-    return data_frame.to_dict(orient="records")
+    return result
