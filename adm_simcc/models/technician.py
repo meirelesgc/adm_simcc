@@ -16,17 +16,17 @@ class Technician(BaseModel):
     titulacao: str
     setor: str
     detalheSetor: str
-    dtYngOrg: datetime
+    dtIngOrg: datetime
     dataProg: datetime
     year_charge: str
     semester: str
 
-    @field_validator("dting_org", mode="before")
-    def parse_dting_org(cls, value):
+    @field_validator("dtIngOrg", mode="before")
+    def parse_dtIngOrg(cls, value):
         return datetime.strptime(value, "%d/%m/%Y")
 
-    @field_validator("data_prog", mode="before")
-    def parse_data_prog(cls, value):
+    @field_validator("dataProg", mode="before")
+    def parse_dataProg(cls, value):
         return datetime.strptime(value, "%d/%m/%Y")
 
 
