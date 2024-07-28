@@ -25,3 +25,9 @@ def teacher_query():
     semester = request.args.get("semester")
     teachers = dao_teacher.reacher_basic_query(year, semester)
     return jsonify(teachers), HTTPStatus.OK
+
+
+@rest_teacher.route("/docentes/semestres", methods=["GET"])
+def teacher_query_semester():
+    semesters = dao_teacher.teacher_query_semester()
+    return jsonify(semesters), HTTPStatus.OK

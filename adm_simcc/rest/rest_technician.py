@@ -26,3 +26,9 @@ def technician_basic_query():
     departament = request.args.get("departament")
     technicians = dao_technician.technician_basic_query(year, semester, departament)
     return jsonify(technicians), HTTPStatus.OK
+
+
+@rest_technician.route("/tecnicos/semestres", methods=["GET"])
+def technician_query_semester():
+    semesters = dao_technician.technician_query_semester()
+    return jsonify(semesters), HTTPStatus.OK

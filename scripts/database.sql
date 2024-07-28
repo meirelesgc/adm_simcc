@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS UFMG.researcher (
       FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );
 CREATE TABLE IF NOT EXISTS UFMG.technician (
-      matric INT UNIQUE,
+      matric VARCHAR(255),
       ins_ufmg VARCHAR(255),
       nome VARCHAR(255),
       genero VARCHAR(50),

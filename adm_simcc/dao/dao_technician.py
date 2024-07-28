@@ -86,3 +86,19 @@ def technician_basic_query(year, semester, departament):
         ],
     )
     return data_frame.to_dict(orient="records")
+
+
+def technician_query_semester():
+    script_sql = """
+    SELECT
+        SUBSTRING(semester, 1, 4) AS year,
+        SUBSTRING(semester, 6, 1) AS semester
+    FROM
+        ufmg.technician
+    GROUP BY semester;
+    """
+    registry = adm_database.select(script_sql)
+
+    data_frame = pd.DataFrame(registry, columns=["year", "semester"])
+
+    return data_frame.to_dict(orient="records")
