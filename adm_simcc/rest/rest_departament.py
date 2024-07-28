@@ -35,8 +35,9 @@ def departament_update():
     dao_departament.departament_update(departament, departaments_file)
     return jsonify("OK"), HTTPStatus.OK
 
-@rest_departament.route('/departamentos/researcher', methods=['GET'])
+
+@rest_departament.route("/departamentos/researcher", methods=["GET"])
 def departament_researcher_query():
     dep_id = request.args.get("dep_id")
-    researchers = dao_departament.departament_researcher_query(dep_id)  
+    researchers = dao_departament.departament_researcher_query(dep_id)
     return jsonify(researchers), HTTPStatus.OK

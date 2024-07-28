@@ -2,6 +2,7 @@ import pandas as pd
 from ..dao import Connection
 import psycopg2
 import base64
+import pandas as pd
 
 adm_database = Connection()
 
@@ -121,6 +122,7 @@ def departament_researcher_query(dep_id):
                             WHERE dep_id = %s)
     """
 
-    data_frame = adm_database.select(script_sql, [dep_id])
+    registry = adm_database.select(script_sql, [dep_id])
 
-    return data_frame.to_dict(orient='records')
+    data_frame = pd.DataFrame(registry, columns=["researcher_id", "name", "lattes_id"])
+    return data_frame.to_dict(orient="records")
