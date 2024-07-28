@@ -278,7 +278,7 @@ def researcher_departament_insert(ListResearcherDepartament: ListResearcherDepar
         parameters.append((researcher.dep_id, researcher.researcher_id))
 
     script_sql = """
-        INSERT INTO departament_researcher (dep_id, researcher_id)
+        INSERT INTO ufmg.departament_researcher (dep_id, researcher_id)
         VALUES (%s, %s);
         """
     adm_database.execmany(script_sql, parameters)
@@ -286,13 +286,13 @@ def researcher_departament_insert(ListResearcherDepartament: ListResearcherDepar
 
 def researcher_departament_basic_query(researcher_id):
 
-    script_sql = """   
-        SELECT 
+    script_sql = """
+        SELECT
             dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
             dep_tel
-        FROM 
-            ufmg_departament dp
-            LEFT JOIN departament_researcher dpr ON dpr.dep_id = dp.dep_id
+        FROM
+            ufmg.departament dp
+            LEFT JOIN ufmg.departament_researcher dpr ON dpr.dep_id = dp.dep_id
         WHERE
             dpr.researcher_id = %s;
         """

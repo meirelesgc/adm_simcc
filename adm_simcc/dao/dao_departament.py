@@ -27,15 +27,20 @@ def departament_insert(departaments, file):
     adm_database.exec(script_sql, parameters)
 
 
-def departament_basic_query():
-    script_sql = """
+def departament_basic_query(dep_id):
+    departament_filter = str()
+    if dep_id:
+        departament_filter = "WHERE dep_id = %s"
+
+    script_sql = f"""
         SELECT 
             dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
             dep_tel, img_data
         FROM 
-            UFMG.departament;
+            UFMG.departament
+        {departament_filter};
         """
-    reg = adm_database.select(script_sql)
+    reg = adm_database.select(script_sql, [dep_id])
 
     columns = [
         "dep_id",
@@ -98,3 +103,24 @@ def departament_update(departament, file):
         WHERE dep_id = %s, 
         """
     adm_database.exec(script_sql, parameters)
+
+
+def departament_researcher_query(dep_id):
+    script_sql = """
+    SELECT
+        r.researcher_id,
+        r.name,
+        r.lattes_id
+    FROM
+        researcher r
+    WHERE
+        r.researcher_id IN (SELECT 
+                                researcher_id 
+                            FROM 
+                                ufmg.departament_researcher
+                            WHERE dep_id = %s)
+    """
+
+    data_frame = adm_database.select(script_sql, [dep_id])
+
+    return data_frame.to_dict(orient='records')

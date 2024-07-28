@@ -75,6 +75,7 @@ def researcher_departament_insert():
         researchers = request.get_json()
         researchers = ListResearcherDepartament(researcher_departament=researchers)
         dao_researcher.researcher_departament_insert(researchers)
+        return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
         return (
             jsonify({"message": "pesquisador ja cadastrado neste departamento"}),

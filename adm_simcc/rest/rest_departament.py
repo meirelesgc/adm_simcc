@@ -16,7 +16,8 @@ def departament_insert():
 
 @rest_departament.route("/departamentos", methods=["GET"])
 def departament_basic_query():
-    departaments = dao_departament.departament_basic_query()
+    dep_id = request.args.get("dep_id")
+    departaments = dao_departament.departament_basic_query(dep_id)
     return jsonify(departaments), HTTPStatus.OK
 
 
@@ -33,3 +34,9 @@ def departament_update():
     departaments_file = request.files
     dao_departament.departament_update(departament, departaments_file)
     return jsonify("OK"), HTTPStatus.OK
+
+@rest_departament.route('/departamentos/researcher', methods=['GET'])
+def departament_researcher_query():
+    dep_id = request.args.get("dep_id")
+    researchers = dao_departament.departament_researcher_query(dep_id)  
+    return jsonify(researchers), HTTPStatus.OK
