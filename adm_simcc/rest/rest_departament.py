@@ -46,7 +46,13 @@ def departament_researcher_query():
 
 @rest_departament.route('/departamentos/disciplinas', methods=['POST'])
 def departament_insert_discipline():
-    disciplines = [request.get_json()]
+    disciplines = request.get_json()
     disciplines = ListDiscipline(list_discipline=disciplines)
     dao_departament.departament_insert_discipline(disciplines)
     return jsonify('OK'), HTTPStatus.CREATED
+
+
+@rest_departament.route('/departamentos/disciplinas', methods=['GET'])
+def departament_query_discipline():
+    disciplines = dao_departament.departament_query_discipline()
+    return jsonify(disciplines), HTTPStatus.OK

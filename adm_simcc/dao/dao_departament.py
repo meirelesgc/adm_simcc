@@ -165,4 +165,40 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
         VALUES
             (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.execmany(script_sql, parameters)
+
+
+def departament_query_discipline():
+    script_sql = """
+    SELECT
+        semester, department, academic_activity_code,
+        academic_activity_name, academic_activity_ch,
+        demanding_courses, oft, id, available_slots, occupied_slots,
+        percent_occupied_slots, schedule, language, researcher_id,
+        workload, status
+    FROM
+        UFMG.disciplines
+    """
+
+    registry = adm_database.select(script_sql)
+
+    data_frame = pd.DataFrame(registry, columns=[
+        'semester',
+        'department',
+        'academic_activity_code',
+        'academic_activity_name',
+        'academic_activity_ch',
+        'demanding_courses',
+        'oft',
+        'id',
+        'available_slots',
+        'occupied_slots',
+        'percent_occupied_slots',
+        'schedule',
+        'language',
+        'researcher_id',
+        'workload',
+        'status'
+    ])
+
+    return data_frame.to_dict(orient='records')
