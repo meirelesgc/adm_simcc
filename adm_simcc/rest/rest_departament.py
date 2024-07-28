@@ -2,6 +2,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify, request
 
 from ..dao import dao_departament
+from ..models.departament import ListDiscipline
 
 rest_departament = Blueprint("rest_departament", __name__)
 
@@ -41,3 +42,11 @@ def departament_researcher_query():
     dep_id = request.args.get("dep_id")
     researchers = dao_departament.departament_researcher_query(dep_id)
     return jsonify(researchers), HTTPStatus.OK
+
+
+@rest_departament.route('/departamentos/disciplinas', methods=['POST'])
+def departament_insert_discipline():
+    disciplines = [request.get_json()]
+    disciplines = ListDiscipline(list_discipline=disciplines)
+    dao_departament.departament_insert_discipline(disciplines)
+    return jsonify('OK'), HTTPStatus.CREATED

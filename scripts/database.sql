@@ -173,3 +173,21 @@ CREATE TABLE IF NOT EXISTS UFMG.departament_researcher (
       FOREIGN KEY (dep_id) REFERENCES UFMG.departament (dep_id),
       FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );
+CREATE TABLE UFMG.disciplines (
+      id VARCHAR(10),
+      semester VARCHAR(10),
+      department VARCHAR(255),
+      academic_activity_code VARCHAR(255),
+      academic_activity_name VARCHAR(255),
+      academic_activity_ch VARCHAR(255),
+      demanding_courses VARCHAR(255),
+      oft VARCHAR(50),
+      available_slots VARCHAR(50),
+      occupied_slots VARCHAR(50),
+      percent_occupied_slots VARCHAR(50),
+      schedule VARCHAR(255),
+      language VARCHAR(50),
+      researcher_id uuid,
+      status VARCHAR(50),
+      workload VARCHAR(50),
+);

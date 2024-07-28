@@ -1,8 +1,11 @@
 import pandas as pd
-from ..dao import Connection
 import psycopg2
 import base64
 import pandas as pd
+
+
+from ..dao import Connection
+from ..models.departament import ListDiscipline
 
 adm_database = Connection()
 
@@ -10,15 +13,13 @@ adm_database = Connection()
 def departament_insert(departaments, file):
     parameters = list()
 
-    # fmt: off
-    parameters =[
+    parameters = [
         departaments["dep_id"], departaments["org_cod"],
         departaments["dep_nom"], departaments["dep_des"],
         departaments["dep_email"], departaments["dep_site"],
         departaments["dep_sigla"], departaments["dep_tel"],
         psycopg2.Binary(file["img_data"].read())
     ]
-    # fmt: on
     script_sql = """
         INSERT INTO UFMG.departament
             (dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla,
@@ -34,10 +35,10 @@ def departament_basic_query(dep_id):
         departament_filter = "WHERE dep_id = %s"
 
     script_sql = f"""
-        SELECT 
-            dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
+        SELECT
+            dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla,
             dep_tel, img_data
-        FROM 
+        FROM
             UFMG.departament
         {departament_filter};
         """
@@ -80,9 +81,9 @@ def departament_update(departament, file):
     filter_image = str()
     # fmt: off
     parameters = [
-        departament["org_cod"], departament["dep_nom"], 
-        departament["dep_des"], departament["dep_email"], 
-        departament["dep_site"], departament["dep_sigla"], 
+        departament["org_cod"], departament["dep_nom"],
+        departament["dep_des"], departament["dep_email"],
+        departament["dep_site"], departament["dep_sigla"],
         departament["dep_tel"], departament["dep_id"],
     ]
     if file:
@@ -93,15 +94,15 @@ def departament_update(departament, file):
     # fmt: on
     script_sql = f"""
         UPDATE UFMG.departament
-        SET org_cod = %s, 
-            dep_nom = %s, 
-            dep_des = %s, 
-            dep_email = %s, 
-            dep_site = %s, 
+        SET org_cod = %s,
+            dep_nom = %s,
+            dep_des = %s,
+            dep_email = %s,
+            dep_site = %s,
             dep_sigla = %s,
             {filter_image}
             dep_tel = %s
-        WHERE dep_id = %s, 
+        WHERE dep_id = %s,
         """
     adm_database.exec(script_sql, parameters)
 
@@ -115,14 +116,53 @@ def departament_researcher_query(dep_id):
     FROM
         researcher r
     WHERE
-        r.researcher_id IN (SELECT 
-                                researcher_id 
-                            FROM 
+        r.researcher_id IN (SELECT
+                                researcher_id
+                            FROM
                                 ufmg.departament_researcher
                             WHERE dep_id = %s)
     """
 
     registry = adm_database.select(script_sql, [dep_id])
 
-    data_frame = pd.DataFrame(registry, columns=["researcher_id", "name", "lattes_id"])
+    data_frame = pd.DataFrame(
+        registry, columns=["researcher_id", "name", "lattes_id"])
     return data_frame.to_dict(orient="records")
+
+
+def departament_insert_discipline(ListDiscipline: ListDiscipline):
+    parameters = list()
+
+    for discipline in ListDiscipline.list_discipline:
+        script_sql = """
+        SELECT researcher_id FROM UFMG.researcher
+        WHERE inscufmg = %s
+        """
+
+        researcher_id = adm_database.select(
+            script_sql, [discipline.professor.ufmg_id])
+        if researcher_id:
+            researcher_id = researcher_id[0][0]
+
+        parameters.append((
+            discipline.semester, discipline.department,
+            discipline.academic_activity_code,
+            discipline.academic_activity_name, discipline.academic_activity_ch,
+            discipline.demanding_courses, discipline.oft, discipline.id,
+            discipline.available_slots, discipline.occupied_slots,
+            discipline.percent_occupied_slots, discipline.schedule,
+            discipline.language, researcher_id if researcher_id else None,
+            discipline.professor.responsibility, discipline.status
+        ))
+
+    script_sql = """
+        INSERT INTO UFMG.disciplines
+            (semester, department, academic_activity_code,
+            academic_activity_name, academic_activity_ch,
+            demanding_courses, oft, id, available_slots, occupied_slots,
+            percent_occupied_slots, schedule, language, researcher_id,
+            workload, status)
+        VALUES
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        """
+    adm_database.exec(script_sql, parameters)
