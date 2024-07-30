@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, UUID4
 from datetime import datetime
 
 
@@ -32,3 +32,12 @@ class Technician(BaseModel):
 
 class ListTechnician(BaseModel):
     list_technician: list[Technician]
+
+
+class Role(BaseModel):
+    role: str
+    researcher_id: UUID4
+
+
+class ListRole(BaseModel):
+    list_roles: list[Role]

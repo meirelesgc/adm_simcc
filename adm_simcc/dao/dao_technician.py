@@ -1,6 +1,6 @@
 import pandas as pd
 from ..dao import Connection
-from ..models.technician import ListTechnician
+from ..models.technician import ListTechnician, ListRole    
 
 adm_database = Connection()
 
@@ -37,28 +37,26 @@ def technician_insert(ListTechnician: ListTechnician):
 def technician_basic_query(year, semester, departament):
 
     parameters = list()
-    filter_departament = str()
 
     if year or semester:
         parameters.append(f"{year}.{semester}")
         filter_semester = """
-            WHERE semester = %s
+            AND semester = %s
             """
     else:
         filter_semester = """
-            WHERE semester = (SELECT MAX(semester) FROM UFMG.technician)
+            AND semester = (SELECT MAX(semester) FROM UFMG.technician)
             """
 
-    if departament:
-        filter_semester = """
-            AND
-            """
     script_sql = f"""
-        SELECT 
-            matric, ins_ufmg, nome, genero, deno_sit, rt, classe, cargo, nivel, ref, 
-            titulacao, setor, detalhe_setor, dting_org, data_prog, semester
+        SELECT
+            technician_id, matric, ins_ufmg, nome, genero, deno_sit, rt, classe,
+            cargo, nivel, ref, titulacao, setor, detalhe_setor, dting_org,
+            data_prog, semester
         FROM
             UFMG.technician
+        WHERE
+        1 = 1
         {filter_semester}
         """
 
@@ -67,6 +65,7 @@ def technician_basic_query(year, semester, departament):
     data_frame = pd.DataFrame(
         registry,
         columns=[
+            "technician_id",
             "matric",
             "ins_ufmg",
             "nome",
@@ -102,3 +101,18 @@ def technician_query_semester():
     data_frame = pd.DataFrame(registry, columns=["year", "semester"])
 
     return data_frame.to_dict(orient="records")
+
+
+def technician_insert_role(ListRole: ListRole):
+    parameters = list()
+    for role in ListRole.list_roles:
+        parameters.append((
+            role.role, role.researcher_id
+        ))
+
+    script_sql = """
+        INSERT INTO technician_role (role, technician_id)
+        VALUES (%s, %s)
+        """
+
+    adm_database.exec(script_sql, parameters)

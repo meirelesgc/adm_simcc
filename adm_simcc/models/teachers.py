@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, UUID4
 from datetime import datetime
 
 
@@ -30,3 +30,12 @@ class Teacher(BaseModel):
 
 class ListTeachers(BaseModel):
     list_teachers: list[Teacher]
+
+
+class Role(BaseModel):
+    role: str
+    researcher_id: UUID4
+
+
+class ListRole(BaseModel):
+    list_roles: list[Role]

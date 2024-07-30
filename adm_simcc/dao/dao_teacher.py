@@ -1,6 +1,6 @@
 import pandas as pd
 from ..dao import Connection
-from ..models.teachers import ListTeachers
+from ..models.teachers import ListTeachers, ListRole
 
 adm_database = Connection()
 
@@ -110,3 +110,18 @@ def teacher_query_semester():
     data_frame = pd.DataFrame(registry, columns=["year", "semester"])
 
     return data_frame.to_dict(orient="records")
+
+
+def teacher_insert_role(ListRole: ListRole):
+    parameters = list()
+    for role in ListRole.list_roles:
+        parameters.append((
+            role.role, role.researcher_id
+        ))
+
+    script_sql = """
+        INSERT INTO researcher_role (role, researcher_id)
+        VALUES (%s, %s)
+        """
+
+    adm_database.exec(script_sql, parameters)

@@ -32,3 +32,9 @@ def technician_basic_query():
 def technician_query_semester():
     semesters = dao_technician.technician_query_semester()
     return jsonify(semesters), HTTPStatus.OK
+
+
+@rest_technician.route("/tecnicos/cargo", methods=["POST"])
+def teacher_insert_role():
+    role = dao_technician.technician_insert_role()
+    return jsonify(role), HTTPStatus.CREATED

@@ -81,27 +81,27 @@ CREATE TABLE IF NOT EXISTS public.research_group (
 );
 CREATE TABLE IF NOT EXISTS public.weights (
       institution_id uuid DEFAULT uuid_generate_v4(),
-      a1 numeric(10, 3),
-      a2 numeric(10, 3),
-      a3 numeric(10, 3),
-      a4 numeric(10, 3),
-      b1 numeric(10, 3),
-      b2 numeric(10, 3),
-      b3 numeric(10, 3),
-      b4 numeric(10, 3),
-      c numeric(10, 3),
-      sq numeric(10, 3),
-      book numeric(10, 3),
-      book_chapter numeric(10, 3),
+      a1 numeric(20, 3),
+      a2 numeric(20, 3),
+      a3 numeric(20, 3),
+      a4 numeric(20, 3),
+      b1 numeric(20, 3),
+      b2 numeric(20, 3),
+      b3 numeric(20, 3),
+      b4 numeric(20, 3),
+      c numeric(20, 3),
+      sq numeric(20, 3),
+      book numeric(20, 3),
+      book_chapter numeric(20, 3),
       software character varying,
       patent_granted character varying,
       patent_not_granted character varying,
       report character varying,
-      f1 numeric(10, 3) DEFAULT 0,
-      f2 numeric(10, 3) DEFAULT 0,
-      f3 numeric(10, 3) DEFAULT 0,
-      f4 numeric(10, 3) DEFAULT 0,
-      f5 numeric(10, 3) DEFAULT 0
+      f1 numeric(20, 3) DEFAULT 0,
+      f2 numeric(20, 3) DEFAULT 0,
+      f3 numeric(20, 3) DEFAULT 0,
+      f4 numeric(20, 3) DEFAULT 0,
+      f5 numeric(20, 3) DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS public.subsidy (
       id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -137,6 +137,8 @@ CREATE TABLE IF NOT EXISTS UFMG.researcher (
       FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );
 CREATE TABLE IF NOT EXISTS UFMG.technician (
+      technician_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      id VARCHAR(255),
       matric VARCHAR(255),
       ins_ufmg VARCHAR(255),
       nome VARCHAR(255),
@@ -155,7 +157,7 @@ CREATE TABLE IF NOT EXISTS UFMG.technician (
       semester character varying(6)
 );
 CREATE TABLE IF NOT EXISTS UFMG.departament (
-      dep_id VARCHAR(10),
+      dep_id VARCHAR(20),
       org_cod VARCHAR(3),
       dep_nom VARCHAR(100),
       dep_des VARCHAR(500),
@@ -167,15 +169,15 @@ CREATE TABLE IF NOT EXISTS UFMG.departament (
       PRIMARY KEY (dep_id)
 );
 CREATE TABLE IF NOT EXISTS UFMG.departament_researcher (
-      dep_id VARCHAR(10),
+      dep_id VARCHAR(20),
       researcher_id uuid NOT NULL,
       PRIMARY KEY (dep_id, researcher_id),
       FOREIGN KEY (dep_id) REFERENCES UFMG.departament (dep_id),
       FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );
 CREATE TABLE UFMG.disciplines (
-      id VARCHAR(10),
-      semester VARCHAR(10),
+      id VARCHAR(20),
+      semester VARCHAR(20),
       department VARCHAR(255),
       academic_activity_code VARCHAR(255),
       academic_activity_name VARCHAR(255),
@@ -191,3 +193,13 @@ CREATE TABLE UFMG.disciplines (
       status VARCHAR(50),
       workload VARCHAR(50),
 );
+CREATE TABLE UFMG.researcher_role(
+      role VARCHAR(50) NOT NULL,
+      researcher_id uuid NOT NULL,
+      FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
+);
+CREATE TABLE UFMG.technician_role(
+      role VARCHAR(50) NOT NULL,
+      technician_id uuid NOT NULL,
+      FOREIGN KEY (technician_id) REFERENCES UFMG.technician (id)
+)

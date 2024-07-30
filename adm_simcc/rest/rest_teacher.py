@@ -31,3 +31,9 @@ def teacher_query():
 def teacher_query_semester():
     semesters = dao_teacher.teacher_query_semester()
     return jsonify(semesters), HTTPStatus.OK
+
+
+@rest_teacher.route("/docentes/cargo", methods=["POST"])
+def teacher_insert_role():
+    role = dao_teacher.teacher_insert_role()
+    return jsonify(role), HTTPStatus.CREATED

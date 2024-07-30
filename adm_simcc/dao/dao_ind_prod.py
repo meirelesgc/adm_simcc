@@ -115,7 +115,6 @@ def ind_prod_basic_query(institution_id):
         WHERE institution_id = '{institution_id}';
         """
     registry = adm_database.select(script_sql)
-    print(registry)
     data_frame = pd.DataFrame(
         registry,
         columns=[
