@@ -70,10 +70,12 @@ def departament_basic_query(dep_id):
 
 def departament_delete(dep_id):
     script_sql = """
+        DELETE FROM UFMG.departament_researcher
+        WHERE dep_id = %s;
         DELETE FROM UFMG.departament
         WHERE dep_id = %s;
         """
-    adm_database.exec(script_sql, [dep_id])
+    adm_database.exec(script_sql, [dep_id, dep_id])
 
 
 def departament_update(departament, file):
