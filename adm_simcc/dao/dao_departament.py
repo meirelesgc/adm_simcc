@@ -212,13 +212,19 @@ def departament_query_discipline(dep_id):
     return data_frame.to_dict(orient='records')
 
 
-def departament_query_discipline_semester():
-    script_sql = """
+def departament_query_discipline_semester(dep_id):
+    if dep_id:
+        filter_departament = f"WHERE dep_id = {dep_id}"
+    else:
+        filter_departament = str()
+
+    script_sql = f"""
     SELECT
         SUBSTRING(semester, 1, 4) AS year,
         SUBSTRING(semester, 6, 1) AS semester
     FROM
         UFMG.disciplines
+    {filter_departament}
     GROUP BY semester;
     """
     registry = adm_database.select(script_sql)
