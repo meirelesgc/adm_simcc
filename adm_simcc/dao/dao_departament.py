@@ -145,7 +145,7 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
             researcher_id = researcher_id[0][0]
 
         parameters.append((
-            discipline.semester, discipline.department,
+            discipline.dep_id, discipline.semester, discipline.department,
             discipline.academic_activity_code,
             discipline.academic_activity_name, discipline.academic_activity_ch,
             discipline.demanding_courses, discipline.oft, discipline.id,
@@ -157,13 +157,13 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
 
     script_sql = """
         INSERT INTO UFMG.disciplines
-            (semester, department, academic_activity_code,
+            (dep_id, semester, department, academic_activity_code,
             academic_activity_name, academic_activity_ch,
             demanding_courses, oft, id, available_slots, occupied_slots,
             percent_occupied_slots, schedule, language, researcher_id,
             workload, status)
         VALUES
-            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
     adm_database.execmany(script_sql, parameters)
 

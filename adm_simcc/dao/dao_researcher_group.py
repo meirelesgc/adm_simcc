@@ -14,12 +14,10 @@ def research_group_insert(ListResearcherGroup: ListResearcherGroup):
         researcher_id = dao_researcher.researcher_query_name(researcher_name)
         if not researcher_id:
             researcher_id = None
-        # fmt: off
         parameters.append((
-                research_group.nome_grupo, researcher_id, research_group.institution_id,
-                research_group.area, datetime.strptime(research_group.ultimo_envio, "%d/%m/%Y"), research_group.situacao,
+            research_group.nome_grupo, researcher_id, research_group.institution_id,
+            research_group.area, datetime.strptime(research_group.ultimo_envio, "%d/%m/%Y"), research_group.situacao,
         ))
-        # fmt: on
 
     script_sql = f"""
         INSERT INTO research_group 

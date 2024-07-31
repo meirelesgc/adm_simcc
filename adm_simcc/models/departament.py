@@ -8,6 +8,7 @@ class Professor(BaseModel):
 
 
 class Discipline(BaseModel):
+    dep_id: str
     semester: str
     department: str
     academic_activity_code: str
