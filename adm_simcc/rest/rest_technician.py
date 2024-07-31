@@ -24,7 +24,8 @@ def technician_basic_query():
     year = request.args.get("year")
     semester = request.args.get("semester")
     departament = request.args.get("departament")
-    technicians = dao_technician.technician_basic_query(year, semester, departament)
+    technicians = dao_technician.technician_basic_query(
+        year, semester, departament)
     return jsonify(technicians), HTTPStatus.OK
 
 
@@ -36,5 +37,11 @@ def technician_query_semester():
 
 @rest_technician.route("/tecnicos/cargo", methods=["POST"])
 def teacher_insert_role():
-    role = dao_technician.technician_insert_role()
-    return jsonify(role), HTTPStatus.CREATED
+    dao_technician.technician_insert_role()
+    return jsonify('OK'), HTTPStatus.CREATED
+
+
+@rest_technician.route("/tecnicos/cargo", methods=["GET"])
+def teacher_query_role():
+    role = dao_technician.technician_query_role()
+    return jsonify(role), HTTPStatus.Ok

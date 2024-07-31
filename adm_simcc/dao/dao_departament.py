@@ -102,7 +102,7 @@ def departament_update(departament, file):
             dep_sigla = %s,
             {filter_image}
             dep_tel = %s
-        WHERE dep_id = %s,
+        WHERE dep_id = %s
         """
     adm_database.exec(script_sql, parameters)
 
@@ -202,3 +202,19 @@ def departament_query_discipline():
     ])
 
     return data_frame.to_dict(orient='records')
+
+
+def departament_query_discipline_semester():
+    script_sql = """
+    SELECT
+        SUBSTRING(semester, 1, 4) AS year,
+        SUBSTRING(semester, 6, 1) AS semester
+    FROM
+        UFMG.disciplines
+    GROUP BY semester;
+    """
+    registry = adm_database.select(script_sql)
+
+    data_frame = pd.DataFrame(registry, columns=["year", "semester"])
+
+    return data_frame.to_dict(orient="records")

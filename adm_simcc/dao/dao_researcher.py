@@ -75,7 +75,7 @@ def researcher_basic_query(
         filter_lattes_id = "AND lattes_id = %s"
         parameters += [lattes_id]
 
-    script_sql = f"""   
+    script_sql = f"""
         SELECT DISTINCT
             r.researcher_id,
             r.name,
@@ -89,7 +89,7 @@ def researcher_basic_query(
             )) AS subsidies
         FROM
             researcher r
-        LEFT JOIN subsidy s ON s.researcher_id = r.researcher_id 
+        LEFT JOIN subsidy s ON s.researcher_id = r.researcher_id
         WHERE
             r.researcher_id NOT IN (SELECT researcher_id FROM graduate_program_student)
             {filter_institution}
@@ -191,22 +191,25 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
     parameters = list()
     untracket_researchers = list()
 
+    script_sql = """
+    DELETE FROM subsidy;
+    """
+    adm_database.exec(script_sql)
+
     for subsidy in ListSubsidies.grant_list:
         researcher_id = researcher_search_id(subsidy.id_lattes)
         if not researcher_id:
             untracket_researchers.append(subsidy.model_dump())
             continue
-        # fmt: off
         parameters.append((
-                researcher_id, subsidy.cod_modalidade,
-                subsidy.nome_modalidade, subsidy.titulo_chamada, 
-                subsidy.cod_categoria_nivel, subsidy.nome_programa_fomento,
-                subsidy.nome_instituto, subsidy.quant_auxilio, 
-                subsidy.quant_bolsa,
-            ))
-        # fmt: on
+            researcher_id, subsidy.cod_modalidade,
+            subsidy.nome_modalidade, subsidy.titulo_chamada,
+            subsidy.cod_categoria_nivel, subsidy.nome_programa_fomento,
+            subsidy.nome_instituto, subsidy.quant_auxilio,
+            subsidy.quant_bolsa,
+        ))
 
-    script_sql = f"""
+    script_sql = """
         INSERT INTO subsidy(
             researcher_id,
             modality_code,
@@ -233,18 +236,18 @@ def researcher_query_grant(institution_id):
         parameters.extend([institution_id])
 
     script_sql = f"""
-        SELECT 
+        SELECT
             s.researcher_id,
             r.name,
-            s.modality_code, 
-            s.modality_name, 
-            s.call_title, 
-            s.category_level_code, 
-            s.funding_program_name, 
-            s.institute_name, 
-            s.aid_quantity, 
+            s.modality_code,
+            s.modality_name,
+            s.call_title,
+            s.category_level_code,
+            s.funding_program_name,
+            s.institute_name,
+            s.aid_quantity,
             s.scholarship_quantity
-        FROM 
+        FROM
             subsidy s
             LEFT JOIN researcher r ON s.researcher_id = r.researcher_id
         {filter_institution}

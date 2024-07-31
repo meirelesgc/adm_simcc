@@ -56,3 +56,10 @@ def departament_insert_discipline():
 def departament_query_discipline():
     disciplines = dao_departament.departament_query_discipline()
     return jsonify(disciplines), HTTPStatus.OK
+
+
+@rest_departament.route(
+    "/departamentos/disciplinas/semestres", methods=["GET"])
+def departament_query_discipline_semester():
+    semesters = dao_departament.departament_query_discipline_semester()
+    return jsonify(semesters), HTTPStatus.OK

@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
 
 from ..dao import dao_ind_prod
 from ..models.weight import Weights

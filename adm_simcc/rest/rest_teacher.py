@@ -35,5 +35,11 @@ def teacher_query_semester():
 
 @rest_teacher.route("/docentes/cargo", methods=["POST"])
 def teacher_insert_role():
-    role = dao_teacher.teacher_insert_role()
-    return jsonify(role), HTTPStatus.CREATED
+    dao_teacher.teacher_insert_role()
+    return jsonify('OK'), HTTPStatus.CREATED
+
+
+@rest_teacher.route("/docentes/cargo", methods=["GET"])
+def teacher_query_role():
+    role = dao_teacher.teacher_query_role()
+    return jsonify(role), HTTPStatus.OK

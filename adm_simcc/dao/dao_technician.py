@@ -116,3 +116,19 @@ def technician_insert_role(ListRole: ListRole):
         """
 
     adm_database.exec(script_sql, parameters)
+
+
+def technician_query_role():
+    script_sql = '''
+        SELECT
+            role,
+            technician_id
+        FROM
+            technician_role
+        '''
+
+    registry = adm_database.select(script_sql)
+
+    data_frame = pd.Dataframe(registry, columns=['role', 'technician_id'])
+
+    return data_frame.to_dict(orient='records')
