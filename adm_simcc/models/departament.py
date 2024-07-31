@@ -29,10 +29,10 @@ class Discipline(BaseModel):
     def parse_professor(cls, value):
         professor = value.strip().split(",")
         if len(professor) != 3:
-            raise ValueError("The professors string format is invalid")
+            return Professor(name='', ufmg_id='', responsibility='')
         return Professor(
             name=professor[0],
-            ufmg_id=professor[1],
+            ufmg_id=professor[1][1:],
             responsibility=professor[2].strip()
         )
 

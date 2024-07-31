@@ -168,17 +168,23 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
     adm_database.execmany(script_sql, parameters)
 
 
-def departament_query_discipline():
-    script_sql = """
-    SELECT
-        semester, department, academic_activity_code,
-        academic_activity_name, academic_activity_ch,
-        demanding_courses, oft, id, available_slots, occupied_slots,
-        percent_occupied_slots, schedule, language, researcher_id,
-        workload, status
-    FROM
-        UFMG.disciplines
-    """
+def departament_query_discipline(dep_id):
+    if dep_id:
+        filter_departament = f"WHERE dep_id = {dep_id}"
+    else:
+        filter_departament = str()
+    
+    script_sql = f"""
+        SELECT
+            semester, department, academic_activity_code,
+            academic_activity_name, academic_activity_ch,
+            demanding_courses, oft, id, available_slots, occupied_slots,
+            percent_occupied_slots, schedule, language, researcher_id,
+            workload, status
+        FROM
+            UFMG.disciplines
+        {filter_departament}
+        """
 
     registry = adm_database.select(script_sql)
 

@@ -54,6 +54,7 @@ def departament_insert_discipline():
 
 @rest_departament.route('/departamentos/disciplinas', methods=['GET'])
 def departament_query_discipline():
+    dep_id = request.args.get('dep_id')
     disciplines = dao_departament.departament_query_discipline()
     return jsonify(disciplines), HTTPStatus.OK
 
