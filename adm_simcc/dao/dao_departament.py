@@ -172,10 +172,9 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
 
 def departament_query_discipline(dep_id):
     if dep_id:
-        filter_departament = f"WHERE dep_id = {dep_id}"
+        filter_departament = "WHERE dep_id = %s"
     else:
         filter_departament = str()
-    
     script_sql = f"""
         SELECT
             semester, department, academic_activity_code,
@@ -188,7 +187,7 @@ def departament_query_discipline(dep_id):
         {filter_departament}
         """
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(script_sql, [dep_id])
 
     data_frame = pd.DataFrame(registry, columns=[
         'semester',
