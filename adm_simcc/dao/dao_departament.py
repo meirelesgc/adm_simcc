@@ -213,7 +213,7 @@ def departament_query_discipline(dep_id):
 
 def departament_query_discipline_semester(dep_id):
     if dep_id:
-        filter_departament = f"WHERE dep_id = {dep_id}"
+        filter_departament = "WHERE dep_id = %s"
     else:
         filter_departament = str()
 
@@ -226,7 +226,8 @@ def departament_query_discipline_semester(dep_id):
     {filter_departament}
     GROUP BY semester;
     """
-    registry = adm_database.select(script_sql)
+    
+    registry = adm_database.select(script_sql, [dep_id])
 
     data_frame = pd.DataFrame(registry, columns=["year", "semester"])
 
