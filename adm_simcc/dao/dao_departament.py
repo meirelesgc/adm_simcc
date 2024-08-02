@@ -136,16 +136,23 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
     parameters = list()
 
     for discipline in ListDiscipline.list_discipline:
-        script_sql = """
-        SELECT researcher_id FROM UFMG.researcher
-        WHERE inscufmg = %s
-        """
-
-        researcher_id = adm_database.select(
-            script_sql, [discipline.professor.ufmg_id])
-        if researcher_id:
-            researcher_id = researcher_id[0][0]
-
+        professors_id = list()
+        professors_name = list()
+        professors_workload = list()
+        for professor in discipline.professor:
+            script_sql = """
+            SELECT researcher_id FROM UFMG.researcher
+            WHERE inscufmg = %s
+            """
+            researcher_id = adm_database.select(script_sql, [professor.ufmg_id])
+            if researcher_id:
+                professors_id.append(researcher_id[0][0])
+            else:
+                professors_id.append(None)
+            professors_name.append(professor.name)
+            professors_workload.append(professor.responsibility)
+            
+        print(professors_workload)
         parameters.append((
             discipline.dep_id, discipline.semester, discipline.department,
             discipline.academic_activity_code,
@@ -153,8 +160,8 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
             discipline.demanding_courses, discipline.oft, discipline.id,
             discipline.available_slots, discipline.occupied_slots,
             discipline.percent_occupied_slots, discipline.schedule,
-            discipline.language, researcher_id if researcher_id else None,
-            discipline.professor.responsibility, discipline.status
+            discipline.language, professors_id, professors_workload,
+            discipline.status, professors_name
         ))
 
     script_sql = """
@@ -163,9 +170,9 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
             academic_activity_name, academic_activity_ch,
             demanding_courses, oft, id, available_slots, occupied_slots,
             percent_occupied_slots, schedule, language, researcher_id,
-            workload, status)
+            workload, status, researcher_name)
         VALUES
-            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
     adm_database.execmany(script_sql, parameters)
 
@@ -181,7 +188,7 @@ def departament_query_discipline(dep_id):
             academic_activity_name, academic_activity_ch,
             demanding_courses, oft, id, available_slots, occupied_slots,
             percent_occupied_slots, schedule, language, researcher_id,
-            workload, status
+            workload, status, researcher_name
         FROM
             UFMG.disciplines
         {filter_departament}
@@ -205,7 +212,8 @@ def departament_query_discipline(dep_id):
         'language',
         'researcher_id',
         'workload',
-        'status'
+        'status',
+        'researcher_name'
     ])
 
     return data_frame.to_dict(orient='records')

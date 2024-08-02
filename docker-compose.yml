@@ -20,6 +20,6 @@ services:
       - admin_database
     env_file:
       - .env
-      
+
 volumes:
   pgdata:

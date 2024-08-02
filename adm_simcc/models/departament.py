@@ -22,19 +22,22 @@ class Discipline(BaseModel):
     percent_occupied_slots: str
     schedule: str
     language: str
-    professor: Professor
+    professor: list[Professor]
     status: str
 
     @field_validator("professor", mode="before")
     def parse_professor(cls, value):
-        professor = value.strip().split(",")
-        if len(professor) != 3:
-            return Professor(name='', ufmg_id='', responsibility='')
-        return Professor(
-            name=professor[0],
-            ufmg_id=professor[1][1:],
-            responsibility=professor[2].strip()
-        )
+        professor = value.replace('\n', ',').replace(',,', ',').split(',')
+        if len(professor) < 3:
+            return [Professor(name='', ufmg_id='', responsibility='')]
+
+        professors_list = list()
+        for i in range(0, len(professor), 3):
+            professors_list.append(Professor(
+                name=professor[i],
+                ufmg_id=professor[i+1],
+                responsibility=professor[i+2]))
+        return professors_list
 
     @field_validator('semester', mode='before')
     def parse_semester(cls, value):
