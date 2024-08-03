@@ -115,6 +115,18 @@ CREATE TABLE IF NOT EXISTS public.subsidy (
       aid_quantity character varying(255),
       scholarship_quantity integer
 );
+CREATE TABLE roles(
+      id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      role VARCHAR(50) NOT NULL,
+      PRIMARY KEY (id)
+);
+CREATE TABLE researcher_role(
+      role_id uuid NOT NULL,
+      researcher_id uuid NOT NULL,
+      PRIMARY KEY (role_id, researcher_id),
+      FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
+      FOREIGN KEY (role_id) REFERENCES roles (id)
+);
 CREATE SCHEMA IF NOT EXISTS UFMG;
 CREATE TABLE IF NOT EXISTS UFMG.researcher (
       id uuid,
@@ -190,13 +202,8 @@ CREATE TABLE UFMG.disciplines (
       percent_occupied_slots VARCHAR(50),
       schedule VARCHAR(255),
       language VARCHAR(50),
-      researcher_id uuid[],
-      researcher_name VARCHAR[],
+      researcher_id uuid [],
+      researcher_name VARCHAR [],
       status VARCHAR(50),
-      workload VARCHAR[]
-);
-CREATE TABLE UFMG.roles(
-      id uuid NOT NULL DEFAULT uuid_generate_v4(),
-      role VARCHAR(50) NOT NULL,
-      PRIMARY KEY (id)
+      workload VARCHAR []
 );

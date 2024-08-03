@@ -7,7 +7,7 @@ from ..dao import dao_system
 rest_system = Blueprint("rest_system_management", __name__)
 
 
-@rest_system.route('/api/save-directory', methods=['POST'])
+@rest_system.route('/s/save-directory', methods=['POST'])
 def save_directory():
     data = request.json
     directory = data.get('directory')
@@ -26,7 +26,7 @@ def save_directory():
         return jsonify({'error': 'Failed to save directory'}), 500
 
 
-@rest_system.route('/api/directory', methods=['GET'])
+@rest_system.route('/s/directory', methods=['GET'])
 def get_directory():
     file_path = os.path.join(os.path.dirname(__file__), 'directory.json')
 
@@ -71,4 +71,31 @@ def update_role():
 def delete_roles():
     role = request.get_json()
     dao_system.delete_roles(role)
+    return jsonify(), HTTPStatus.OK
+
+
+@rest_system.route('/s/permission', methods=['POST'])
+def create_new_permission():
+    permission = request.get_json()
+    dao_system.create_new_permission(permission)
+    return jsonify('OK'), HTTPStatus.CREATED
+
+
+@rest_system.route('/s/permission', methods=['GET'])
+def view_permission():
+    roles = dao_system.view_permission()
+    return jsonify(roles), HTTPStatus.OK
+
+
+@rest_system.route('/s/permission', methods=['PUT'])
+def update_permission():
+    permission = request.get_json()
+    dao_system.update_permission(permission)
+    return jsonify('OK'), HTTPStatus.CREATED
+
+
+@rest_system.route('/s/role', methods=['DELETE'])
+def delete_permission():
+    permission = request.get_json()
+    dao_system.delete_permission(permission)
     return jsonify(), HTTPStatus.OK
