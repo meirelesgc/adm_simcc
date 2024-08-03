@@ -85,7 +85,7 @@ def researcher_departament_insert():
 
 @rest_researcher.route("/departament", methods=["DELETE"])
 def researcher_departament_delete():
-    researcher = request.get_json() 
+    researcher = request.get_json()
     dao_researcher.researcher_departament_delete(researcher)
     return jsonify({"message": "ok"}), HTTPStatus.NO_CONTENT
 

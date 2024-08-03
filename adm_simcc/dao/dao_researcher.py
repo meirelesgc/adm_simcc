@@ -24,7 +24,7 @@ def researcher_insert(ListResearchers: ListResearchers):
         ))
     # fmt: on
 
-    script_sql = f"""
+    script_sql = """
         INSERT INTO researcher
         (researcher_id, name, lattes_id, institution_id)
         VALUES (%s, %s, %s, %s);
@@ -324,4 +324,7 @@ def researcher_departament_delete(researcher):
         DELETE FROM ufmg.departament_researcher
         WHERE researcher_id = %s AND dep_id = %s;
         """
-    adm_database.exec(script_sql, [researcher['researcher_id'], researcher['dep_id']])
+    adm_database.exec(
+        script_sql,
+        [researcher[0]['researcher_id'], researcher[0]['dep_id']]
+    )

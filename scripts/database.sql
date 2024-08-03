@@ -195,13 +195,8 @@ CREATE TABLE UFMG.disciplines (
       status VARCHAR(50),
       workload VARCHAR[]
 );
-CREATE TABLE UFMG.researcher_role(
+CREATE TABLE UFMG.roles(
+      id uuid NOT NULL DEFAULT uuid_generate_v4(),
       role VARCHAR(50) NOT NULL,
-      researcher_id uuid NOT NULL,
-      FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
+      PRIMARY KEY (id)
 );
-CREATE TABLE UFMG.technician_role(
-      role VARCHAR(50) NOT NULL,
-      technician_id uuid NOT NULL,
-      FOREIGN KEY (technician_id) REFERENCES UFMG.technician (id)
-)

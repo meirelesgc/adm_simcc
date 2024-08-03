@@ -13,7 +13,7 @@ def create_app():
     from .rest.rest_institution import rest_institution
     from .rest.rest_researcher import rest_researcher
     from .rest.rest_researcher_group import rest_researcher_group
-    from .rest.rest_system_management import rest_sys
+    from .rest.rest_system_management import rest_system
     from .rest.rest_teacher import rest_teacher
     from .rest.rest_technician import rest_technician
     from .rest.rest_departament import rest_departament
@@ -25,7 +25,7 @@ def create_app():
     app.register_blueprint(rest_graduate_program_researcher)
     app.register_blueprint(rest_graduate_program_student)
     app.register_blueprint(rest_ind_prod)
-    app.register_blueprint(rest_sys)
+    app.register_blueprint(rest_system)
     app.register_blueprint(rest_teacher)
     app.register_blueprint(rest_technician)
     app.register_blueprint(rest_departament)
