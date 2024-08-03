@@ -94,7 +94,7 @@ def update_permission():
     return jsonify('OK'), HTTPStatus.CREATED
 
 
-@rest_system.route('/s/role', methods=['DELETE'])
+@rest_system.route('/s/permission', methods=['DELETE'])
 def delete_permission():
     permission = request.get_json()
     dao_system.delete_permission(permission)
@@ -121,20 +121,20 @@ def unassign_researcher():
     return jsonify('OK'), HTTPStatus.NO_CONTENT
 
 
-@rest_system.route('/s/researcher/role', methods=['POST'])
+@rest_system.route('/s/technician/role', methods=['POST'])
 def assign_technician():
     technician = request.get_json()
     dao_system.assign_technician(technician)
     return jsonify('OK'), HTTPStatus.CREATED
 
 
-@rest_system.route('/s/researcher/role', methods=['GET'])
+@rest_system.route('/s/technician/role', methods=['GET'])
 def view_technician_roles():
     dao_system.view_technician_roles()
     return jsonify('OK'), HTTPStatus.OK
 
 
-@rest_system.route('/s/researcher/role', methods=['DELETE'])
+@rest_system.route('/s/technician/role', methods=['DELETE'])
 def unassign_technician():
     technician = request.get_json()
     dao_system.unassign_technician(technician)
