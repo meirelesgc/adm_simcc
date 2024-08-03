@@ -83,8 +83,8 @@ def assign_researcher(researcher):
         VALUES (%s, %s);
         """
     adm_database.exec(script_sql, [
-        researcher['role_id'],
-        researcher['researcher_id']
+        researcher[0]['role_id'],
+        researcher[0]['researcher_id']
     ])
 
 
@@ -113,8 +113,8 @@ def unassign_researcher(researcher):
         WHERE role_id = %s AND researcher_id = %s;
         """
     adm_database.exec(script_sql, [
-        researcher['role_id'],
-        researcher['researcher_id']
+        researcher[0]['role_id'],
+        researcher[0]['researcher_id']
     ])
 
 
@@ -124,8 +124,8 @@ def assign_technician(technician):
         VALUES (%s, %s);
         """
     adm_database.exec(script_sql, [
-        technician['role_id'],
-        technician['technician_id']
+        technician[0]['role_id'],
+        technician[0]['technician_id']
     ])
 
 
@@ -154,6 +154,6 @@ def unassign_technician(technician):
         WHERE role_id = %s AND technician_id = %s;
         """
     adm_database.exec(script_sql, [
-        technician['role_id'],
-        technician['technician_id']
+        technician[0]['role_id'],
+        technician[0]['technician_id']
     ])
