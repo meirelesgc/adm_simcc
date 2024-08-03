@@ -83,6 +83,13 @@ def researcher_departament_insert():
         )
 
 
+@rest_researcher.route("/departament", methods=["DELETE"])
+def researcher_departament_delete():
+    researcher = request.get_json() 
+    dao_researcher.researcher_departament_delete(researcher)
+    return jsonify({"message": "ok"}), HTTPStatus.NO_CONTENT
+
+
 @rest_researcher.route("/departament", methods=["GET"])
 def researcher_departament_basic_query():
     dep_id = request.args.get("dep_id")

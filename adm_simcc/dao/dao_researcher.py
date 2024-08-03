@@ -317,3 +317,11 @@ def researcher_departament_basic_query(researcher_id):
     )
 
     return data_frame.to_dict(orient="records")
+
+
+def researcher_departament_delete(researcher):
+    script_sql = """
+        DELETE FROM ufmg.departament_researcher
+        WHERE researcher_id = %s AND dep_id = %s;
+        """
+    adm_database.exec(script_sql, [researcher['researcher_id'], researcher['dep_id']])
