@@ -59,7 +59,6 @@ def permissions_view():
 
 
 def permission_update(permission):
-
     script_sql = """
         UPDATE permission
         SET permission = %s
@@ -76,3 +75,85 @@ def permission_delete(permission):
         WHERE id = %s;
         """
     adm_database.exec(script_sql, [permission[0]['permission_id']])
+
+
+def assign_researcher(researcher):
+    script_sql = """
+        INSERT INTO researcher_roles (role_id, researcher_id)
+        VALUES (%s, %s);
+        """
+    adm_database.exec(script_sql, [
+        researcher['role_id'],
+        researcher['researcher_id']
+    ])
+
+
+def view_researcher_roles():
+    script_sql = """
+        SELECT
+            rr.researcher_id,
+            jsonb_agg(jsonb_build_object(
+                'role_id', r.id,
+                'role', r.role
+            )) AS roles
+        FROM
+            researcher_roles rr
+            LEFT JOIN roles r ON r.id = rr.role_id
+        GROUP BY
+            rr.researcher_id;
+        """
+    reg = adm_database.select(script_sql)
+    data_frame = pd.DataFrame(reg, columns=['researcher_id', 'roles'])
+    return data_frame.to_dict(orient='records')
+
+
+def unassign_researcher(researcher):
+    script_sql = """
+        DELETE FROM researcher_roles
+        WHERE role_id = %s AND researcher_id = %s;
+        """
+    adm_database.exec(script_sql, [
+        researcher['role_id'],
+        researcher['researcher_id']
+    ])
+
+
+def assign_technician(technician):
+    script_sql = """
+        INSERT INTO technician_roles (role_id, technician_id)
+        VALUES (%s, %s);
+        """
+    adm_database.exec(script_sql, [
+        technician['role_id'],
+        technician['technician_id']
+    ])
+
+
+def view_technician_roles():
+    script_sql = """
+        SELECT
+            tr.technician_id,
+            jsonb_agg(jsonb_build_object(
+                'role_id', r.id,
+                'role', r.role
+            )) AS roles
+        FROM
+            technician_roles tr
+            LEFT JOIN roles r ON r.id = tr.role_id
+        GROUP BY
+            tr.technician_id;
+        """
+    reg = adm_database.select(script_sql)
+    data_frame = pd.DataFrame(reg, columns=['technician_id', 'roles'])
+    return data_frame.to_dict(orient='records')
+
+
+def unassign_technician(technician):
+    script_sql = """
+        DELETE FROM technician_roles
+        WHERE role_id = %s AND technician_id = %s;
+        """
+    adm_database.exec(script_sql, [
+        technician['role_id'],
+        technician['technician_id']
+    ])

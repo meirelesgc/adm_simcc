@@ -115,17 +115,20 @@ CREATE TABLE IF NOT EXISTS public.subsidy (
       aid_quantity character varying(255),
       scholarship_quantity integer
 );
-CREATE TABLE roles(
-      id uuid NOT NULL DEFAULT uuid_generate_v4(),
-      role VARCHAR(50) NOT NULL,
-      PRIMARY KEY (id)
+CREATE TABLE roles (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      role VARCHAR(255) NOT NULL
 );
-CREATE TABLE researcher_role(
-      role_id uuid NOT NULL,
-      researcher_id uuid NOT NULL,
+CREATE TABLE permission (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
+      permission VARCHAR(255) NOT NULL
+);
+CREATE TABLE researcher_roles (
+      role_id UUID NOT NULL,
+      researcher_id UUID NOT NULL,
       PRIMARY KEY (role_id, researcher_id),
-      FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
-      FOREIGN KEY (role_id) REFERENCES roles (id)
+      FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );
 CREATE SCHEMA IF NOT EXISTS UFMG;
 CREATE TABLE IF NOT EXISTS UFMG.researcher (
@@ -166,7 +169,8 @@ CREATE TABLE IF NOT EXISTS UFMG.technician (
       detalhe_setor VARCHAR(255),
       dting_org DATE,
       data_prog DATE,
-      semester character varying(6)
+      semester character varying(6),
+      PRIMARY KEY (technician_id)
 );
 CREATE TABLE IF NOT EXISTS UFMG.departament (
       dep_id VARCHAR(20),
@@ -206,4 +210,10 @@ CREATE TABLE UFMG.disciplines (
       researcher_name VARCHAR [],
       status VARCHAR(50),
       workload VARCHAR []
+);
+CREATE TABLE technician_roles (
+      role_id UUID NOT NULL,
+      technician_id UUID NOT NULL,
+      PRIMARY KEY (role_id, technician_id),
+      FOREIGN KEY (technician_id) REFERENCES UFMG.technician (technician_id)
 );
