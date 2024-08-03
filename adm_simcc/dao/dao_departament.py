@@ -151,8 +151,7 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
                 professors_id.append(None)
             professors_name.append(professor.name)
             professors_workload.append(professor.responsibility)
-            
-        print(professors_workload)
+
         parameters.append((
             discipline.dep_id, discipline.semester, discipline.department,
             discipline.academic_activity_code,

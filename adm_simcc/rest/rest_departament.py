@@ -65,3 +65,5 @@ def departament_query_discipline_semester():
     dep_id = request.args.get('dep_id')
     semesters = dao_departament.departament_query_discipline_semester(dep_id)
     return jsonify(semesters), HTTPStatus.OK
+
+
