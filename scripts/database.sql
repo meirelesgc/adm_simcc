@@ -217,3 +217,24 @@ CREATE TABLE technician_roles (
       PRIMARY KEY (role_id, technician_id),
       FOREIGN KEY (technician_id) REFERENCES UFMG.technician (technician_id)
 );
+CREATE TABLE incite_graduate_program(
+      incite_graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      name VARCHAR(255) NOT NULL,
+      description VARCHAR(500) NULL,
+      link VARCHAR(500) NULL,
+      institution_id uuid NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      visible bool DEFAULT FALSE,
+      PRIMARY KEY (incite_graduate_program_id),
+      FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
+);
+CREATE TABLE incite_graduate_program_researcher(
+      incite_graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (incite_graduate_program_id, researcher_id),
+      FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
+      FOREIGN KEY (incite_graduate_program_id) REFERENCES incite_graduate_program (incite_graduate_program_id)
+);

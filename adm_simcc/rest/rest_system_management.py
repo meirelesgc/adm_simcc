@@ -15,10 +15,8 @@ def save_directory():
     if not directory:
         return jsonify({'error': 'No directory provided'}), 400
 
-    file_path = os.path.join(os.path.dirname(__file__), 'directory.json')
-
     try:
-        with open(file_path, 'w') as file:
+        with open('files/directory.json', 'w') as file:
             json.dump({'directory': directory}, file)
         return jsonify({'message': 'Directory saved successfully'}), 200
     except Exception as e:
@@ -28,10 +26,9 @@ def save_directory():
 
 @rest_system.route('/s/directory', methods=['GET'])
 def get_directory():
-    file_path = os.path.join(os.path.dirname(__file__), 'directory.json')
 
     try:
-        with open(file_path, 'r') as file:
+        with open('files/directory.json', 'r') as file:
             data = json.load(file)
             directory_path = data.get('directory')
 
