@@ -31,12 +31,10 @@ def get_directory():
         with open('files/directory.json', 'r') as file:
             data = json.load(file)
             directory_path = data.get('directory')
-
         if not directory_path:
             return jsonify({'error': 'Directory path not found'}), 404
 
         directory_list = os.listdir(directory_path)
-
         return jsonify(directory_list)
     except FileNotFoundError:
         return jsonify({'error': 'Directory file not found'}), 404
