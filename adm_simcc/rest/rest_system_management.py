@@ -63,9 +63,9 @@ def update_role():
 
 
 @rest_system.route('/s/role', methods=['DELETE'])
-def delete_roles():
+def delete_role():
     role = request.get_json()
-    dao_system.delete_roles(role)
+    dao_system.delete_role(role)
     return jsonify(), HTTPStatus.OK
 
 
