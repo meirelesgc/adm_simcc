@@ -24,17 +24,17 @@ def researcher_insert(ListResearchers: ListResearchers):
         ))
     # fmt: on
 
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO researcher
         (researcher_id, name, lattes_id, institution_id)
         VALUES (%s, %s, %s, %s);
         """
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
 
 
 def researcher_delete(researcher_id: UUID4):
     parameters = [researcher_id, researcher_id, researcher_id]
-    script_sql = """
+    SCRIPT_SQL = """
         DELETE FROM graduate_program_researcher
         WHERE researcher_id = %s;
 
@@ -44,7 +44,7 @@ def researcher_delete(researcher_id: UUID4):
         DELETE FROM researcher
         WHERE researcher_id = %s;
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
 def researcher_basic_query(
@@ -75,7 +75,7 @@ def researcher_basic_query(
         filter_lattes_id = "AND lattes_id = %s"
         parameters += [lattes_id]
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT DISTINCT
             r.researcher_id,
             r.name,
@@ -105,7 +105,7 @@ def researcher_basic_query(
             r.created_at DESC
             {filter_limit};
         """
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     data_frame = pd.DataFrame(
         registry,
@@ -118,7 +118,7 @@ def researcher_basic_query(
             "subsidies",
         ],
     )
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             r.lattes_id,
             r.last_update
@@ -126,7 +126,7 @@ def researcher_basic_query(
             researcher r
         """
 
-    # registry = simcc_database.select(script_sql=script_sql)
+    # registry = simcc_database.select(SCRIPT_SQL=SCRIPT_SQL)
     # data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
     # data_frame = pd.merge(data_frame, data_frame_simcc, how="left", on="lattes_id")
     data_frame = data_frame.drop(columns=["created_at"])
@@ -140,9 +140,9 @@ def researcher_count(institution_id: UUID4 = None):
         filter_institution = "WHERE institution_id = %s"
         parameters.extend([institution_id])
 
-    script_sql = f"SELECT COUNT(*) FROM researcher {filter_institution}"
+    SCRIPT_SQL = f"SELECT COUNT(*) FROM researcher {filter_institution}"
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     # psycopg2 retorna uma lista de truplas,
     # quero apenas o primeiro valor da primeira lista
@@ -151,7 +151,7 @@ def researcher_count(institution_id: UUID4 = None):
 
 def researcher_query_name(researcher_name: str):
     parameters = [researcher_name]
-    script_sql = """
+    SCRIPT_SQL = """
     SELECT
         researcher_id
     FROM
@@ -161,7 +161,7 @@ def researcher_query_name(researcher_name: str):
     LIMIT 1;
     """
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     if registry:
         return registry[0][0]
@@ -171,7 +171,7 @@ def researcher_query_name(researcher_name: str):
 
 def researcher_search_id(lattes_id):
     parameters = [lattes_id]
-    script_sql = """
+    SCRIPT_SQL = """
         SELECT
             researcher_id 
         FROM
@@ -179,7 +179,7 @@ def researcher_search_id(lattes_id):
         WHERE
             lattes_id = %s
         """
-    researcher_id = adm_database.select(script_sql, parameters)
+    researcher_id = adm_database.select(SCRIPT_SQL, parameters)
 
     if researcher_id:
         return researcher_id[0][0]
@@ -191,10 +191,10 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
     parameters = list()
     untracket_researchers = list()
 
-    script_sql = """
+    SCRIPT_SQL = """
     DELETE FROM subsidy;
     """
-    adm_database.exec(script_sql)
+    adm_database.exec(SCRIPT_SQL)
 
     for subsidy in ListSubsidies.grant_list:
         researcher_id = researcher_search_id(subsidy.id_lattes)
@@ -202,14 +202,18 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
             untracket_researchers.append(subsidy.model_dump())
             continue
         parameters.append((
-            researcher_id, subsidy.cod_modalidade,
-            subsidy.nome_modalidade, subsidy.titulo_chamada,
-            subsidy.cod_categoria_nivel, subsidy.nome_programa_fomento,
-            subsidy.nome_instituto, subsidy.quant_auxilio,
+            researcher_id,
+            subsidy.cod_modalidade,
+            subsidy.nome_modalidade,
+            subsidy.titulo_chamada,
+            subsidy.cod_categoria_nivel,
+            subsidy.nome_programa_fomento,
+            subsidy.nome_instituto,
+            subsidy.quant_auxilio,
             subsidy.quant_bolsa,
         ))
 
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO subsidy(
             researcher_id,
             modality_code,
@@ -222,7 +226,7 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
             scholarship_quantity)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
     return untracket_researchers
 
 
@@ -235,7 +239,7 @@ def researcher_query_grant(institution_id):
                 """
         parameters.extend([institution_id])
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             s.researcher_id,
             r.name,
@@ -253,7 +257,7 @@ def researcher_query_grant(institution_id):
         {filter_institution}
         """
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     data_frame = pd.DataFrame(
         registry,
@@ -274,22 +278,23 @@ def researcher_query_grant(institution_id):
     return data_frame.to_dict(orient="records")
 
 
-def researcher_departament_insert(ListResearcherDepartament: ListResearcherDepartament):
+def researcher_departament_insert(
+        ListResearcherDepartament: ListResearcherDepartament):
     parameters = list()
 
     for researcher in ListResearcherDepartament.researcher_departament:
         parameters.append((researcher.dep_id, researcher.researcher_id))
 
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO ufmg.departament_researcher (dep_id, researcher_id)
         VALUES (%s, %s);
         """
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
 
 
 def researcher_departament_basic_query(researcher_id):
 
-    script_sql = """
+    SCRIPT_SQL = """
         SELECT
             dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
             dep_tel
@@ -300,10 +305,9 @@ def researcher_departament_basic_query(researcher_id):
             dpr.researcher_id = %s;
         """
 
-    reg = adm_database.select(script_sql, researcher_id)
+    registry = adm_database.select(SCRIPT_SQL, researcher_id)
 
-    data_frame = pd.DataFrame(
-        reg,
+    data_frame = pd.DataFrame(registry,
         columns=[
             "dep_id",
             "org_cod",
@@ -320,11 +324,9 @@ def researcher_departament_basic_query(researcher_id):
 
 
 def researcher_departament_delete(researcher):
-    script_sql = """
+    SCRIPT_SQL = """
         DELETE FROM ufmg.departament_researcher
         WHERE researcher_id = %s AND dep_id = %s;
         """
     adm_database.exec(
-        script_sql,
-        [researcher[0]['researcher_id'], researcher[0]['dep_id']]
-    )
+        SCRIPT_SQL, [researcher[0]['researcher_id'], researcher[0]['dep_id']])

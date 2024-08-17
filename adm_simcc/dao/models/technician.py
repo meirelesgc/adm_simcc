@@ -41,12 +41,3 @@ class Role(BaseModel):
 
 class ListRole(BaseModel):
     list_roles: list[Role]
-
-
-class TechnicianDepartament(BaseModel):
-    dep_id: int
-    Technician_id: UUID4
-
-
-class ListTechnicianDepartament(BaseModel):
-    technician_departament: list[TechnicianDepartament]

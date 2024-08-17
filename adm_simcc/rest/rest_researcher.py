@@ -92,10 +92,8 @@ def researcher_departament_delete():
 
 @rest_researcher.route("/departament", methods=["GET"])
 def researcher_departament_basic_query():
-    dep_id = request.args.get("dep_id")
     researcher_id = request.args.get("researcher_id")
 
     researchers = dao_researcher.researcher_departament_basic_query(
-        researcher_id, dep_id
-    )
+        researcher_id)
     return jsonify(researchers), HTTPStatus.OK

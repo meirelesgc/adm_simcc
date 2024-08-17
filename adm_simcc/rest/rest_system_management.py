@@ -1,10 +1,28 @@
-from http import HTTPStatus
-from flask import Blueprint, jsonify, request
 import os
 import json
+
+from http import HTTPStatus
+from flask import Blueprint, jsonify, request
+
 from ..dao import dao_system
+from ..models import UserModel
 
 rest_system = Blueprint("rest_system_management", __name__)
+
+
+@rest_system.route('/s/login', methods=['POST'])
+def create_user():
+    user = request.get_json()
+    user = UserModel(**user)
+    dao_system.create_user(user)
+    return jsonify('OK'), HTTPStatus.CREATED
+
+
+@rest_system.route('/s/login', methods=['GET'])
+def select_user():
+    uid = request.args.get('uid')
+    user = dao_system.select_user(uid)
+    return jsonify(user), HTTPStatus.OK
 
 
 @rest_system.route('/s/save-directory', methods=['POST'])
@@ -133,4 +151,24 @@ def view_technician_roles():
 def unassign_technician():
     technician = request.get_json()
     dao_system.unassign_technician(technician)
+    return jsonify('OK'), HTTPStatus.NO_CONTENT
+
+
+@rest_system.route('/s/user/role', methods=['POST'])
+def assign_user():
+    user = request.get_json()
+    dao_system.assign_user(user)
+    return jsonify('OK'), HTTPStatus.CREATED
+
+
+@rest_system.route('/s/user/role', methods=['GET'])
+def view_user_roles():
+    dao_system.view_user_roles()
+    return jsonify('OK'), HTTPStatus.OK
+
+
+@rest_system.route('/s/user/role', methods=['DELETE'])
+def unassign_user():
+    technician = request.get_json()
+    dao_system.unassign_user(technician)
     return jsonify('OK'), HTTPStatus.NO_CONTENT

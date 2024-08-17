@@ -7,24 +7,24 @@ adm_database = Connection()
 
 def ufmg_researcher_insert(ListTeachers: ListTeachers):
 
-    script_sql = """
+    SCRIPT_SQL = """
         DELETE FROM UFMG.researcher
         WHERE semester = %s;
         """
     year = ListTeachers.list_teachers[0].year_charge
     semester = ListTeachers.list_teachers[0].semester
-    adm_database.exec(script_sql, [f"{year}.{semester}"])
+    adm_database.exec(SCRIPT_SQL, [f"{year}.{semester}"])
 
     parameters = list()
 
     for teacher in ListTeachers.list_teachers:
-        script_sql = """
+        SCRIPT_SQL = """
             SELECT researcher_id FROM researcher
             WHERE ts_rank(to_tsvector(unaccent(LOWER(name))), websearch_to_tsquery(%s)) > 0.04
             LIMIT 1;
             """
 
-        researcher_id = adm_database.select(script_sql, [teacher.nome])
+        researcher_id = adm_database.select(SCRIPT_SQL, [teacher.nome])
         if researcher_id:
             researcher_id = researcher_id[0][0]
 
@@ -38,14 +38,14 @@ def ufmg_researcher_insert(ListTeachers: ListTeachers):
         ))
         # fmt: on
 
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO UFMG.researcher
         (researcher_id, matric, inscUFMG, nome, genero, situacao, rt, clas, 
         cargo, classe, ref, titulacao, entradaNaUFMG, progressao, semester) 
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
 
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
 
 
 def reacher_basic_query(year, semester):
@@ -60,7 +60,7 @@ def reacher_basic_query(year, semester):
             WHERE semester = (SELECT MAX(semester) FROM UFMG.researcher)
             """
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT 
             id, researcher_id, matric, inscUFMG, nome, genero, situacao, rt, 
             clas, cargo, classe, ref, titulacao, entradaNaUFMG,
@@ -70,7 +70,7 @@ def reacher_basic_query(year, semester):
         {filter_semester}
         """
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     data_frame = pd.DataFrame(
         registry,
@@ -97,7 +97,7 @@ def reacher_basic_query(year, semester):
 
 
 def teacher_query_semester():
-    script_sql = """
+    SCRIPT_SQL = """
     SELECT
         SUBSTRING(semester, 1, 4) AS year,
         SUBSTRING(semester, 6, 1) AS semester
@@ -105,7 +105,7 @@ def teacher_query_semester():
         ufmg.researcher
     GROUP BY semester;
     """
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(SCRIPT_SQL)
 
     data_frame = pd.DataFrame(registry, columns=["year", "semester"])
 
@@ -115,20 +115,18 @@ def teacher_query_semester():
 def teacher_insert_role(ListRole: ListRole):
     parameters = list()
     for role in ListRole.list_roles:
-        parameters.append((
-            role.role, role.researcher_id
-        ))
+        parameters.append((role.role, role.researcher_id))
 
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO researcher_role (role, researcher_id)
         VALUES (%s, %s)
         """
 
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
 def teacher_query_role():
-    script_sql = '''
+    SCRIPT_SQL = '''
         SELECT
             role,
             technician_id
@@ -136,7 +134,7 @@ def teacher_query_role():
             technician_role
         '''
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(SCRIPT_SQL)
 
     data_frame = pd.Dataframe(registry, columns=['role', 'technician_id'])
 

@@ -1,6 +1,7 @@
 import pandas as pd
 from adm_simcc.dao import Connection
 
+
 def get_researchers():
     sql_script = """
         SELECT
@@ -14,7 +15,7 @@ def get_researchers():
     return data_frame
 
 
-def build_script_sql_researcher(data_frame):
+def build_SCRIPT_SQL_researcher(data_frame):
 
     insert_data = str()
     for Index, Data in data_frame.iterrows():
@@ -76,7 +77,7 @@ def get_actual_graduate_program():
     return data_frame
 
 
-def build_script_sql_graduate_program(data_frame):
+def build_SCRIPT_SQL_graduate_program(data_frame):
 
     insert_data = str()
     for Index, Data in data_frame.iterrows():
@@ -127,6 +128,7 @@ def get_actual_graduate_program_researcher():
         registry, columns=["code", "lattes_id", "year", "type_"])
     return data_frame
 
+
 def get_actual_graduate_program_student():
     sql_script = """
         SELECT
@@ -144,9 +146,9 @@ def get_actual_graduate_program_student():
         registry, columns=["code", "lattes_id", "year"])
     return data_frame
 
-def build_script_sql_graduate_program_researcher(Series):
+def build_SCRIPT_SQL_graduate_program_researcher(Series):
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         INSERT INTO graduate_program_researcher (graduate_program_id, researcher_id, year, type_)
         SELECT graduate_program_id, r.researcher_id, '{Series['year']}', '{Series['type_']}'
         FROM graduate_program
@@ -154,11 +156,11 @@ def build_script_sql_graduate_program_researcher(Series):
         ON r.lattes_id = '{Series['lattes_id']}'
         WHERE code = '{Series['code']}';
         """
-    return script_sql
+    return SCRIPT_SQL
 
-def build_script_sql_graduate_program_student(Series, Index):
+def build_SCRIPT_SQL_graduate_program_student(Series, Index):
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         INSERT INTO graduate_program_student (graduate_program_id, researcher_id, year)
         SELECT graduate_program_id, r.researcher_id, '{Series['year']}'
         FROM graduate_program
@@ -166,7 +168,7 @@ def build_script_sql_graduate_program_student(Series, Index):
         ON r.lattes_id = '{Series['lattes_id']}'
         WHERE code = '{Series['code']}';
         """
-    return script_sql
+    return SCRIPT_SQL
 
 
 if __name__ == "__main__":
@@ -177,29 +179,29 @@ if __name__ == "__main__":
     if int(input('Importar os pesquisadores?\n[1-Sim / 0-Não]: ')):
         data_frame = get_researchers()
 
-        script_sql = build_script_sql_researcher(data_frame)
+        SCRIPT_SQL = build_SCRIPT_SQL_researcher(data_frame)
 
-        adm_database.exec(script_sql)
+        adm_database.exec(SCRIPT_SQL)
 
     if int(input('Importar os programas de pós-graduação?\n[1-Sim / 0-Não]: ')):
         data_frame_graduate_program = get_actual_graduate_program()
 
-        script_sql = build_script_sql_graduate_program(
+        SCRIPT_SQL = build_SCRIPT_SQL_graduate_program(
             data_frame_graduate_program)
 
-        adm_database.exec(script_sql)
+        adm_database.exec(SCRIPT_SQL)
 
     if int(input('Importar os pesquisadores da pós-graduação?\n[1-Sim / 0-Não]: ')):
         data_frame_graduate_program_researcher = get_actual_graduate_program_researcher()
     
         for Index, Data in data_frame_graduate_program_researcher.iterrows():
 
-            script_sql = build_script_sql_graduate_program_researcher(Data)
-            adm_database.exec(script_sql)
+            SCRIPT_SQL = build_SCRIPT_SQL_graduate_program_researcher(Data)
+            adm_database.exec(SCRIPT_SQL)
 
     if int(input('Importar os discentes da pós-graduação?\n[1-Sim / 0-Não]: ')):
         data_frame_graduate_program_student = get_actual_graduate_program_student()
         for Index, Data in data_frame_graduate_program_student.iterrows():
             
-            script_sql = build_script_sql_graduate_program_student(Data, Index)
-            adm_database.exec(script_sql)
+            SCRIPT_SQL = build_SCRIPT_SQL_graduate_program_student(Data, Index)
+            adm_database.exec(SCRIPT_SQL)

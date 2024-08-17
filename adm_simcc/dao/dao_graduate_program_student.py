@@ -9,28 +9,29 @@ adm_database = Connection()
 
 
 def student_insert(ListStudent: ListGraduateProgramStudent):
-    script_sql = str()
+    SCRIPT_SQL = str()
     for student in ListStudent.student_list:
-        main_data_base_id = dao_researcher.researcher_basic_query(lattes_id=student.lattes_id)  # fmt: skip
+        main_data_base_id = dao_researcher.researcher_basic_query(
+            lattes_id=student.lattes_id)  # fmt: skip
         if not main_data_base_id:
-            script_sql += f"""
+            SCRIPT_SQL += f"""
             INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
             VALUES ('{student.student_id}', '{student.name}', '{student.lattes_id}', '{student.institution_id}');
             """
         else:
             student.student_id = main_data_base_id[0]["researcher_id"]
 
-        script_sql += f"""
+        SCRIPT_SQL += f"""
         INSERT INTO graduate_program_student (graduate_program_id, researcher_id, year)
         VALUES ('{student.graduate_program_id}', '{student.student_id}', '{student.year}');
         """
 
-    return adm_database.exec(script_sql)
+    return adm_database.exec(SCRIPT_SQL)
 
 
-def student_basic_query(
-    graduate_program_id: str = None, institution_id: str = None, lattes_id: str = None
-):
+def student_basic_query(graduate_program_id: str = None,
+                        institution_id: str = None,
+                        lattes_id: str = None):
 
     if lattes_id:
         filter_lattes_id = f"AND r.lattes_id = '{lattes_id}'"
@@ -39,8 +40,7 @@ def student_basic_query(
 
     if graduate_program_id:
         filter_graduate_program = (
-            f"AND gps.graduate_program_id = '{graduate_program_id}'"
-        )
+            f"AND gps.graduate_program_id = '{graduate_program_id}'")
     else:
         filter_graduate_program = str()
 
@@ -49,7 +49,7 @@ def student_basic_query(
     else:
         filter_institution = str()
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             r.name,
             r.lattes_id,
@@ -64,7 +64,7 @@ def student_basic_query(
             {filter_institution}
             {filter_lattes_id};
     """
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(SCRIPT_SQL)
     data_frame = pd.DataFrame(
         registry,
         columns=[
@@ -78,7 +78,7 @@ def student_basic_query(
 
 
 def student_delete(student_id, graduate_program):
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         DELETE FROM graduate_program_student gs
         USING researcher r
         WHERE gs.researcher_id = r.researcher_id
@@ -87,11 +87,11 @@ def student_delete(student_id, graduate_program):
         
         DELETE FROM researcher WHERE lattes_id = '{student_id}';
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(SCRIPT_SQL)
 
 
 def student_update(student: GraduateProgramStudent):
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         UPDATE researcher
         SET
             researcher_id = '{student.student_id}',
@@ -100,4 +100,4 @@ def student_update(student: GraduateProgramStudent):
             institution_id = '{student.institution_id}'
         WHERE researcher_id = '{student.student_id}';
         """
-    adm_database.exec(script_sql)
+    adm_database.exec(SCRIPT_SQL)

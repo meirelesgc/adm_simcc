@@ -24,19 +24,18 @@ def graduate_program_researcher_insert(
         )
     # fmt: on
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         INSERT INTO graduate_program_researcher(
         graduate_program_id, researcher_id, year, type_)
         VALUES (%s, %s, %s, %s);
         """
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
 
 
-def graduate_program_researcher_delete(
-    researcher_id: UUID4, graduate_program_id: UUID4
-):
+def graduate_program_researcher_delete(researcher_id: UUID4,
+                                       graduate_program_id: UUID4):
     parameters = [researcher_id, graduate_program_id]
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         DELETE FROM graduate_program_researcher
         WHERE
             researcher_id = (
@@ -44,12 +43,11 @@ def graduate_program_researcher_delete(
                 FROM researcher
                 WHERE lattes_id = %s)
             AND graduate_program_id = %s;"""
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
-def graduate_program_researcher_count(
-    institution_id: UUID4 = None, graduate_program_id: UUID4 = None
-):
+def graduate_program_researcher_count(institution_id: UUID4 = None,
+                                      graduate_program_id: UUID4 = None):
     parameters = list()
 
     filter_institution = str()
@@ -73,7 +71,7 @@ def graduate_program_researcher_count(
     else:
         filter_graduate_program = str()
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             COUNT(*)
         FROM
@@ -82,14 +80,13 @@ def graduate_program_researcher_count(
         {filter_graduate_program};
         """
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     return registry[0][0]
 
 
-def graduate_program_researcher_basic_query(
-    graduate_program_id: UUID4, type_: str = None
-):
+def graduate_program_researcher_basic_query(graduate_program_id: UUID4,
+                                            type_: str = None):
     parameters = [graduate_program_id]
 
     if type_:
@@ -98,7 +95,7 @@ def graduate_program_researcher_basic_query(
     else:
         type_filter = "AND type_ IN ('PERMANENTE', 'COLABORADOR')"
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             r.name, r.lattes_id,
             gpr.type_, gpr.created_at
@@ -112,7 +109,7 @@ def graduate_program_researcher_basic_query(
             gpr.created_at DESC
         """
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     data_frame = pd.DataFrame(
         registry,

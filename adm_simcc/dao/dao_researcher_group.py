@@ -19,16 +19,17 @@ def research_group_insert(ListResearcherGroup: ListResearcherGroup):
             research_group.area, datetime.strptime(research_group.ultimo_envio, "%d/%m/%Y"), research_group.situacao,
         ))
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         INSERT INTO research_group 
         (research_group_name, researcher_id, institution_id, area, last_date_sent, situation) 
         VALUES (%s, %s, %s, %s, %s, %s)
         """
 
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
 
 
-def research_group_basic_query(institution_id, research_group_id, researcher_id):
+def research_group_basic_query(institution_id, research_group_id,
+                               researcher_id):
     filter_institution = str()
     filter_research_group = str()
     filter_researcher = str()
@@ -44,7 +45,7 @@ def research_group_basic_query(institution_id, research_group_id, researcher_id)
         filter_researcher = f"AND r.researcher_id = %s"
         parameters += [researcher_id]
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT 
             rg.research_group_id,
             rg.research_group_name,
@@ -68,7 +69,7 @@ def research_group_basic_query(institution_id, research_group_id, researcher_id)
             {filter_research_group}
             {filter_researcher}
         """
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
     data_frame = pd.DataFrame(
         registry,
         columns=[
@@ -89,14 +90,15 @@ def research_group_basic_query(institution_id, research_group_id, researcher_id)
     return data_frame.to_dict(orient="records")
 
 
-def research_group_delete(research_group_id: str = None, institution_id: str = None):
+def research_group_delete(research_group_id: str = None,
+                          institution_id: str = None):
     parameters = list()
     if research_group_id:
-        script_sql = f"DELETE FROM research_group WHERE research_group_id = %s;"
+        SCRIPT_SQL = f"DELETE FROM research_group WHERE research_group_id = %s;"
         parameters += [research_group_id]
 
     if institution_id:
-        script_sql = f"DELETE FROM research_group WHERE institution_id = %s;"
+        SCRIPT_SQL = f"DELETE FROM research_group WHERE institution_id = %s;"
         parameters += [institution_id]
 
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)

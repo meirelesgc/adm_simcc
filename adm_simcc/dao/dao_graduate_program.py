@@ -24,28 +24,28 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
         ))
     # fmt: on
 
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO graduate_program
         (graduate_program_id, code, name, area, modality, type, rating,
         institution_id, city, url_image, sigla, description, visible)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
 
 
 def graduate_program_update(graduate_program_id: UUID4):
     parameters = [graduate_program_id]
-    script_sql = """
+    SCRIPT_SQL = """
         UPDATE graduate_program
         SET visible = NOT visible
         WHERE graduate_program_id = %s;
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
 def graduate_program_basic_query(institution_id: UUID4):
     parameters = [institution_id]
-    script_sql = """
+    SCRIPT_SQL = """
         SELECT
             gp.graduate_program_id,
             gp.code,
@@ -72,7 +72,7 @@ def graduate_program_basic_query(institution_id: UUID4):
             gp.graduate_program_id, gp
         """
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     data_frame = pd.DataFrame(
         registry,
@@ -95,7 +95,7 @@ def graduate_program_basic_query(institution_id: UUID4):
         ],
     )
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT 
             graduate_program_id,
             COUNT(researcher_id) as qtr_discente
@@ -104,11 +104,10 @@ def graduate_program_basic_query(institution_id: UUID4):
         GROUP BY 
             graduate_program_id
         """
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(SCRIPT_SQL)
 
     qtd_discentes = pd.DataFrame(
-        registry, columns=["graduate_program_id", "qtd_discente"]
-    )
+        registry, columns=["graduate_program_id", "qtd_discente"])
 
     data_frame = pd.merge(
         data_frame,
@@ -122,8 +121,10 @@ def graduate_program_basic_query(institution_id: UUID4):
 
 
 def graduate_program_delete(graudate_program_id: UUID4):
-    parameters = [graudate_program_id, graudate_program_id, graudate_program_id]
-    script_sql = """
+    parameters = [
+        graudate_program_id, graudate_program_id, graudate_program_id
+    ]
+    SCRIPT_SQL = """
         DELETE FROM graduate_program_student
         WHERE graduate_program_id = %s;
        
@@ -134,28 +135,28 @@ def graduate_program_delete(graudate_program_id: UUID4):
         WHERE graduate_program_id = %s;
         """
 
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
 def graduate_program_fix(Graduate_program: GraduateProgram):
     # fmt: off
     parameters = [
         Graduate_program.code, Graduate_program.name, Graduate_program.area,
-        Graduate_program.modality, Graduate_program.type, 
-        Graduate_program.rating, Graduate_program.institution_id, 
-        Graduate_program.city, Graduate_program.url_image, 
-        Graduate_program.sigla, Graduate_program.description, 
+        Graduate_program.modality, Graduate_program.type,
+        Graduate_program.rating, Graduate_program.institution_id,
+        Graduate_program.city, Graduate_program.url_image,
+        Graduate_program.sigla, Graduate_program.description,
         Graduate_program.visible, Graduate_program.graduate_program_id,
     ]
     # fmt: on
-    script_sql = """
+    SCRIPT_SQL = """
         UPDATE graduate_program SET
         code = %s, name = %s, area = %s, modality = %s, type = %s, 
         rating = %s, institution_id = %s, city = %s, url_image = %s,
         sigla = %s, description = %s, visible = %s
         WHERE graduate_program_id = %s;
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
 def graduate_program_count(institution_id: UUID4 = None):
@@ -165,9 +166,9 @@ def graduate_program_count(institution_id: UUID4 = None):
         filter_institution = "WHERE institution_id = %s"
         parameters.extend([institution_id])
 
-    script_sql = f"SELECT COUNT(*) FROM graduate_program {filter_institution}"
+    SCRIPT_SQL = f"SELECT COUNT(*) FROM graduate_program {filter_institution}"
 
-    registry = adm_database.select(script_sql, parameters)
+    registry = adm_database.select(SCRIPT_SQL, parameters)
 
     # psycopg2 retorna uma lista de truplas,
     # quero apenas o primeiro valor da primeira lista

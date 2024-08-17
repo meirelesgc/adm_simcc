@@ -15,13 +15,13 @@ def institution_insert(ListInstitutions: ListInstitutions):
     # Criação do script de insert.
     # Unifiquei em um unico comando para facilitar
     # o retorno da mensagem de erro
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         INSERT INTO public.institution
         (institution_id, name, acronym, lattes_id)
         VALUES {values_str[:-1]};
         """
 
-    adm_database.exec(script_sql)
+    adm_database.exec(SCRIPT_SQL)
 
 
 def institution_full_query(institution_id: UUID4 = None):
@@ -29,7 +29,7 @@ def institution_full_query(institution_id: UUID4 = None):
     if institution_id:
         filter_institution = f"WHERE i.institution_id = '{institution_id}'"
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             i.name AS name,
             i.institution_id,
@@ -48,7 +48,7 @@ def institution_full_query(institution_id: UUID4 = None):
         GROUP BY
             i.institution_id, i.name;
         """
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(SCRIPT_SQL)
 
     data_frame = pd.DataFrame(
         registry,
@@ -59,7 +59,7 @@ def institution_full_query(institution_id: UUID4 = None):
 
 
 def institution_basic_query(institution_id: UUID4):
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             institution_id,
             name,
@@ -71,11 +71,10 @@ def institution_basic_query(institution_id: UUID4):
             institution_id = '{institution_id}'
         """
 
-    registry = adm_database.select(script_sql=script_sql)
+    registry = adm_database.select(SCRIPT_SQL=SCRIPT_SQL)
 
     data_frame = pd.DataFrame(
-        registry, columns=["institution_id", "name", "acronym", "lattes_id"]
-    )
+        registry, columns=["institution_id", "name", "acronym", "lattes_id"])
 
     # to_dict retorna uma lista, e eu so quero o primeiro valor
     return data_frame.to_dict(orient="records")[0]
@@ -83,7 +82,7 @@ def institution_basic_query(institution_id: UUID4):
 
 def institution_query_name(institution_name: str):
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
     SELECT
         institution_id
     FROM
@@ -93,7 +92,7 @@ def institution_query_name(institution_name: str):
     LIMIT 1;
     """
 
-    registry = adm_database.select(script_sql)
+    registry = adm_database.select(SCRIPT_SQL)
 
     if registry:
         return registry[0][0]

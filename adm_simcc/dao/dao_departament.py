@@ -20,13 +20,13 @@ def departament_insert(departaments, file):
         departaments["dep_sigla"], departaments["dep_tel"],
         psycopg2.Binary(file["img_data"].read())
     ]
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO UFMG.departament
             (dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla,
              dep_tel, img_data)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
 def departament_basic_query(dep_id):
@@ -34,7 +34,7 @@ def departament_basic_query(dep_id):
     if dep_id:
         departament_filter = "WHERE dep_id = %s"
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla,
             dep_tel, img_data
@@ -42,7 +42,7 @@ def departament_basic_query(dep_id):
             UFMG.departament
         {departament_filter};
         """
-    reg = adm_database.select(script_sql, [dep_id])
+    reg = adm_database.select(SCRIPT_SQL, [dep_id])
 
     columns = [
         "dep_id",
@@ -58,24 +58,22 @@ def departament_basic_query(dep_id):
     result = list()
     for row in reg:
         row_dict = dict(zip(columns, row))
-        row_dict["img_data"] = (
-            base64.b64encode(row_dict["img_data"]).decode("utf-8")
-            if row_dict["img_data"]
-            else None
-        )
+        row_dict["img_data"] = (base64.b64encode(
+            row_dict["img_data"]).decode("utf-8")
+                                if row_dict["img_data"] else None)
         result.append(row_dict)
 
     return result
 
 
 def departament_delete(dep_id):
-    script_sql = """
+    SCRIPT_SQL = """
         DELETE FROM UFMG.departament_researcher
         WHERE dep_id = %s;
         DELETE FROM UFMG.departament
         WHERE dep_id = %s;
         """
-    adm_database.exec(script_sql, [dep_id, dep_id])
+    adm_database.exec(SCRIPT_SQL, [dep_id, dep_id])
 
 
 def departament_update(departament, file):
@@ -94,7 +92,7 @@ def departament_update(departament, file):
         parameters.insert(7, image)
 
     # fmt: on
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         UPDATE UFMG.departament
         SET org_cod = %s,
             dep_nom = %s,
@@ -106,11 +104,11 @@ def departament_update(departament, file):
             dep_tel = %s
         WHERE dep_id = %s
         """
-    adm_database.exec(script_sql, parameters)
+    adm_database.exec(SCRIPT_SQL, parameters)
 
 
 def departament_researcher_query(dep_id):
-    script_sql = """
+    SCRIPT_SQL = """
     SELECT
         r.researcher_id,
         r.name,
@@ -125,10 +123,10 @@ def departament_researcher_query(dep_id):
                             WHERE dep_id = %s)
     """
 
-    registry = adm_database.select(script_sql, [dep_id])
+    registry = adm_database.select(SCRIPT_SQL, [dep_id])
 
-    data_frame = pd.DataFrame(
-        registry, columns=["researcher_id", "name", "lattes_id"])
+    data_frame = pd.DataFrame(registry,
+                              columns=["researcher_id", "name", "lattes_id"])
     return data_frame.to_dict(orient="records")
 
 
@@ -140,11 +138,12 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
         professors_name = list()
         professors_workload = list()
         for professor in discipline.professor:
-            script_sql = """
+            SCRIPT_SQL = """
             SELECT researcher_id FROM UFMG.researcher
             WHERE inscufmg = %s
             """
-            researcher_id = adm_database.select(script_sql, [professor.ufmg_id])
+            researcher_id = adm_database.select(SCRIPT_SQL,
+                                                [professor.ufmg_id])
             if researcher_id:
                 professors_id.append(researcher_id[0][0])
             else:
@@ -152,18 +151,17 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
             professors_name.append(professor.name)
             professors_workload.append(professor.responsibility)
 
-        parameters.append((
-            discipline.dep_id, discipline.semester, discipline.department,
-            discipline.academic_activity_code,
-            discipline.academic_activity_name, discipline.academic_activity_ch,
-            discipline.demanding_courses, discipline.oft, discipline.id,
-            discipline.available_slots, discipline.occupied_slots,
-            discipline.percent_occupied_slots, discipline.schedule,
-            discipline.language, professors_id, professors_workload,
-            discipline.status, professors_name
-        ))
+        parameters.append(
+            (discipline.dep_id, discipline.semester, discipline.department,
+             discipline.academic_activity_code,
+             discipline.academic_activity_name,
+             discipline.academic_activity_ch, discipline.demanding_courses,
+             discipline.oft, discipline.id, discipline.available_slots,
+             discipline.occupied_slots, discipline.percent_occupied_slots,
+             discipline.schedule, discipline.language, professors_id,
+             professors_workload, discipline.status, professors_name))
 
-    script_sql = """
+    SCRIPT_SQL = """
         INSERT INTO UFMG.disciplines
             (dep_id, semester, department, academic_activity_code,
             academic_activity_name, academic_activity_ch,
@@ -173,7 +171,7 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
         VALUES
             (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
-    adm_database.execmany(script_sql, parameters)
+    adm_database.execmany(SCRIPT_SQL, parameters)
 
 
 def departament_query_discipline(dep_id):
@@ -181,7 +179,7 @@ def departament_query_discipline(dep_id):
         filter_departament = "WHERE dep_id = %s"
     else:
         filter_departament = str()
-    script_sql = f"""
+    SCRIPT_SQL = f"""
         SELECT
             semester, department, academic_activity_code,
             academic_activity_name, academic_activity_ch,
@@ -193,27 +191,17 @@ def departament_query_discipline(dep_id):
         {filter_departament}
         """
 
-    registry = adm_database.select(script_sql, [dep_id])
+    registry = adm_database.select(SCRIPT_SQL, [dep_id])
 
-    data_frame = pd.DataFrame(registry, columns=[
-        'semester',
-        'department',
-        'academic_activity_code',
-        'academic_activity_name',
-        'academic_activity_ch',
-        'demanding_courses',
-        'oft',
-        'id',
-        'available_slots',
-        'occupied_slots',
-        'percent_occupied_slots',
-        'schedule',
-        'language',
-        'researcher_id',
-        'workload',
-        'status',
-        'researcher_name'
-    ])
+    data_frame = pd.DataFrame(
+        registry,
+        columns=[
+            'semester', 'department', 'academic_activity_code',
+            'academic_activity_name', 'academic_activity_ch',
+            'demanding_courses', 'oft', 'id', 'available_slots',
+            'occupied_slots', 'percent_occupied_slots', 'schedule', 'language',
+            'researcher_id', 'workload', 'status', 'researcher_name'
+        ])
 
     return data_frame.to_dict(orient='records')
 
@@ -224,7 +212,7 @@ def departament_query_discipline_semester(dep_id):
     else:
         filter_departament = str()
 
-    script_sql = f"""
+    SCRIPT_SQL = f"""
     SELECT
         SUBSTRING(semester, 1, 4) AS year,
         SUBSTRING(semester, 6, 1) AS semester
@@ -233,8 +221,8 @@ def departament_query_discipline_semester(dep_id):
     {filter_departament}
     GROUP BY semester;
     """
-    
-    registry = adm_database.select(script_sql, [dep_id])
+
+    registry = adm_database.select(SCRIPT_SQL, [dep_id])
 
     data_frame = pd.DataFrame(registry, columns=["year", "semester"])
 

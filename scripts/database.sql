@@ -153,7 +153,6 @@ CREATE TABLE IF NOT EXISTS UFMG.researcher (
 );
 CREATE TABLE IF NOT EXISTS UFMG.technician (
       technician_id uuid NOT NULL DEFAULT uuid_generate_v4(),
-      id VARCHAR(255),
       matric VARCHAR(255),
       ins_ufmg VARCHAR(255),
       nome VARCHAR(255),
@@ -171,6 +170,13 @@ CREATE TABLE IF NOT EXISTS UFMG.technician (
       data_prog DATE,
       semester character varying(6),
       PRIMARY KEY (technician_id)
+);
+CREATE TABLE IF NOT EXISTS ufmg.departament_technician (
+      dep_id character varying(10),
+      technician_id uuid,
+      PRIMARY KEY (dep_id, technician_id),
+      FOREIGN KEY (dep_id) REFERENCES ufmg.departament (dep_id),
+      FOREIGN KEY (technician_id) REFERENCES ufmg.technician (technician_id)
 );
 CREATE TABLE IF NOT EXISTS UFMG.departament (
       dep_id VARCHAR(20),
@@ -237,4 +243,18 @@ CREATE TABLE incite_graduate_program_researcher(
       PRIMARY KEY (incite_graduate_program_id, researcher_id),
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (incite_graduate_program_id) REFERENCES incite_graduate_program (incite_graduate_program_id)
+);
+CREATE TABLE users (
+      user_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      display_name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) UNIQUE NOT NULL,
+      uid VARCHAR(255) UNIQUE NOT NULL,
+      photo_url TEXT,
+      PRIMARY user_id
+);
+CREATE TABLE users_roles (
+      role_id UUID NOT NULL,
+      users_id UUID NOT NULL,
+      PRIMARY KEY (role_id, users_id),
+      FOREIGN KEY (users_id) REFERENCES public.users (users_id)
 );

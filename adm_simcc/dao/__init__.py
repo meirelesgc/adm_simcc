@@ -43,11 +43,11 @@ class Connection:
         if self.connection:
             self.connection.close()
 
-    def select(self, script_sql: str, parameters: list = []):
+    def select(self, SCRIPT_SQL: str, parameters: list = []):
         self.__connect()
         query = None
         try:
-            self.cursor.execute(script_sql, parameters)
+            self.cursor.execute(SCRIPT_SQL, parameters)
             query = self.cursor.fetchall()
         except psycopg2.errors.InvalidTextRepresentation as e:
             print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
@@ -57,10 +57,10 @@ class Connection:
             self.__close()
         return query
 
-    def exec(self, script_sql: str, parameters: list = []):
+    def exec(self, SCRIPT_SQL: str, parameters: list = []):
         self.__connect()
         try:
-            self.cursor.execute(script_sql, parameters)
+            self.cursor.execute(SCRIPT_SQL, parameters)
             self.connection.commit()
         except psycopg2.errors.UniqueViolation as e:
             print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
@@ -73,10 +73,10 @@ class Connection:
         finally:
             self.__close()
 
-    def execmany(self, script_sql: str, parameters: list = []):
+    def execmany(self, SCRIPT_SQL: str, parameters: list = []):
         self.__connect()
         try:
-            self.cursor.executemany(script_sql, parameters)
+            self.cursor.executemany(SCRIPT_SQL, parameters)
             self.connection.commit()
         except psycopg2.errors.UniqueViolation as e:
             print(f"\nTipo: {type(e).__name__}\nMensagem: {e}")
