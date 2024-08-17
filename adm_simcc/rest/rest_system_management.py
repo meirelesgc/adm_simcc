@@ -10,7 +10,7 @@ from ..models import UserModel
 rest_system = Blueprint("rest_system_management", __name__)
 
 
-@rest_system.route('/s/login', methods=['POST'])
+@rest_system.route('/s/user', methods=['POST'])
 def create_user():
     user = request.get_json()
     user = UserModel(**user)
@@ -18,7 +18,7 @@ def create_user():
     return jsonify('OK'), HTTPStatus.CREATED
 
 
-@rest_system.route('/s/login', methods=['GET'])
+@rest_system.route('/s/user', methods=['GET'])
 def select_user():
     uid = request.args.get('uid')
     user = dao_system.select_user(uid)
