@@ -250,11 +250,11 @@ CREATE TABLE users (
       email VARCHAR(255) UNIQUE NOT NULL,
       uid VARCHAR(255) UNIQUE NOT NULL,
       photo_url TEXT,
-      PRIMARY user_id
+      PRIMARY KEY (user_id)
 );
 CREATE TABLE users_roles (
       role_id UUID NOT NULL,
-      users_id UUID NOT NULL,
-      PRIMARY KEY (role_id, users_id),
-      FOREIGN KEY (users_id) REFERENCES public.users (users_id)
+      user_id UUID NOT NULL,
+      PRIMARY KEY (role_id, user_id),
+      FOREIGN KEY (user_id) REFERENCES public.users (user_id)
 );

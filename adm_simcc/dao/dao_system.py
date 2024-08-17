@@ -7,7 +7,7 @@ adm_database = Connection()
 
 def create_user(User: UserModel):
     SCRIPT_SQL = """
-        INSERT INTO user (displayName, email, uid, photoURL)
+        INSERT INTO users (displayName, email, uid, photoURL)
         VALUES (%s, %s, %s, %s);
         """
     adm_database.exec(SCRIPT_SQL,
@@ -17,12 +17,13 @@ def create_user(User: UserModel):
 def select_user(uid):
     SCRIPT_SQL = """
         SELECT user_id, displayName, email, uid, photoURL
-        FROM user WHERE uid = %s;
+        FROM users WHERE uid = %s;
         """
     registry = adm_database.select(SCRIPT_SQL, uid)
 
     data_frame = pd.DataFrame(
-        registry, columns=['user_id', 'displayName', 'email', 'uid', 'photoURL'])
+        registry,
+        columns=['user_id', 'displayName', 'email', 'uid', 'photoURL'])
 
     return data_frame.to_dict(orient='records')
 
@@ -176,7 +177,7 @@ def unassign_technician(technician):
 
 def assign_user(user):
     SCRIPT_SQL = """
-        INSERT INTO user_roles (role_id, user_id)
+        INSERT INTO users_roles (role_id, user_id)
         VALUES (%s, %s);
         """
     adm_database.exec(SCRIPT_SQL, [user[0]['role_id'], user[0]['user_id']])
@@ -191,7 +192,7 @@ def view_user_roles():
                 'role', r.role
             )) AS roles
         FROM
-            user_roles ur
+            users_roles ur
             LEFT JOIN roles r ON r.id = ur.role_id
         GROUP BY
             ur.user;
@@ -203,7 +204,7 @@ def view_user_roles():
 
 def unassign_user(user):
     SCRIPT_SQL = """
-        DELETE FROM user_roles
+        DELETE FROM users_roles
         WHERE role_id = %s AND user_id = %s;
         """
     adm_database.exec(
