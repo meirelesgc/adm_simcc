@@ -22,11 +22,10 @@ def select_user(uid):
             uid, 
             photo_url, 
             shib_uid,
-            jsonb_agg(jsonb_build_object('id', p.id, 'role_id', p.role_id, 'permission', p.permission)) AS permission
+            jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles
         FROM users u
         LEFT JOIN users_roles ur ON ur.user_id = u.user_id
         LEFT JOIN roles r ON r.id = ur.role_id
-        LEFT JOIN permission p ON p.role_id = ur.role_id
         WHERE uid = %s OR shib_uid = %s
         GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid;
         """
@@ -36,7 +35,7 @@ def select_user(uid):
     data_frame = pd.DataFrame(registry,
                               columns=[
                                   'user_id', 'display_name', 'email', 'uid',
-                                  'photo_url', 'shib_uid', 'permissions'
+                                  'photo_url', 'shib_uid', 'roles'
                               ])
 
     return data_frame.to_dict(orient='records')

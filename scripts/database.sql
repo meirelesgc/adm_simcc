@@ -124,12 +124,6 @@ CREATE TABLE permission (
       role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
       permission VARCHAR(255) NOT NULL
 );
-CREATE TABLE researcher_roles (
-      role_id UUID NOT NULL,
-      researcher_id UUID NOT NULL,
-      PRIMARY KEY (role_id, researcher_id),
-      FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
-);
 CREATE SCHEMA IF NOT EXISTS UFMG;
 CREATE TABLE IF NOT EXISTS UFMG.researcher (
       id uuid,
@@ -216,12 +210,6 @@ CREATE TABLE UFMG.disciplines (
       researcher_name VARCHAR [],
       status VARCHAR(50),
       workload VARCHAR []
-);
-CREATE TABLE technician_roles (
-      role_id UUID NOT NULL,
-      technician_id UUID NOT NULL,
-      PRIMARY KEY (role_id, technician_id),
-      FOREIGN KEY (technician_id) REFERENCES UFMG.technician (technician_id)
 );
 CREATE TABLE incite_graduate_program(
       incite_graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
