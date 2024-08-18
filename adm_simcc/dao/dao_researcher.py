@@ -33,8 +33,11 @@ def researcher_insert(ListResearchers: ListResearchers):
 
 
 def researcher_delete(researcher_id: UUID4):
-    parameters = [researcher_id, researcher_id, researcher_id]
+    parameters = [researcher_id, researcher_id, researcher_id, researcher_id]
     SCRIPT_SQL = """
+        DELETE FROM ufmg.researcher
+        WHERE researcher_id = %s;
+
         DELETE FROM graduate_program_researcher
         WHERE researcher_id = %s;
 
