@@ -7,7 +7,7 @@ adm_database = Connection()
 
 def create_user(User: UserModel):
     SCRIPT_SQL = """
-        INSERT INTO users (displayName, email, uid, photoURL)
+        INSERT INTO users (display_name, email, uid, photo_url, shib_uid)
         VALUES (%s, %s, %s, %s);
         """
     adm_database.exec(SCRIPT_SQL,
@@ -16,14 +16,28 @@ def create_user(User: UserModel):
 
 def select_user(uid):
     SCRIPT_SQL = """
-        SELECT user_id, displayName, email, uid, photoURL, shib_uid
-        FROM users WHERE uid = %s OR shib_uid = %s;
+        SELECT u.user_id, 
+            display_name, 
+            email, 
+            uid, 
+            photo_url, 
+            shib_uid,
+            jsonb_agg(jsonb_build_object('id', p.id, 'role_id', p.role_id, 'permission', p.permission)) AS permission
+        FROM users u
+        LEFT JOIN users_roles ur ON ur.user_id = u.user_id
+        LEFT JOIN roles r ON r.id = ur.role_id
+        LEFT JOIN permission p ON p.role_id = ur.role_id
+        WHERE uid = %s OR shib_uid = %s
+        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid;
         """
-    registry = adm_database.select(SCRIPT_SQL, uid)
+    print(SCRIPT_SQL)
+    registry = adm_database.select(SCRIPT_SQL, [uid, uid])
 
-    data_frame = pd.DataFrame(
-        registry,
-        columns=['user_id', 'displayName', 'email', 'uid', 'photoURL'])
+    data_frame = pd.DataFrame(registry,
+                              columns=[
+                                  'user_id', 'display_name', 'email', 'uid',
+                                  'photo_url', 'shib_uid', 'permissions'
+                              ])
 
     return data_frame.to_dict(orient='records')
 

@@ -250,6 +250,7 @@ CREATE TABLE users (
       email VARCHAR(255) UNIQUE NOT NULL,
       uid VARCHAR(255) UNIQUE NOT NULL,
       photo_url TEXT,
+      shib_uid VARCHAR(255) UNIQUE NOT NULL,
       PRIMARY KEY (user_id)
 );
 CREATE TABLE users_roles (
