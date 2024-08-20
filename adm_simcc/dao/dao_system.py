@@ -35,7 +35,7 @@ def select_user(uid):
             uid,
             photo_url,
             shib_uid,
-            jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles
+            jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles,
             linkedin,
             provider,
             lattes_id
@@ -51,11 +51,19 @@ def select_user(uid):
     data_frame = pd.DataFrame(registry,
                               columns=[
                                   'user_id', 'display_name', 'email', 'uid',
-                                  'photo_url', 'shib_uid', 'roles'
+                                  'photo_url', 'shib_uid', 'roles', 'linkedin',
+                                  'provider', 'lattes_id'
                               ])
 
     return data_frame.to_dict(orient='records')
 
+
+def update_user():
+    SCRIPT_SQL = """
+    UPDATE users 
+    SET linkedin = %s 
+    WHERE uid = %s
+    """
 
 def list_users():
     SCRIPT_SQL = """
