@@ -38,12 +38,17 @@ def select_user(uid):
             jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles,
             linkedin,
             provider,
-            lattes_id,
+            u.lattes_id,
+            rr.institution_id,
+            jsonb_agg(jsonb_build_object('graduate_program_id', gp.graduate_program_id, 'name', gp.name)) AS graduate_program
         FROM users u
         LEFT JOIN users_roles ur ON ur.user_id = u.user_id
         LEFT JOIN roles r ON r.id = ur.role_id
+        LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
+        LEFT JOIN graduate_program_researcher gpr ON gpr.researcher_id = rr.researcher_id
+        LEFT JOIN graduate_program gp ON gp.graduate_program_id = gpr.graduate_program_id
         WHERE uid = %s OR shib_uid = %s
-        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid;
+        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, rr.institution_id;
         """
     print(SCRIPT_SQL)
     registry = adm_database.select(SCRIPT_SQL, [uid, uid])
@@ -52,7 +57,8 @@ def select_user(uid):
                               columns=[
                                   'user_id', 'display_name', 'email', 'uid',
                                   'photo_url', 'shib_uid', 'roles', 'linkedin',
-                                  'provider', 'lattes_id'
+                                  'provider', 'lattes_id', 'institution_id',
+                                  'graduate_program'
                               ])
 
     return data_frame.to_dict(orient='records')
