@@ -68,11 +68,13 @@ def update_user(user):
     SCRIPT_SQL = """
     UPDATE users
     SET linkedin = %s,
-        lattes_id = %s
+        lattes_id = %s,
+        displayName = %s
     WHERE uid = %s
     """
-    adm_database.exec(SCRIPT_SQL,
-                      [user['linkedin'], user['lattes_id'], user['uid']])
+    adm_database.exec(SCRIPT_SQL, [
+        user['linkedin'], user['lattes_id'], user['display_name'], user['uid']
+    ])
 
 
 def list_users():
