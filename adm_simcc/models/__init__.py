@@ -8,3 +8,6 @@ class UserModel(BaseModel):
     uid: str
     photoURL: HttpUrl
     shib_id: Optional[str] = None
+    linkedin: Optional[str] = None
+    provider: Optional[str] = None
+    lattes_id: Optional[str] = None

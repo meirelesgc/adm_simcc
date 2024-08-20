@@ -1,5 +1,6 @@
 import os
 import json
+import psycopg2
 
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request
@@ -12,11 +13,13 @@ rest_system = Blueprint("rest_system_management", __name__)
 
 @rest_system.route('/s/user', methods=['POST'])
 def create_user():
-    user = request.get_json()
-    user = UserModel(**user)
-    dao_system.create_user(user)
-    return jsonify('OK'), HTTPStatus.CREATED
-
+    try:
+        user = request.get_json()
+        user = UserModel(**user)
+        dao_system.create_user(user)
+        return jsonify('OK'), HTTPStatus.CREATED
+    except psycopg2.errors.UniqueViolation:
+        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.OK
 
 @rest_system.route('/s/user', methods=['GET'])
 def select_user():

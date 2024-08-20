@@ -6,13 +6,24 @@ adm_database = Connection()
 
 
 def create_user(User: UserModel):
+
     SCRIPT_SQL = """
-        INSERT INTO users (display_name, email, uid, photo_url, shib_uid)
-        VALUES (%s, %s, %s, %s, %s);
+    SELECT lattes_id FROM researcher WHERE
+    unaccent(name) ILIKE unaccent(%s) LIMIT 1;
+    """
+
+    lattes_id = adm_database.select(SCRIPT_SQL, [User.displayName])
+
+    if lattes_id:
+        User.lattes_id = lattes_id[0][0]
+    SCRIPT_SQL = """
+        INSERT INTO users (display_name, email, uid, photo_url, shib_uid, linkedin, provider, lattes_id)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
         """
     adm_database.exec(SCRIPT_SQL, [
         User.displayName, User.email, User.uid,
-        str(User.photoURL), User.shib_id or str()
+        str(User.photoURL), User.shib_id or str(), User.linkedin or str(),
+        User.provider or str(), User.lattes_id or str()
     ])
 
 
