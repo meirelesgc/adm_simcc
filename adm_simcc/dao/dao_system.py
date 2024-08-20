@@ -123,7 +123,7 @@ def delete_role(role):
     adm_database.exec(SCRIPT_SQL, [role[0]['id']])
 
 
-def permission_insert(permission):
+def create_new_permission(permission):
     SCRIPT_SQL = """
         INSERT INTO permission (role_id, permission)
         VALUES (%s, %s);
