@@ -238,7 +238,10 @@ CREATE TABLE users (
       email VARCHAR(255) UNIQUE NOT NULL,
       uid VARCHAR(255) UNIQUE NOT NULL,
       photo_url TEXT,
-      shib_uid VARCHAR(255) UNIQUE NOT NULL,
+      shib_uid VARCHAR(255) UNIQUE,
+      lattes_id VARCHAR(255) UNIQUE,
+      provider VARCHAR(255),
+      linkedin VARCHAR(255),
       PRIMARY KEY (user_id)
 );
 CREATE TABLE users_roles (

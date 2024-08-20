@@ -15,7 +15,7 @@ rest_system = Blueprint("rest_system_management", __name__)
 def create_user():
     try:
         user = request.get_json()
-        user = UserModel(**user)
+        user = UserModel(**user[0])
         dao_system.create_user(user)
         return jsonify('OK'), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
