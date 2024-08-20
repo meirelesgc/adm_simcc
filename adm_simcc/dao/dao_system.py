@@ -36,6 +36,9 @@ def select_user(uid):
             photo_url,
             shib_uid,
             jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles
+            linkedin,
+            provider,
+            lattes_id
         FROM users u
         LEFT JOIN users_roles ur ON ur.user_id = u.user_id
         LEFT JOIN roles r ON r.id = ur.role_id
