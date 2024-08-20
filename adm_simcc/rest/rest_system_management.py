@@ -28,6 +28,13 @@ def select_user():
     return jsonify(user), HTTPStatus.OK
 
 
+@rest_system.route('/s/user', methods=['PUT'])
+def update_user():
+    user = request.get_json()
+    dao_system.update_user(user[0])
+    return jsonify(), HTTPStatus.OK
+
+
 @rest_system.route('/s/save-directory', methods=['POST'])
 def save_directory():
     data = request.json

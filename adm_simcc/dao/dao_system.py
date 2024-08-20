@@ -38,7 +38,7 @@ def select_user(uid):
             jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles,
             linkedin,
             provider,
-            lattes_id
+            lattes_id,
         FROM users u
         LEFT JOIN users_roles ur ON ur.user_id = u.user_id
         LEFT JOIN roles r ON r.id = ur.role_id
@@ -58,12 +58,16 @@ def select_user(uid):
     return data_frame.to_dict(orient='records')
 
 
-def update_user():
+def update_user(user):
     SCRIPT_SQL = """
-    UPDATE users 
-    SET linkedin = %s 
+    UPDATE users
+    SET linkedin = %s,
+        lattes_id = %s
     WHERE uid = %s
     """
+    adm_database.exec(SCRIPT_SQL,
+                      [user['linkedin'], user['lattes_id'], user['uid']])
+
 
 def list_users():
     SCRIPT_SQL = """
