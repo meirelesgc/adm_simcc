@@ -8,19 +8,21 @@ adm_database = Connection()
 def create_user(User: UserModel):
     SCRIPT_SQL = """
         INSERT INTO users (display_name, email, uid, photo_url, shib_uid)
-        VALUES (%s, %s, %s, %s);
+        VALUES (%s, %s, %s, %s, %s);
         """
-    adm_database.exec(SCRIPT_SQL,
-                      (User.displayName, User.email, User.uid, User.photoURL))
+    adm_database.exec(SCRIPT_SQL, [
+        User.displayName, User.email, User.uid,
+        str(User.photoURL), User.shib_id or str()
+    ])
 
 
 def select_user(uid):
     SCRIPT_SQL = """
-        SELECT u.user_id, 
-            display_name, 
-            email, 
-            uid, 
-            photo_url, 
+        SELECT u.user_id,
+            display_name,
+            email,
+            uid,
+            photo_url,
             shib_uid,
             jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles
         FROM users u

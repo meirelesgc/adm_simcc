@@ -165,14 +165,7 @@ CREATE TABLE IF NOT EXISTS UFMG.technician (
       semester character varying(6),
       PRIMARY KEY (technician_id)
 );
-CREATE TABLE IF NOT EXISTS ufmg.departament_technician (
-      dep_id character varying(10),
-      technician_id uuid,
-      PRIMARY KEY (dep_id, technician_id),
-      FOREIGN KEY (dep_id) REFERENCES ufmg.departament (dep_id),
-      FOREIGN KEY (technician_id) REFERENCES ufmg.technician (technician_id)
-);
-CREATE TABLE IF NOT EXISTS UFMG.departament (
+CREATE TABLE IF NOT EXISTS ufmg.departament (
       dep_id VARCHAR(20),
       org_cod VARCHAR(3),
       dep_nom VARCHAR(100),
@@ -183,6 +176,13 @@ CREATE TABLE IF NOT EXISTS UFMG.departament (
       dep_tel VARCHAR(20),
       img_data BYTEA,
       PRIMARY KEY (dep_id)
+);
+CREATE TABLE IF NOT EXISTS ufmg.departament_technician (
+      dep_id character varying(10),
+      technician_id uuid,
+      PRIMARY KEY (dep_id, technician_id),
+      FOREIGN KEY (dep_id) REFERENCES ufmg.departament (dep_id),
+      FOREIGN KEY (technician_id) REFERENCES ufmg.technician (technician_id)
 );
 CREATE TABLE IF NOT EXISTS UFMG.departament_researcher (
       dep_id VARCHAR(20),
