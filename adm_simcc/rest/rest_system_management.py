@@ -105,8 +105,9 @@ def create_new_permission():
 
 
 @rest_system.route('/s/permission', methods=['GET'])
-def view_permission():
-    roles = dao_system.view_permission()
+def permissions_view():
+    role_id = request.args.get('role_id')
+    roles = dao_system.permissions_view(role_id)
     return jsonify(roles), HTTPStatus.OK
 
 
