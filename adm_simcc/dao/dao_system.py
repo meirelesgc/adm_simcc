@@ -40,13 +40,16 @@ def select_user(uid):
             provider,
             u.lattes_id,
             rr.institution_id,
-            jsonb_agg(jsonb_build_object('graduate_program_id', gp.graduate_program_id, 'name', gp.name)) AS graduate_program
+            jsonb_agg(jsonb_build_object('graduate_program_id', gp.graduate_program_id, 'name', gp.name)) AS graduate_program,
+            jsonb_agg(jsonb_build_object('name', d.dep_nom, 'dep_id', d.dep_id)) AS departament 
         FROM users u
         LEFT JOIN users_roles ur ON ur.user_id = u.user_id
         LEFT JOIN roles r ON r.id = ur.role_id
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
         LEFT JOIN graduate_program_researcher gpr ON gpr.researcher_id = rr.researcher_id
         LEFT JOIN graduate_program gp ON gp.graduate_program_id = gpr.graduate_program_id
+        LEFT JOIN ufmg.departament_researcher dr ON dr.researcher_id = rr.researcher_id
+        LEFT JOIN ufmg.departament d ON d.dep_id = dr.dep_id
         WHERE uid = %s OR shib_uid = %s
         GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, rr.institution_id;
         """
@@ -58,7 +61,7 @@ def select_user(uid):
                                   'user_id', 'display_name', 'email', 'uid',
                                   'photo_url', 'shib_uid', 'roles', 'linkedin',
                                   'provider', 'lattes_id', 'institution_id',
-                                  'graduate_program'
+                                  'graduate_program', 'departament'
                               ])
 
     return data_frame.to_dict(orient='records')
