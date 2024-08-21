@@ -41,7 +41,8 @@ def select_user(uid):
             u.lattes_id,
             rr.institution_id,
             jsonb_agg(jsonb_build_object('graduate_program_id', gp.graduate_program_id, 'name', gp.name)) AS graduate_program,
-            jsonb_agg(jsonb_build_object('name', d.dep_nom, 'dep_id', d.dep_id)) AS departament 
+            jsonb_agg(jsonb_build_object('name', d.dep_nom, 'dep_id', d.dep_id)) AS departament,
+            rr.name
         FROM users u
         LEFT JOIN users_roles ur ON ur.user_id = u.user_id
         LEFT JOIN roles r ON r.id = ur.role_id
@@ -53,16 +54,27 @@ def select_user(uid):
         WHERE uid = %s OR shib_uid = %s
         GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, rr.institution_id;
         """
-    print(SCRIPT_SQL)
     registry = adm_database.select(SCRIPT_SQL, [uid, uid])
 
-    data_frame = pd.DataFrame(registry,
-                              columns=[
-                                  'user_id', 'display_name', 'email', 'uid',
-                                  'photo_url', 'shib_uid', 'roles', 'linkedin',
-                                  'provider', 'lattes_id', 'institution_id',
-                                  'graduate_program', 'departament'
-                              ])
+    data_frame = pd.DataFrame(
+        registry,
+        columns=[
+            "user_id",
+            "display_name",
+            "email",
+            "uid",
+            "photo_url",
+            "shib_uid",
+            "roles",
+            "linkedin",
+            "provider",
+            "lattes_id",
+            "institution_id",
+            "graduate_program",
+            "departament",
+            "researcger_name",
+        ],
+    )
 
     return data_frame.to_dict(orient='records')
 
@@ -82,12 +94,18 @@ def update_user(user):
 
 def list_users():
     SCRIPT_SQL = """
-        SELECT user_id, display_name, email
-        FROM users;
+        SELECT 
+            u.user_id, display_name, email,
+            jsonb_agg(jsonb_build_object('role', rl.role, 'role_id', rl.id)) AS roles
+        FROM users u
+        LEFT JOIN users_roles ur ON u.user_id = ur.user_id
+        LEFT JOIN roles rl ON rl.id = ur.role_id
+        GROUP BY u.user_id;
         """
     registry = adm_database.select(SCRIPT_SQL)
-    data_frame = pd.DataFrame(registry,
-                              columns=['user_id', 'display_name', 'email'])
+    data_frame = pd.DataFrame(
+        registry, columns=["user_id", "display_name", "email", "roles"]
+    )
 
     return data_frame.to_dict(orient='records')
 

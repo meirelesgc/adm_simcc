@@ -1,12 +1,12 @@
 import psycopg2
+
 from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
+from http import HTTPStatus
 
 from ..dao import dao_institution
 from ..dao import dao_researcher_group
 from ..models.researcher_group import ListResearcherGroup
 
-from http import HTTPStatus
 
 rest_researcher_group = Blueprint(
     "rest_researcher_group", __name__, url_prefix="/researchGroupRest"
