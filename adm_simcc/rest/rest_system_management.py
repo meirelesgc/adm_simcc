@@ -21,10 +21,17 @@ def create_user():
     except psycopg2.errors.UniqueViolation:
         return jsonify({"message": "discente já cadastrado"}), HTTPStatus.OK
 
+
 @rest_system.route('/s/user', methods=['GET'])
 def select_user():
     uid = request.args.get('uid')
     user = dao_system.select_user(uid)
+    return jsonify(user), HTTPStatus.OK
+
+
+@rest_system.route('/s/user/all', methods=['GET'])
+def list_users():
+    user = dao_system.list_users()
     return jsonify(user), HTTPStatus.OK
 
 
@@ -109,7 +116,6 @@ def permissions_view():
     role_id = request.args.get('role_id')
     roles = dao_system.permissions_view(role_id)
     return jsonify(roles), HTTPStatus.OK
-
 
 
 @rest_system.route('/s/permission', methods=['PUT'])
