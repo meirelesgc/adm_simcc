@@ -151,7 +151,7 @@ def permissions_view(role_id):
     {filter_id}
     GROUP BY role_id
     """
-    reg = adm_database.select(SCRIPT_SQL)
+    reg = adm_database.select(SCRIPT_SQL, [role_id])
     data_frame = pd.DataFrame(reg, columns=['role_id', 'permission'])
     return data_frame.to_dict(orient='records')
 
