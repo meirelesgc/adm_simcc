@@ -29,30 +29,22 @@ def create_user(User: UserModel):
 
 def select_user(uid):
     SCRIPT_SQL = """
-        SELECT u.user_id,
+        SELECT 
+            u.user_id,
             display_name,
             email,
             uid,
             photo_url,
             shib_uid,
-            jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles,
             linkedin,
             provider,
             u.lattes_id,
             rr.institution_id,
-            jsonb_agg(jsonb_build_object('graduate_program_id', gp.graduate_program_id, 'name', gp.name)) AS graduate_program,
-            jsonb_agg(jsonb_build_object('name', d.dep_nom, 'dep_id', d.dep_id)) AS departament,
             rr.name
         FROM users u
-        LEFT JOIN users_roles ur ON ur.user_id = u.user_id
-        LEFT JOIN roles r ON r.id = ur.role_id
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
-        LEFT JOIN graduate_program_researcher gpr ON gpr.researcher_id = rr.researcher_id
-        LEFT JOIN graduate_program gp ON gp.graduate_program_id = gpr.graduate_program_id
-        LEFT JOIN ufmg.departament_researcher dr ON dr.researcher_id = rr.researcher_id
-        LEFT JOIN ufmg.departament d ON d.dep_id = dr.dep_id
         WHERE uid = %s OR shib_uid = %s
-        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, rr.institution_id;
+        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, rr.institution_id, rr.name;
         """
     registry = adm_database.select(SCRIPT_SQL, [uid, uid])
 
@@ -65,17 +57,19 @@ def select_user(uid):
             "uid",
             "photo_url",
             "shib_uid",
-            "roles",
             "linkedin",
             "provider",
             "lattes_id",
             "institution_id",
-            "graduate_program",
-            "departament",
             "researcger_name",
         ],
     )
 
+    data_frame = data_frame.merge(users_roles(), on="user_id", how="left")
+    data_frame = data_frame.merge(users_graduate_program(), on="user_id", how="left")
+    data_frame = data_frame.merge(users_departaments(), on="user_id", how="left")
+
+    data_frame.fillna("", inplace=True)
     return data_frame.to_dict(orient='records')
 
 
@@ -218,3 +212,52 @@ def unassign_user(user):
         """
     adm_database.exec(
         SCRIPT_SQL, [user[0]['role_id'], user[0]['user_id']])
+
+
+def users_roles():
+    SCRIPT_SQL = """
+        SELECT
+            u.user_id,
+            jsonb_agg(jsonb_build_object('id', r.id, 'role_id', r.role)) AS roles
+        FROM users u
+        LEFT JOIN users_roles ur ON ur.user_id = u.user_id
+        LEFT JOIN roles r ON r.id = ur.role_id
+        GROUP BY u.user_id
+        """
+    registry = adm_database.select(SCRIPT_SQL)
+
+    data_frame = pd.DataFrame(registry, columns=["user_id", "roles"])
+
+    return data_frame
+
+
+def users_graduate_program():
+    SCRIPT_SQL = """
+        SELECT
+            gpr.researcher_id,
+            jsonb_agg(jsonb_build_object('graduate_program_id', gp.graduate_program_id, 'name', gp.name)) AS graduate_program
+        FROM graduate_program_researcher gpr
+        LEFT JOIN graduate_program gp ON gp.graduate_program_id = gpr.graduate_program_id
+        GROUP BY gpr.researcher_id
+        """
+    registry = adm_database.select(SCRIPT_SQL)
+
+    data_frame = pd.DataFrame(registry, columns=["user_id", "graduate_program"])
+
+    return data_frame
+
+
+def users_departaments():
+    SCRIPT_SQL = """
+        SELECT
+            dr.researcher_id,
+            jsonb_agg(jsonb_build_object('name', d.dep_nom, 'dep_id', d.dep_id)) AS departament
+        FROM ufmg.departament_researcher dr
+        LEFT JOIN ufmg.departament d ON d.dep_id = dr.dep_id
+        GROUP BY dr.researcher_id
+        """
+    registry = adm_database.select(SCRIPT_SQL)
+
+    data_frame = pd.DataFrame(registry, columns=["user_id", "departament"])
+
+    return data_frame
