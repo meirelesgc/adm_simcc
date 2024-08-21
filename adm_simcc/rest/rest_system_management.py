@@ -134,13 +134,13 @@ def delete_permission():
 
 @rest_system.route('/s/user/role', methods=['POST'])
 def assign_user():
-    user = request.get_json()
-    dao_system.assign_user(user)
-    return jsonify('OK'), HTTPStatus.CREATED
+    try:
+        user = request.get_json()
+        dao_system.assign_user(user)
+        return jsonify('OK'), HTTPStatus.CREATED
+    except psycopg2.errors.UniqueViolation:
+        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.OK
 
-
-# /s/user/role | POST
-[{'role_id': ..., 'user_id': ...}]
 
 @rest_system.route('/s/user/role', methods=['GET'])
 def view_user_roles():
