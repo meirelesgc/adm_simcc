@@ -138,21 +138,13 @@ def create_new_permission(permission):
 
 
 def permissions_view(role_id):
-    if role_id:
-        filter_id = """
-            WHERE role_id = %s
-            """
-    else:
-        filter_id = str()
-
-    SCRIPT_SQL = f"""
-    SELECT role_id, ARRAY_AGG(permission) AS permission
+    SCRIPT_SQL = """
+    SELECT id, permission AS permission
     FROM permission
-    {filter_id}
-    GROUP BY role_id
+    WHERE role_id = %s
     """
     reg = adm_database.select(SCRIPT_SQL, [role_id])
-    data_frame = pd.DataFrame(reg, columns=['role_id', 'permission'])
+    data_frame = pd.DataFrame(reg, columns=['id', 'permission'])
     return data_frame.to_dict(orient='records')
 
 

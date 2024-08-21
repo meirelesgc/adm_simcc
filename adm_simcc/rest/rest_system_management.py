@@ -111,6 +111,7 @@ def permissions_view():
     return jsonify(roles), HTTPStatus.OK
 
 
+
 @rest_system.route('/s/permission', methods=['PUT'])
 def update_permission():
     permission = request.get_json()
