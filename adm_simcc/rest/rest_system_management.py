@@ -19,7 +19,7 @@ def create_user():
         dao_system.create_user(user)
         return jsonify('OK'), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.OK
+        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
 
 
 @rest_system.route('/s/user', methods=['GET'])

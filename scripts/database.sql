@@ -238,8 +238,8 @@ CREATE TABLE users (
       email VARCHAR(255) UNIQUE NOT NULL,
       uid VARCHAR(255) UNIQUE NOT NULL,
       photo_url TEXT,
-      shib_uid VARCHAR(255) UNIQUE,
-      lattes_id VARCHAR(255) UNIQUE,
+      shib_uid VARCHAR(255),
+      lattes_id VARCHAR(255),
       provider VARCHAR(255),
       linkedin VARCHAR(255),
       PRIMARY KEY (user_id)
