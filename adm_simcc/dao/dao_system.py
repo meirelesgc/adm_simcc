@@ -148,7 +148,7 @@ def permissions_view(role_id):
     return data_frame.to_dict(orient='records')
 
 
-def permission_update(permission):
+def update_permission(permission):
     SCRIPT_SQL = """
         UPDATE permission
         SET permission = %s
@@ -159,7 +159,7 @@ def permission_update(permission):
         [permission[0]['permission'], permission[0]['permission_id']])
 
 
-def permission_delete(permission):
+def delete_permission(permission):
     SCRIPT_SQL = """
         DELETE FROM permission
         WHERE id = %s;
