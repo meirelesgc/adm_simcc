@@ -142,10 +142,12 @@ def assign_user():
         return jsonify({"message": "discente já cadastrado"}), HTTPStatus.OK
 
 
-@rest_system.route('/s/user/role', methods=['GET'])
+@rest_system.route("/s/user/permissions", methods=["GET"])
 def view_user_roles():
-    dao_system.view_user_roles()
-    return jsonify('OK'), HTTPStatus.OK
+    uid = request.args.get("uid")
+    role_id = request.args.get("role_id")
+    permissions = dao_system.view_user_roles(uid, role_id)
+    return jsonify(permissions), HTTPStatus.OK
 
 
 @rest_system.route('/s/user/role', methods=['DELETE'])

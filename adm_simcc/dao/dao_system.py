@@ -185,23 +185,21 @@ def assign_user(user):
     adm_database.exec(SCRIPT_SQL, [user[0]['role_id'], user[0]['user_id']])
 
 
-def view_user_roles():
+def view_user_roles(uid, role_id):
     SCRIPT_SQL = """
         SELECT
-            ur.user_id,
-            jsonb_agg(jsonb_build_object(
-                'role_id', r.id,
-                'role', r.role
-            )) AS roles
+            r.id,
+            p.permission
         FROM
             users_roles ur
             LEFT JOIN roles r ON r.id = ur.role_id
-            LEFT JOIN
-        GROUP BY
-            ur.user;
+            LEFT JOIN permission p ON p.role_id = ur.role_id
+            LEFT JOIN users u ON u.user_id = ur.user_id
+        WHERE u.uid = %s AND r.id = %s
         """
-    reg = adm_database.select(SCRIPT_SQL)
-    data_frame = pd.DataFrame(reg, columns=['user_id', 'roles'])
+
+    reg = adm_database.select(SCRIPT_SQL, [uid, role_id])
+    data_frame = pd.DataFrame(reg, columns=["role_id", "permissions"])
     return data_frame.to_dict(orient='records')
 
 
