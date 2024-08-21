@@ -132,52 +132,15 @@ def delete_permission():
     return jsonify('OK'), HTTPStatus.NO_CONTENT
 
 
-@rest_system.route('/s/researcher/role', methods=['POST'])
-def assign_researcher():
-    researcher = request.get_json()
-    dao_system.assign_researcher(researcher)
-    return jsonify('OK'), HTTPStatus.CREATED
-
-
-@rest_system.route('/s/researcher/role', methods=['GET'])
-def view_researcher_roles():
-    dao_system.view_researcher_roles()
-    return jsonify('OK'), HTTPStatus.OK
-
-
-@rest_system.route('/s/researcher/role', methods=['DELETE'])
-def unassign_researcher():
-    researcher = request.get_json()
-    dao_system.unassign_researcher(researcher)
-    return jsonify('OK'), HTTPStatus.NO_CONTENT
-
-
-@rest_system.route('/s/technician/role', methods=['POST'])
-def assign_technician():
-    technician = request.get_json()
-    dao_system.assign_technician(technician)
-    return jsonify('OK'), HTTPStatus.CREATED
-
-
-@rest_system.route('/s/technician/role', methods=['GET'])
-def view_technician_roles():
-    dao_system.view_technician_roles()
-    return jsonify('OK'), HTTPStatus.OK
-
-
-@rest_system.route('/s/technician/role', methods=['DELETE'])
-def unassign_technician():
-    technician = request.get_json()
-    dao_system.unassign_technician(technician)
-    return jsonify('OK'), HTTPStatus.NO_CONTENT
-
-
 @rest_system.route('/s/user/role', methods=['POST'])
 def assign_user():
     user = request.get_json()
     dao_system.assign_user(user)
     return jsonify('OK'), HTTPStatus.CREATED
 
+
+# /s/user/role | POST
+[{'role_id': ..., 'user_id': ...}]
 
 @rest_system.route('/s/user/role', methods=['GET'])
 def view_user_roles():
