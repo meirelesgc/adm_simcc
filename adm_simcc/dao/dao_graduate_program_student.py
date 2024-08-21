@@ -15,7 +15,7 @@ def student_insert(ListStudent: ListGraduateProgramStudent):
             SELECT researcher_id FROM researcher WHERE lattes_id = %s;
             """
 
-        main_data_base_id = adm_database.select(lattes_id=student.lattes_id)
+        main_data_base_id = adm_database.select(SCRIPT_SQL, [student.lattes_id])
         if not main_data_base_id:
             SCRIPT_SQL += f"""
             INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
