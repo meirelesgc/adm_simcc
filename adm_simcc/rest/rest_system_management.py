@@ -139,7 +139,7 @@ def assign_user():
         dao_system.assign_user(user)
         return jsonify('OK'), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.OK
+        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
 
 
 @rest_system.route("/s/user/permissions", methods=["GET"])
