@@ -82,13 +82,12 @@ def update_user(user):
 
 def list_users():
     SCRIPT_SQL = """
-        SELECT user_id, displayName, email, uid, photoURL
+        SELECT user_id, display_name, email
         FROM users;
         """
     registry = adm_database.select(SCRIPT_SQL)
-    data_frame = pd.DataFrame(
-        registry,
-        columns=['user_id', 'displayName', 'email', 'uid', 'photoURL'])
+    data_frame = pd.DataFrame(registry,
+                              columns=['user_id', 'display_name', 'email'])
 
     return data_frame.to_dict(orient='records')
 
