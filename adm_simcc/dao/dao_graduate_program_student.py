@@ -11,11 +11,13 @@ adm_database = Connection()
 def student_insert(ListStudent: ListGraduateProgramStudent):
     SCRIPT_SQL = str()
     for student in ListStudent.student_list:
-        SCRIPT_SQL_ = """
-            SELECT researcher_id FROM researcher WHERE lattes_id = %s;
+        SCRIPT_SQL_ = f"""
+            SELECT researcher_id FROM researcher WHERE lattes_id = {student.lattes_id};
             """
 
-        main_data_base_id = adm_database.select(SCRIPT_SQL_, student.lattes_id)
+        main_data_base_id = adm_database.select(
+            SCRIPT_SQL_,
+        )
         if not main_data_base_id:
             SCRIPT_SQL += f"""
             INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
