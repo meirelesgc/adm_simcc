@@ -154,9 +154,8 @@ def update_permission(permission):
         SET permission = %s
         WHERE id = %s;
         """
-    adm_database.exec(
-        SCRIPT_SQL,
-        [permission[0]['permission'], permission[0]['permission_id']])
+    adm_database.exec(SCRIPT_SQL,
+                      [permission[0]['permission'], permission[0]['id']])
 
 
 def delete_permission(permission):
@@ -164,7 +163,7 @@ def delete_permission(permission):
         DELETE FROM permission
         WHERE id = %s;
         """
-    adm_database.exec(SCRIPT_SQL, [permission[0]['permission_id']])
+    adm_database.exec(SCRIPT_SQL, [permission[0]['id']])
 
 
 def assign_user(user):
