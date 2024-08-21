@@ -240,6 +240,7 @@ CREATE TABLE users (
       photo_url TEXT,
       shib_uid VARCHAR(255),
       lattes_id VARCHAR(255),
+      institution_id uuid,
       provider VARCHAR(255),
       linkedin VARCHAR(255),
       PRIMARY KEY (user_id)

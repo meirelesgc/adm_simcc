@@ -39,12 +39,12 @@ def select_user(uid):
             linkedin,
             provider,
             u.lattes_id,
-            rr.institution_id,
+            u.institution_id,
             rr.name
         FROM users u
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
         WHERE uid = %s OR shib_uid = %s
-        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, rr.institution_id, rr.name;
+        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, u.institution_id, rr.name;
         """
     registry = adm_database.select(SCRIPT_SQL, [uid, uid])
 
@@ -88,7 +88,7 @@ def update_user(user):
 
 def list_users():
     SCRIPT_SQL = """
-        SELECT 
+        SELECT
             u.user_id, display_name, email,
             jsonb_agg(jsonb_build_object('role', rl.role, 'role_id', rl.id)) AS roles
         FROM users u
@@ -179,10 +179,22 @@ def delete_permission(permission):
 
 def assign_user(user):
     SCRIPT_SQL = """
+        UPDATE users SET
+        institution_id = %s
+        WHERE user_id = %s;
+
         INSERT INTO users_roles (role_id, user_id)
         VALUES (%s, %s);
         """
-    adm_database.exec(SCRIPT_SQL, [user[0]['role_id'], user[0]['user_id']])
+    adm_database.exec(
+        SCRIPT_SQL,
+        [
+            user[0]["institution_id"],
+            user[0]["user_id"],
+            user[0]["role_id"],
+            user[0]["user_id"],
+        ],
+    )
 
 
 def view_user_roles(uid, role_id):
