@@ -12,7 +12,7 @@ def student_insert(ListStudent: ListGraduateProgramStudent):
     SCRIPT_SQL = str()
     for student in ListStudent.student_list:
         SCRIPT_SQL_ = f"""
-            SELECT researcher_id FROM researcher WHERE lattes_id = {student.lattes_id};
+            SELECT researcher_id FROM researcher WHERE lattes_id = '{student.lattes_id}';
             """
 
         main_data_base_id = adm_database.select(
@@ -24,7 +24,7 @@ def student_insert(ListStudent: ListGraduateProgramStudent):
             VALUES ('{student.student_id}', '{student.name}', '{student.lattes_id}', '{student.institution_id}');
             """
         else:
-            student.student_id = main_data_base_id[0]["researcher_id"]
+            student.student_id = main_data_base_id[0][0]
 
         SCRIPT_SQL += f"""
         INSERT INTO graduate_program_student (graduate_program_id, researcher_id, year)
