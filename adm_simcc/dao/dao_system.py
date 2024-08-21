@@ -78,7 +78,7 @@ def update_user(user):
     UPDATE users
     SET linkedin = %s,
         lattes_id = %s,
-        displayName = %s
+        display_name = %s
     WHERE uid = %s
     """
     adm_database.exec(SCRIPT_SQL, [
