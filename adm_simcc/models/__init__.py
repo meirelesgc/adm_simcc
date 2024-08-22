@@ -6,7 +6,7 @@ class UserModel(BaseModel):
     displayName: str
     email: EmailStr
     uid: str
-    photoURL: HttpUrl
+    photoURL: Optional[HttpUrl] = None
     shib_id: Optional[str] = None
     linkedin: Optional[str] = None
     provider: Optional[str] = None
