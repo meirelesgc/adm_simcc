@@ -26,6 +26,25 @@ def create_user():
         return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
 
 
+@rest_system.route("/s/ufmg/user", methods=["POST"])
+def create_ufmg_user():
+    try:
+        all_headers = dict(request.headers)
+
+        user = {
+            "displayName": all_headers["Shib-Person-Commonname"],
+            "email": all_headers["Shib-Person-Mail"],
+            "shib_uid": all_headers["Shib-Person-Uid"],
+            "shib_code": all_headers["Shib-Brperson-Cpf"],
+        }
+
+        user = UserModel(**user)
+        dao_system.create_user(user)
+        return jsonify("OK"), HTTPStatus.CREATED
+    except psycopg2.errors.UniqueViolation:
+        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
+
+
 @rest_system.route('/s/user', methods=['GET'])
 def select_user():
     uid = request.args.get('uid')

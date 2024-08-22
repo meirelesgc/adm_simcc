@@ -132,6 +132,9 @@ def update_user(user):
 
 def list_users():
     SCRIPT_SQL = """
+        SELECT * FROM
+        """
+    SCRIPT_SQL = """
         SELECT
             u.user_id, display_name, email,
             jsonb_agg(jsonb_build_object('role', rl.role, 'role_id', rl.id)) AS roles,

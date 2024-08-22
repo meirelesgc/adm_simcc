@@ -34,13 +34,7 @@ def create_app():
 
     @app.route("/", methods=["GET"])
     def home():
-
         response_data = {"message": "api em funcionamento"}
         return jsonify(response_data), HTTPStatus.OK
-
-    @app.route("/login", methods=["GET"])
-    def login():
-
-        return jsonify(user_data)
 
     return app
