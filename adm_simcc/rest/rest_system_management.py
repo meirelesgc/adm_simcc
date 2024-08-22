@@ -43,12 +43,12 @@ def create_ufmg_user():
         dao_system.create_user(user)
 
         return (
-            jsonify({"shi_person_uid": all_headers["Shib-Person-Uid"]}),
+            jsonify([{"uid": all_headers["Shib-Person-Uid"]}]),
             HTTPStatus.CREATED,
         )
     except psycopg2.errors.UniqueViolation:
         return (
-            jsonify({"shi_person_uid": all_headers["Shib-Person-Uid"]}),
+            jsonify([{"uid": all_headers["Shib-Person-Uid"]}]),
             HTTPStatus.CONFLICT,
         )
 
