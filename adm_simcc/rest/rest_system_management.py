@@ -11,8 +11,8 @@ from ..models import UserModel
 
 rest_system = Blueprint("rest_system_management", __name__)
 HOP_LOCK_FILE_PATH = os.getenv("LOCK_FILE_PATH", "/tmp/hop_execution.lock")
-HOP_LOG_FILE_PATH = os.getenv("LOG_FILE_PATH", "/tmp/hop_execution.lock")
-
+HOP_LOG_FILE_PATH = os.getenv("LOG_FILE_PATH")
+HOP_ROUTINE_PATH = os.getenv("HOP_ROUTINE_PATH")
 
 @rest_system.route('/s/user', methods=['POST'])
 def create_user():
@@ -179,7 +179,7 @@ def hop():
         with open(HOP_LOCK_FILE_PATH, "w") as lock_file:
             lock_file.write("locked")
 
-        subprocess.Popen(["./script.sh"], shell=True)
+        subprocess.Popen([HOP_ROUTINE_PATH], shell=True)
 
         response = {
             "status": "success",
