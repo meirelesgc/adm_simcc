@@ -90,7 +90,7 @@ def list_all_users():
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
         GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, u.institution_id, rr.name;
         """
-    registry = adm_database.select(SCRIPT_SQL, [uid, uid])
+    registry = adm_database.select(SCRIPT_SQL)
 
     data_frame = pd.DataFrame(
         registry,
