@@ -42,9 +42,15 @@ def create_ufmg_user():
         user = UserModel(**user)
         dao_system.create_user(user)
 
-        return redirect(url_for(all_headers["X-Forwarded-Host"])), HTTPStatus.CREATED
+        return (
+            jsonify({"shi_person_uid": all_headers["Shib-Person-Uid"]}),
+            HTTPStatus.CREATED,
+        )
     except psycopg2.errors.UniqueViolation:
-        return redirect(url_for(all_headers["X-Forwarded-Host"])), HTTPStatus.CONFLICT
+        return (
+            jsonify({"shi_person_uid": all_headers["Shib-Person-Uid"]}),
+            HTTPStatus.CONFLICT,
+        )
 
 
 @rest_system.route('/s/user', methods=['GET'])
