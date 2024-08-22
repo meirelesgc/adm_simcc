@@ -5,7 +5,7 @@ from typing import Optional
 class UserModel(BaseModel):
     displayName: str
     email: EmailStr
-    uid: str
+    uid: Optional[str] = None
     photoURL: Optional[HttpUrl] = None
     shib_id: Optional[str] = None
     shib_code: Optional[str] = None

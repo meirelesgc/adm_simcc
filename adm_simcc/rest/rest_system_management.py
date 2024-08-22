@@ -4,7 +4,7 @@ import subprocess
 import psycopg2
 
 from http import HTTPStatus
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, url_for
 
 from ..dao import dao_system
 from ..models import UserModel
@@ -34,15 +34,17 @@ def create_ufmg_user():
         user = {
             "displayName": all_headers["Shib-Person-Commonname"],
             "email": all_headers["Shib-Person-Mail"],
-            "shib_uid": all_headers["Shib-Person-Uid"],
+            "uid": all_headers["Shib-Person-Uid"],
             "shib_code": all_headers["Shib-Brperson-Cpf"],
+            "provider": "shib",
         }
 
         user = UserModel(**user)
         dao_system.create_user(user)
-        return jsonify("OK"), HTTPStatus.CREATED
+
+        return redirect(url_for(all_headers["X-Forwarded-Host"])), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
+        return redirect(url_for(all_headers["X-Forwarded-Host"])), HTTPStatus.CONFLICT
 
 
 @rest_system.route('/s/user', methods=['GET'])
