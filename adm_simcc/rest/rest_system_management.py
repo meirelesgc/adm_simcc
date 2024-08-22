@@ -28,15 +28,14 @@ def create_user():
 
 @rest_system.route("/s/ufmg/user", methods=["GET"])
 def create_ufmg_user():
-    try:
-        all_headers = dict(request.headers)
-        user = {
-            "displayName": all_headers["Shib-Person-Commonname"],
-            "email": all_headers["Shib-Person-Mail"],
-            "uid": all_headers["Shib-Person-Uid"],
-            "provider": "shib",
-        }
-        return (jsonify([user]),HTTPStatus.OK)
+    all_headers = dict(request.headers)
+    user = {
+        "displayName": all_headers["Shib-Person-Commonname"],
+        "email": all_headers["Shib-Person-Mail"],
+        "uid": all_headers["Shib-Person-Uid"],
+        "provider": "shib",
+    }
+    return (jsonify([user]), HTTPStatus.OK)
 
 
 @rest_system.route('/s/user', methods=['GET'])
