@@ -6,7 +6,6 @@ adm_database = Connection()
 
 
 def create_user(User: UserModel):
-
     SCRIPT_SQL = """
     SELECT lattes_id FROM researcher WHERE
     unaccent(name) ILIKE unaccent(%s) LIMIT 1;
@@ -73,7 +72,7 @@ def select_user(uid):
     return data_frame.to_dict(orient='records')
 
 
-def list_all_users(uid):
+def list_all_users():
     SCRIPT_SQL = """
         SELECT 
             u.user_id,
