@@ -209,7 +209,7 @@ def get_last_log_line():
             lines = log_file.readlines()
             last_line = lines[-1].strip() if lines else "Log file is empty."
 
-        return jsonify({"status": "success", "last_line": last_line}), HTTPStatus.OK
+        return jsonify({"status": "success", "message": last_line}), HTTPStatus.OK
 
     except Exception as e:
         return (
