@@ -134,7 +134,8 @@ def list_users():
     SCRIPT_SQL = """
         SELECT
             u.user_id, display_name, email,
-            jsonb_agg(jsonb_build_object('role', rl.role, 'role_id', rl.id)) AS roles
+            jsonb_agg(jsonb_build_object('role', rl.role, 'role_id', rl.id)) AS roles,
+            photo_url
         FROM users u
         LEFT JOIN users_roles ur ON u.user_id = ur.user_id
         LEFT JOIN roles rl ON rl.id = ur.role_id
@@ -142,7 +143,7 @@ def list_users():
         """
     registry = adm_database.select(SCRIPT_SQL)
     data_frame = pd.DataFrame(
-        registry, columns=["user_id", "display_name", "email", "roles"]
+        registry, columns=["user_id", "display_name", "email", "roles", "photo_url"]
     )
 
     return data_frame.to_dict(orient='records')

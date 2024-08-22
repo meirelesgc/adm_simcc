@@ -19,7 +19,7 @@ def research_group_insert(ListResearcherGroup: ListResearcherGroup):
             research_group.area, datetime.strptime(research_group.ultimo_envio, "%d/%m/%Y"), research_group.situacao,
         ))
 
-    SCRIPT_SQL = f"""
+    SCRIPT_SQL = """
         INSERT INTO research_group 
         (research_group_name, researcher_id, institution_id, area, last_date_sent, situation) 
         VALUES (%s, %s, %s, %s, %s, %s)
