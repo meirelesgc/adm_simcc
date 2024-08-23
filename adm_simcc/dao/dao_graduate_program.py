@@ -20,15 +20,15 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             program.graduate_program_id, program.code, program.name,
             program.area, program.modality, program.type, program.rating,
             program.institution_id, program.city, program.url_image,
-            program.sigla, program.description, program.visible
+            program.sigla, program.description, program.visible, program.site
         ))
     # fmt: on
 
     SCRIPT_SQL = """
         INSERT INTO graduate_program
         (graduate_program_id, code, name, area, modality, type, rating,
-        institution_id, city, url_image, sigla, description, visible)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+        institution_id, city, url_image, sigla, description, visible, site)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
     adm_database.execmany(SCRIPT_SQL, parameters)
 
@@ -60,6 +60,7 @@ def graduate_program_basic_query(institution_id: UUID4):
             gp.sigla,
             gp.city,
             gp.visible,
+            gp.site,
             COUNT(CASE WHEN gr.type_ = 'PERMANENTE' THEN 1 END) as qtd_permanente,
             COUNT(CASE WHEN gr.type_ = 'COLABORADOR' THEN 1 END) as qtd_colaborador
         FROM
@@ -90,6 +91,7 @@ def graduate_program_basic_query(institution_id: UUID4):
             "sigla",
             "city",
             "visible",
+            "site",
             "qtd_permanente",
             "qtd_colaborador",
         ],
@@ -138,22 +140,23 @@ def graduate_program_delete(graudate_program_id: UUID4):
     adm_database.exec(SCRIPT_SQL, parameters)
 
 
-def graduate_program_fix(Graduate_program: GraduateProgram):
+def graduate_program_fix(program: GraduateProgram):
     # fmt: off
-    parameters = [
-        Graduate_program.code, Graduate_program.name, Graduate_program.area,
-        Graduate_program.modality, Graduate_program.type,
-        Graduate_program.rating, Graduate_program.institution_id,
-        Graduate_program.city, Graduate_program.url_image,
-        Graduate_program.sigla, Graduate_program.description,
-        Graduate_program.visible, Graduate_program.graduate_program_id,
-    ]
+    parameters = (
+        program.code, program.name, program.area,
+        program.modality, program.type,
+        program.rating, program.institution_id,
+        program.city, program.url_image,
+        program.sigla, program.description,
+        program.visible, program.graduate_program_id,
+        program.site
+    )
     # fmt: on
     SCRIPT_SQL = """
         UPDATE graduate_program SET
-        code = %s, name = %s, area = %s, modality = %s, type = %s, 
+        code = %s, name = %s, area = %s, modality = %s, type = %s,
         rating = %s, institution_id = %s, city = %s, url_image = %s,
-        sigla = %s, description = %s, visible = %s
+        sigla = %s, description = %s, visible = %s, , visible = %s
         WHERE graduate_program_id = %s;
         """
     adm_database.exec(SCRIPT_SQL, parameters)

@@ -33,29 +33,65 @@ def institution_full_query(institution_id: UUID4 = None):
         SELECT
             i.name AS name,
             i.institution_id,
-            COUNT(DISTINCT gp.graduate_program_id) AS count_gp,
-            COUNT(DISTINCT gpr.researcher_id) AS count_gpr,
-            COUNT(DISTINCT r.researcher_id) - (SELECT COUNT(DISTINCT researcher_id) FROM graduate_program_student) AS count_r 
-        FROM
+            r.count_r,
+            gp.count_gp,
+            gpr.count_gpr,
+            gps.count_gps,
+            d.count_d,
+            (SELECT COUNT(*) FROM ufmg.technician) as count_t
+        FROM 
             institution i
-        LEFT JOIN graduate_program gp
-            ON gp.institution_id = i.institution_id
-        LEFT JOIN graduate_program_researcher gpr
-            ON gpr.graduate_program_id = gp.graduate_program_id
-        LEFT JOIN researcher r
+            
+            LEFT JOIN (SELECT institution_id, COUNT(DISTINCT researcher_id) AS count_r FROM researcher GROUP BY institution_id) r
             ON r.institution_id = i.institution_id
+            
+            LEFT JOIN (SELECT institution_id, COUNT(DISTINCT graduate_program_id) AS count_gp FROM graduate_program GROUP BY institution_id) gp
+            ON gp.institution_id = i.institution_id
+            
+            LEFT JOIN (SELECT gp.institution_id, SUM(gpr.count_r) AS count_gpr
+                    FROM graduate_program gp
+                    LEFT JOIN (SELECT graduate_program_id, COUNT(DISTINCT researcher_id) AS count_r FROM graduate_program_researcher GROUP BY graduate_program_id) gpr
+                    ON gpr.graduate_program_id = gp.graduate_program_id GROUP BY institution_id) gpr
+            ON gpr.institution_id = i.institution_id
+            
+            LEFT JOIN (SELECT gp.institution_id, SUM(gps.count_s) AS count_gps
+                    FROM graduate_program gp
+                    LEFT JOIN (SELECT graduate_program_id, COUNT(DISTINCT researcher_id) AS count_s FROM graduate_program_student GROUP BY graduate_program_id) gps
+                    ON gps.graduate_program_id = gp.graduate_program_id GROUP BY institution_id) gps
+            ON gps.institution_id = i.institution_id
+
+            LEFT JOIN (SELECT institution_id, COUNT(ur.researcher_id) AS count_d
+                    FROM ufmg.researcher ur
+                    LEFT JOIN researcher r ON r.researcher_id = ur.researcher_id 
+                    GROUP BY r.institution_id) d
+                    ON d.institution_id = i.institution_id
         {filter_institution}
         GROUP BY
-            i.institution_id, i.name;
+            i.institution_id,
+            i.name,
+            r.count_r,
+            gp.count_gp,
+            gpr.count_gpr,
+            gps.count_gps,
+            d.count_d;
         """
     registry = adm_database.select(SCRIPT_SQL)
 
     data_frame = pd.DataFrame(
         registry,
-        columns=["name", "institution_id", "count_gp", "count_gpr", "count_r"],
+        columns=[
+            "name",
+            "institution_id",
+            "count_r",
+            "count_gp",
+            "count_gpr",
+            "count_gps",
+            "count_d",
+            "count_t",
+        ],
     )
 
-    return data_frame.to_dict(orient="records")
+    return data_frame.fillna(0).to_dict(orient="records")
 
 
 def institution_basic_query(institution_id: UUID4):

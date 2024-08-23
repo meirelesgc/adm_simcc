@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS public.graduate_program(
       sigla character varying(100),
       description VARCHAR(500) NULL,
       visible bool DEFAULT FALSE,
+      site TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (graduate_program_id),
