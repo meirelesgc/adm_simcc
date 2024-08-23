@@ -38,9 +38,13 @@ def create_ufmg_user():
         }
         user = UserModel(**user)
         dao_system.create_user(user)
-        return jsonify([user.json()]), HTTPStatus.CREATED
+        user = dao_system.select_user(user.uid)
+        return jsonify(user), HTTPStatus.CREATED
+
     except psycopg2.errors.UniqueViolation:
-        return jsonify([user.json()]), HTTPStatus.OK
+
+        user = dao_system.select_user(user.uid)
+        return jsonify(user), HTTPStatus.OK
 
 
 @rest_system.route('/s/user', methods=['GET'])
