@@ -36,7 +36,7 @@ def create_ufmg_user():
             "uid": all_headers["Shib-Person-Uid"],
             "provider": "shib",
         }
-        user = UserModel(user)
+        user = UserModel(**user)
         dao_system.create_user(user)
         return jsonify([user]), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
