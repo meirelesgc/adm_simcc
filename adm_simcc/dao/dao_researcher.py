@@ -176,7 +176,7 @@ def researcher_search_id(lattes_id):
     parameters = [lattes_id]
     SCRIPT_SQL = """
         SELECT
-            researcher_id 
+            researcher_id
         FROM
             researcher
         WHERE
@@ -201,20 +201,19 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
 
     for subsidy in ListSubsidies.grant_list:
         researcher_id = researcher_search_id(subsidy.id_lattes)
-        if not researcher_id:
-            untracket_researchers.append(subsidy.model_dump())
-            continue
-        parameters.append((
-            researcher_id,
-            subsidy.cod_modalidade,
-            subsidy.nome_modalidade,
-            subsidy.titulo_chamada,
-            subsidy.cod_categoria_nivel,
-            subsidy.nome_programa_fomento,
-            subsidy.nome_instituto,
-            subsidy.quant_auxilio,
-            subsidy.quant_bolsa,
-        ))
+        parameters.append(
+            (
+                researcher_id or None,
+                subsidy.cod_modalidade,
+                subsidy.nome_modalidade,
+                subsidy.titulo_chamada,
+                subsidy.cod_categoria_nivel,
+                subsidy.nome_programa_fomento,
+                subsidy.nome_instituto,
+                subsidy.quant_auxilio,
+                subsidy.quant_bolsa,
+            )
+        )
 
     SCRIPT_SQL = """
         INSERT INTO subsidy(
@@ -230,6 +229,7 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
     """
     adm_database.execmany(SCRIPT_SQL, parameters)
+
     return untracket_researchers
 
 
@@ -238,7 +238,7 @@ def researcher_query_grant(institution_id):
     filter_institution = str()
     if institution_id:
         filter_institution = """
-                WHERE r.institution_id = %s
+                AND r.institution_id = %s
                 """
         parameters.extend([institution_id])
 
@@ -257,6 +257,8 @@ def researcher_query_grant(institution_id):
         FROM
             subsidy s
             LEFT JOIN researcher r ON s.researcher_id = r.researcher_id
+        WHERE
+        s.researcher_id IS NOT NULL
         {filter_institution}
         """
 

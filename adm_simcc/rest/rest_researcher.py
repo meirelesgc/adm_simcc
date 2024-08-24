@@ -57,10 +57,6 @@ def researcher_count():
 @rest_researcher.route("/InsertGrant", methods=["POST"])
 def researcher_insert_grant():
     grant_list = request.get_json()
-    from pprint import pprint
-
-    for item in grant_list:
-        pprint(item)
     list_instance = ListSubsidies(grant_list=grant_list)
     untracket_researchers = dao_researcher.researcher_insert_grant(list_instance)
     return jsonify({"not found": untracket_researchers}), HTTPStatus.CREATED
