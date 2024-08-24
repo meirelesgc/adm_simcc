@@ -67,7 +67,6 @@ def select_user(uid):
             "email",
             "uid",
             "photo_url",
-            "shib_uid",
             "linkedin",
             "provider",
             "lattes_id",
