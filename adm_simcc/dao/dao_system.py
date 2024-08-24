@@ -35,7 +35,7 @@ def create_user(User: UserModel):
 
 def select_user(uid):
     SCRIPT_SQL = """
-        SELECT 
+        SELECT
             u.user_id,
             display_name,
             email,
@@ -49,9 +49,15 @@ def select_user(uid):
         FROM users u
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
         WHERE uid = %s
-        GROUP BY u.user_id, display_name, email, uid, photo_url, u.institution_id, rr.name;
+        GROUP BY
+            u.user_id,
+            display_name,
+            email, uid,
+            photo_url,
+            u.institution_id,
+            rr.name;
         """
-    registry = adm_database.select(SCRIPT_SQL, [uid, uid])
+    registry = adm_database.select(SCRIPT_SQL, [uid])
 
     data_frame = pd.DataFrame(
         registry,
