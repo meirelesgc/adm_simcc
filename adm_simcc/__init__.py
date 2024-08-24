@@ -37,4 +37,9 @@ def create_app():
         response_data = {"message": "api em funcionamento"}
         return jsonify(response_data), HTTPStatus.OK
 
+    @app.route("/headers", methods=["GET"])
+    def headers():
+        all_headers = dict(request.headers)
+        return jsonify(all_headers), HTTPStatus.OK
+
     return app
