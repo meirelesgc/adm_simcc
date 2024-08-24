@@ -41,7 +41,6 @@ def select_user(uid):
             email,
             uid,
             photo_url,
-            shib_uid,
             linkedin,
             provider,
             u.lattes_id,
@@ -49,8 +48,8 @@ def select_user(uid):
             rr.name
         FROM users u
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
-        WHERE uid = %s OR shib_uid = %s
-        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, u.institution_id, rr.name;
+        WHERE uid = %s
+        GROUP BY u.user_id, display_name, email, uid, photo_url, u.institution_id, rr.name;
         """
     registry = adm_database.select(SCRIPT_SQL, [uid, uid])
 
