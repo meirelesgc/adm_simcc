@@ -13,7 +13,7 @@ class ListResearchers(BaseModel):
 
 
 class Subsidies(BaseModel):
-    id: int
+    id: str
     id_lattes: str
     nome_beneficiario: str
     cpf_beneficiario: str
@@ -31,7 +31,7 @@ class Subsidies(BaseModel):
     nome_programa_fomento: str
     nome_instituto: str
     quant_auxilio: str
-    quant_bolsa: int
+    quant_bolsa: str
 
 
 class ListSubsidies(BaseModel):
