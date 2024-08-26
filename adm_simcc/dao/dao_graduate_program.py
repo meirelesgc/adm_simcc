@@ -88,7 +88,7 @@ def graduate_program_basic_query(institution_id: UUID4):
             "institution_id",
             "description",
             "url_image",
-            "sigla",
+            "acronym",
             "city",
             "visible",
             "site",

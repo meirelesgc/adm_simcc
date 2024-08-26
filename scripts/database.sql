@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS ufmg.departament (
       dep_id VARCHAR(20),
       org_cod VARCHAR(3),
       dep_nom VARCHAR(100),
-      dep_des VARCHAR(500),
+      dep_des TEXT,
       dep_email VARCHAR(100),
       dep_site VARCHAR(100),
       dep_sigla VARCHAR(30),
