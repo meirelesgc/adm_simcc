@@ -64,7 +64,6 @@ def researcher_insert_grant():
         except Exception as E:
             print(b, E)
     list_instance = ListSubsidies(grant_list=grant_list)
-    print("cheguei até aqui")
     untracket_researchers = dao_researcher.researcher_insert_grant(list_instance)
     return jsonify({"not found": untracket_researchers}), HTTPStatus.CREATED
 
