@@ -16,6 +16,7 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
 
     # fmt: off
     for program in ListGraduateProgram.graduate_program_list:
+        print(program)
         parameters.append((
             program.graduate_program_id, program.code, program.name,
             program.area, program.modality, program.type, program.rating,
@@ -74,7 +75,6 @@ def graduate_program_basic_query(institution_id: UUID4):
         """
 
     registry = adm_database.select(SCRIPT_SQL, parameters)
-
     data_frame = pd.DataFrame(
         registry,
         columns=[
