@@ -20,14 +20,14 @@ def graduate_program_insert(ListGraduateProgram: ListGraduateProgram):
             program.graduate_program_id, program.code, program.name,
             program.area, program.modality, program.type, program.rating,
             program.institution_id, program.city, program.url_image,
-            program.sigla, program.description, program.visible, program.site
+            program.acronym, program.description, program.visible, program.site
         ))
     # fmt: on
 
     SCRIPT_SQL = """
         INSERT INTO graduate_program
         (graduate_program_id, code, name, area, modality, type, rating,
-        institution_id, city, url_image, sigla, description, visible, site)
+        institution_id, city, url_image, acronym, description, visible, site)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
     adm_database.execmany(SCRIPT_SQL, parameters)
@@ -57,7 +57,7 @@ def graduate_program_basic_query(institution_id: UUID4):
             gp.institution_id,
             gp.description,
             gp.url_image,
-            gp.sigla,
+            gp.acronym,
             gp.city,
             gp.visible,
             gp.site,
