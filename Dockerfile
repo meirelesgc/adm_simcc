@@ -15,5 +15,3 @@ RUN poetry install --no-interaction --no-ansi
 EXPOSE 5002
 
 CMD ["poetry", "run", "gunicorn", "-b", "0.0.0.0:5002", "app:app", "--reload", "--log-level", "error", "--access-logfile", "-", "--error-logfile", "-", "--workers", "4"]
-
-RUN apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/* && rm -rf /root/.cache
