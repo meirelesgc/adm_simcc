@@ -76,8 +76,9 @@ def select_user(uid):
     )
 
     data_frame = data_frame.merge(users_roles(), on="user_id", how="left")
-    data_frame = data_frame.merge(users_graduate_program(), on="user_id", how="left")
-    data_frame = data_frame.merge(users_departaments(), on="user_id", how="left")
+    data_frame = data_frame.merge(
+        users_graduate_program(), on="lattes_id", how="left")
+    data_frame = data_frame.merge(users_departaments(), on="lattes_id", how="left")
 
     data_frame.fillna("", inplace=True)
     return data_frame.to_dict(orient='records')
@@ -303,15 +304,17 @@ def users_roles():
 def users_graduate_program():
     SCRIPT_SQL = """
         SELECT
-            gpr.researcher_id,
+            r.lattes_id,
             jsonb_agg(jsonb_build_object('graduate_program_id', gp.graduate_program_id, 'name', gp.name)) AS graduate_program
         FROM graduate_program_researcher gpr
         LEFT JOIN graduate_program gp ON gp.graduate_program_id = gpr.graduate_program_id
-        GROUP BY gpr.researcher_id
+        LEFT JOIN researcher r ON gpr.researcher_id = r.researcher_id
+        GROUP BY r.lattes_id
         """
     registry = adm_database.select(SCRIPT_SQL)
 
-    data_frame = pd.DataFrame(registry, columns=["user_id", "graduate_program"])
+    data_frame = pd.DataFrame(
+        registry, columns=["lattes_id", "graduate_program"])
 
     return data_frame
 
@@ -319,14 +322,15 @@ def users_graduate_program():
 def users_departaments():
     SCRIPT_SQL = """
         SELECT
-            dr.researcher_id,
+            r.lattes_id,
             jsonb_agg(jsonb_build_object('name', d.dep_nom, 'dep_id', d.dep_id)) AS departament
         FROM ufmg.departament_researcher dr
         LEFT JOIN ufmg.departament d ON d.dep_id = dr.dep_id
-        GROUP BY dr.researcher_id
+        LEFT JOIN researcher r ON r.researcher_id = dr.researcher_id
+        GROUP BY r.lattes_id
         """
     registry = adm_database.select(SCRIPT_SQL)
 
-    data_frame = pd.DataFrame(registry, columns=["user_id", "departament"])
+    data_frame = pd.DataFrame(registry, columns=["lattes_id", "departament"])
 
     return data_frame

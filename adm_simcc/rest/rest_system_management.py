@@ -188,7 +188,7 @@ def unassign_user():
     return jsonify('OK'), HTTPStatus.NO_CONTENT
 
 
-@rest_system.route("/sys/requestUpdate", methods=["POST"])
+@rest_system.route("/s/hop", methods=["POST"])
 def hop():
     try:
         if os.path.exists(HOP_LOCK_FILE_PATH):
@@ -217,7 +217,7 @@ def hop():
         return jsonify(response), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-@rest_system.route("/sys/checkHop", methods=["GET"])
+@rest_system.route("/s/hop", methods=["GET"])
 def get_last_log_line():
     try:
         if not os.path.exists(HOP_LOG_FILE_PATH):
