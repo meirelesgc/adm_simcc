@@ -92,7 +92,6 @@ def list_all_users():
             email,
             uid,
             photo_url,
-            shib_uid,
             linkedin,
             provider,
             u.lattes_id,
@@ -100,7 +99,7 @@ def list_all_users():
             rr.name
         FROM users u
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
-        GROUP BY u.user_id, display_name, email, uid, photo_url, shib_uid, u.institution_id, rr.name;
+        GROUP BY u.user_id, display_name, email, uid, photo_url, u.institution_id, rr.name;
         """
     registry = adm_database.select(SCRIPT_SQL)
 
@@ -112,7 +111,6 @@ def list_all_users():
             "email",
             "uid",
             "photo_url",
-            "shib_uid",
             "linkedin",
             "provider",
             "lattes_id",
@@ -122,8 +120,10 @@ def list_all_users():
     )
 
     data_frame = data_frame.merge(users_roles(), on="user_id", how="left")
-    data_frame = data_frame.merge(users_graduate_program(), on="user_id", how="left")
-    data_frame = data_frame.merge(users_departaments(), on="user_id", how="left")
+    data_frame = data_frame.merge(
+        users_graduate_program(), on="lattes_id", how="left")
+    data_frame = data_frame.merge(
+        users_departaments(), on="lattes_id", how="left")
 
     data_frame.fillna("", inplace=True)
     return data_frame.to_dict(orient="records")
