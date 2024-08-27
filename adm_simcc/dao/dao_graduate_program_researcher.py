@@ -2,7 +2,7 @@ import pandas as pd
 from pydantic import UUID4
 
 from ..dao import Connection
-from ..models.graduate_program_resarcher import ListResearcher
+from ..models.graduate_program_resarcher import ListResearcher, ListResearcher
 
 adm_database = Connection()
 
@@ -31,6 +31,38 @@ def graduate_program_researcher_insert(
         VALUES (%s, %s, %s, %s);
         """
     adm_database.execmany(SCRIPT_SQL, parameters)
+
+
+def graduate_program_researcher_update(
+    ListResearcher: ListResearcher,
+):
+    parameters = list()
+
+    # fmt: 0ff
+    for researcher in ListResearcher.researcher_list:
+        parameters.append(
+            (
+                researcher.graduate_program_id,
+                researcher.researcher_id,
+                researcher.year,
+                researcher.type_,
+            )
+        )
+        print(parameters)
+    # fmt: on
+
+    SCRIPT_SQL = """
+        UPDATE graduate_program_researcher
+        SET
+            graduate_program_id = %s,
+            researcher_id = %s,
+            year = %s,
+            type_ = %s
+        """
+    adm_database.execmany(SCRIPT_SQL, parameters)
+
+
+
 
 
 def graduate_program_researcher_delete(researcher_id: UUID4,

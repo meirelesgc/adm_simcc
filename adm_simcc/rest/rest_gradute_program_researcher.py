@@ -27,6 +27,20 @@ def graduate_program_researcher_insert():
         )
 
 
+@rest_graduate_program_researcher.route("/Update", methods=["PUT"])
+def graduate_program_researcher_update():
+    try:
+        list_instance = request.get_json()
+        researcher_instance = ListResearcher(researcher_list=list_instance)
+        dao.graduate_program_researcher_update(researcher_instance)
+        return jsonify({"message": "ok"}), HTTPStatus.CREATED
+    except psycopg2.errors.UniqueViolation:
+        return (
+            jsonify({"message": "pesquisador já cadastrado no programa"}),
+            HTTPStatus.CONFLICT,
+        )
+
+
 @rest_graduate_program_researcher.route("/Delete", methods=["DELETE"])
 def graduate_program_researcher_delete():
     researcher = request.get_json()
