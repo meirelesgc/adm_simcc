@@ -42,27 +42,24 @@ def graduate_program_researcher_update(
     for researcher in ListResearcher.researcher_list:
         parameters.append(
             (
-                researcher.graduate_program_id,
-                researcher.researcher_id,
                 researcher.year,
                 researcher.type_,
+                researcher.lattes_id,
             )
         )
-        print(parameters)
     # fmt: on
 
     SCRIPT_SQL = """
-        UPDATE graduate_program_researcher
+        UPDATE graduate_program_researcher AS gpr
         SET
-            graduate_program_id = %s,
-            researcher_id = %s,
             year = %s,
             type_ = %s
+        FROM researcher AS r
+        WHERE
+            gpr.researcher_id = r.researcher_id
+            AND r.lattes_id = %s;
         """
     adm_database.execmany(SCRIPT_SQL, parameters)
-
-
-
 
 
 def graduate_program_researcher_delete(researcher_id: UUID4,

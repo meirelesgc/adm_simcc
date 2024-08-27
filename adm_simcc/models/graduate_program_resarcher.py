@@ -1,12 +1,14 @@
 from typing import List
 from pydantic import UUID4, BaseModel, validator
+from typing import Optional
 
 
 class GraduateProgramResearcher(BaseModel):
     graduate_program_id: UUID4
-    researcher_id: UUID4
+    researcher_id: Optional[UUID4]
     year: list
     type_: str
+    lattes_id: Optional[str]
 
     @validator('year', pre=True)
     def split_year(cls, v):
