@@ -53,18 +53,18 @@ CREATE TABLE IF NOT EXISTS public.graduate_program(
 CREATE TABLE IF NOT EXISTS public.graduate_program_researcher(
       graduate_program_id uuid NOT NULL,
       researcher_id uuid NOT NULL,
-      year INTEGER,
+      year INT[],
       type_ relationship,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (graduate_program_id, researcher_id, year),
+      PRIMARY KEY (graduate_program_id, researcher_id),
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
 );
 CREATE TABLE IF NOT EXISTS public.graduate_program_student(
       graduate_program_id uuid NOT NULL DEFAULT uuid_generate_v4(),
       researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
-      year INTEGER,
+      year INT[],
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (graduate_program_id, researcher_id, year),

@@ -28,7 +28,7 @@ def student_insert(ListStudent: ListGraduateProgramStudent):
 
         SCRIPT_SQL += f"""
         INSERT INTO graduate_program_student (graduate_program_id, researcher_id, year)
-        VALUES ('{student.graduate_program_id}', '{student.student_id}', '{student.year}');
+        VALUES ('{student.graduate_program_id}', '{student.student_id}', '{student.year.split(';')}');
         """
 
     return adm_database.exec(SCRIPT_SQL)

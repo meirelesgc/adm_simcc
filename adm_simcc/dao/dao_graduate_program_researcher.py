@@ -19,12 +19,12 @@ def graduate_program_researcher_insert(
                 researcher.graduate_program_id,
                 researcher.researcher_id,
                 researcher.year,
-                researcher.type_,
+                researcher.type_.split(';'),
             )
         )
     # fmt: on
 
-    SCRIPT_SQL = f"""
+    SCRIPT_SQL = """
         INSERT INTO graduate_program_researcher(
         graduate_program_id, researcher_id, year, type_)
         VALUES (%s, %s, %s, %s);
@@ -35,7 +35,7 @@ def graduate_program_researcher_insert(
 def graduate_program_researcher_delete(researcher_id: UUID4,
                                        graduate_program_id: UUID4):
     parameters = [researcher_id, graduate_program_id]
-    SCRIPT_SQL = f"""
+    SCRIPT_SQL = """
         DELETE FROM graduate_program_researcher
         WHERE
             researcher_id = (
@@ -52,7 +52,7 @@ def graduate_program_researcher_count(institution_id: UUID4 = None,
 
     filter_institution = str()
     if institution_id:
-        filter_institution = f"""
+        filter_institution = """
             WHERE
                 graduate_program_id IN (
                     SELECT
@@ -64,7 +64,7 @@ def graduate_program_researcher_count(institution_id: UUID4 = None,
         parameters.append(institution_id)
 
     if graduate_program_id:
-        filter_graduate_program = f"""
+        filter_graduate_program = """
             WHERE
                 graduate_program_id = %s"""
         parameters.append(graduate_program_id)
@@ -90,7 +90,7 @@ def graduate_program_researcher_basic_query(graduate_program_id: UUID4,
     parameters = [graduate_program_id]
 
     if type_:
-        type_filter = f"AND type_ = %s"
+        type_filter = "AND type_ = %s"
         parameters.append(type_)
     else:
         type_filter = "AND type_ IN ('PERMANENTE', 'COLABORADOR')"
@@ -98,7 +98,8 @@ def graduate_program_researcher_basic_query(graduate_program_id: UUID4,
     SCRIPT_SQL = f"""
         SELECT
             r.name, r.lattes_id,
-            gpr.type_, gpr.created_at
+            gpr.type_, gpr.created_at,
+            gpr.year
         FROM
             graduate_program_researcher gpr
             JOIN researcher r ON r.researcher_id = gpr.researcher_id
@@ -113,7 +114,7 @@ def graduate_program_researcher_basic_query(graduate_program_id: UUID4,
 
     data_frame = pd.DataFrame(
         registry,
-        columns=["name", "lattes_id", "type_", "created_at"],
+        columns=["name", "lattes_id", "type_", "created_at", "year"],
     )
 
     return data_frame.to_dict(orient="records")
