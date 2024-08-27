@@ -2,6 +2,7 @@ from typing import Optional
 from pydantic import UUID4, BaseModel, Field
 
 
+
 class GraduateProgram(BaseModel):
     graduate_program_id: UUID4
     code: Optional[str]
