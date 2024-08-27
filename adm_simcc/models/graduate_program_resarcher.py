@@ -8,7 +8,7 @@ class GraduateProgramResearcher(BaseModel):
     researcher_id: Optional[UUID4] = None
     year: list
     type_: str
-    lattes_id: Optional[str]
+    lattes_id: Optional[str] = None
 
     @validator('year', pre=True)
     def split_year(cls, v):
