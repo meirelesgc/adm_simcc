@@ -148,15 +148,15 @@ def graduate_program_fix(program: GraduateProgram):
         program.rating, program.institution_id,
         program.city, program.url_image,
         program.acronym, program.description,
-        program.visible, program.graduate_program_id,
-        program.site
+        program.visible, program.site,
+        program.graduate_program_id,
     )
     # fmt: on
     SCRIPT_SQL = """
         UPDATE graduate_program SET
         code = %s, name = %s, area = %s, modality = %s, type = %s,
         rating = %s, institution_id = %s, city = %s, url_image = %s,
-        acronym = %s, description = %s, visible = %s, visible = %s
+        acronym = %s, description = %s, visible = %s, site = %s
         WHERE graduate_program_id = %s;
         """
     adm_database.exec(SCRIPT_SQL, parameters)
