@@ -13,7 +13,7 @@ class GraduateProgram(BaseModel):
     institution_id: UUID4
     city: str = "Salvador"
     url_image: Optional[str]
-    sigla: Optional[str] = None
+    acronym: Optional[str] = None
     description: Optional[str]
     visible: bool = False
 

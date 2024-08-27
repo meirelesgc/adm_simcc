@@ -147,7 +147,7 @@ def graduate_program_fix(program: GraduateProgram):
         program.modality, program.type,
         program.rating, program.institution_id,
         program.city, program.url_image,
-        program.sigla, program.description,
+        program.acronym, program.description,
         program.visible, program.graduate_program_id,
         program.site
     )
@@ -156,7 +156,7 @@ def graduate_program_fix(program: GraduateProgram):
         UPDATE graduate_program SET
         code = %s, name = %s, area = %s, modality = %s, type = %s,
         rating = %s, institution_id = %s, city = %s, url_image = %s,
-        sigla = %s, description = %s, visible = %s, , visible = %s
+        acronym = %s, description = %s, visible = %s, , visible = %s
         WHERE graduate_program_id = %s;
         """
     adm_database.exec(SCRIPT_SQL, parameters)
