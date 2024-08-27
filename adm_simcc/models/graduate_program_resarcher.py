@@ -5,7 +5,7 @@ from typing import Optional
 
 class GraduateProgramResearcher(BaseModel):
     graduate_program_id: UUID4
-    researcher_id: Optional[str]
+    researcher_id: Optional[UUID4] = None
     year: list
     type_: str
     lattes_id: Optional[str]
