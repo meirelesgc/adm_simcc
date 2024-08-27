@@ -19,9 +19,10 @@ def graduate_program_researcher_insert(
                 researcher.graduate_program_id,
                 researcher.researcher_id,
                 researcher.year,
-                researcher.type_.split(';'),
+                researcher.type_,
             )
         )
+        print(parameters)
     # fmt: on
 
     SCRIPT_SQL = """
