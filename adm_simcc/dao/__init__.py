@@ -1,7 +1,7 @@
 import os
+
 import psycopg2
 import psycopg2.extras
-
 
 # Garantir que ele consiga converter UUID's
 psycopg2.extras.register_uuid()
@@ -14,13 +14,11 @@ class Connection:
         user: str = os.getenv("ADM_USER", "postgres"),
         password: str = os.getenv("ADM_PASSWORD", "postgres"),
         host: str = os.getenv("ADM_HOST", "localhost"),
-        port: int = os.getenv("ADM_PORT", "5432"),
     ):
         self.database = database
         self.user = user
         self.host = host
         self.password = password
-        self.port = port
         self.connection = None
         self.cursor = None
 
@@ -31,7 +29,6 @@ class Connection:
                 user=self.user,
                 host=self.host,
                 password=self.password,
-                port=self.port,
             )
             self.cursor = self.connection.cursor()
         except psycopg2.Error as e:

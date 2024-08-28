@@ -1,10 +1,10 @@
-import psycopg2
 from http import HTTPStatus
-from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
-from ..models.graduate_program_resarcher import ListResearcher
-from ..dao import dao_graduate_program_researcher as dao
 
+import psycopg2
+from flask import Blueprint, jsonify, request
+
+from ..dao import dao_graduate_program_researcher as dao
+from ..models.graduate_program_resarcher import ListResearcher
 
 rest_graduate_program_researcher = Blueprint(
     "rest_graduate_program_researcher",

@@ -1,8 +1,7 @@
+import base64
+
 import pandas as pd
 import psycopg2
-import base64
-import pandas as pd
-
 
 from ..dao import Connection
 from ..models.departament import ListDiscipline

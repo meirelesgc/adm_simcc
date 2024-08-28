@@ -2,7 +2,7 @@ import pandas as pd
 from pydantic import UUID4
 
 from ..dao import Connection
-from ..models.graduate_program_resarcher import ListResearcher, ListResearcher
+from ..models.graduate_program_resarcher import ListResearcher
 
 adm_database = Connection()
 
@@ -22,7 +22,6 @@ def graduate_program_researcher_insert(
                 researcher.type_,
             )
         )
-        print(parameters)
     # fmt: on
 
     SCRIPT_SQL = """
@@ -136,7 +135,7 @@ def graduate_program_researcher_basic_query(graduate_program_id: UUID4,
         WHERE
             gpr.graduate_program_id = %s
             {type_filter}
-        ORDER BY 
+        ORDER BY
             gpr.created_at DESC
         """
 

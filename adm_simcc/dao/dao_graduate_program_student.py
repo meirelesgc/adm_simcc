@@ -2,42 +2,44 @@ import pandas as pd
 
 from ..dao import Connection
 from ..models.student import GraduateProgramStudent, ListGraduateProgramStudent
-from ..dao import dao_researcher
-
 
 adm_database = Connection()
 
 
 def student_insert(ListStudent: ListGraduateProgramStudent):
-    SCRIPT_SQL = str()
     for student in ListStudent.student_list:
-        SCRIPT_SQL_ = f"""
-            SELECT researcher_id FROM researcher WHERE lattes_id = '{student.lattes_id}';
+        SCRIPT_SQL = """
+            SELECT researcher_id FROM researcher
+            WHERE lattes_id = %(lattes_id)s
             """
-
-        main_data_base_id = adm_database.select(
-            SCRIPT_SQL_,
-        )
-        if not main_data_base_id:
-            SCRIPT_SQL += f"""
-            INSERT INTO researcher (researcher_id, name, lattes_id, institution_id)
-            VALUES ('{student.student_id}', '{student.name}', '{student.lattes_id}', '{student.institution_id}');
-            """
+        student_id = adm_database.select(SCRIPT_SQL, student.model_dump())
+        if student_id:
+            student.student_id = student_id[0][0]
         else:
-            student.student_id = main_data_base_id[0][0]
+            researcher_student_insert(student)
 
-        SCRIPT_SQL += f"""
-        INSERT INTO graduate_program_student (graduate_program_id, researcher_id, year)
-        VALUES ('{student.graduate_program_id}', '{student.student_id}', '{student.year.split(';')}');
+    SCRIPT_SQL = """
+        INSERT INTO public.graduate_program_student(
+        graduate_program_id, researcher_id, year)
+        VALUES (%(graduate_program_id)s, %(student_id)s, %(year)s);
         """
+    adm_database.execmany(SCRIPT_SQL, ListStudent.model_dump()["student_list"])
 
-    return adm_database.exec(SCRIPT_SQL)
+
+def researcher_student_insert(student: GraduateProgramStudent):
+    SCRIPT_SQL = """
+        INSERT INTO public.researcher(
+        researcher_id, name, lattes_id, institution_id)
+        VALUES (%(student_id)s, %(name)s, %(lattes_id)s, %(institution_id)s);
+        """
+    adm_database.exec(SCRIPT_SQL, student.model_dump())
 
 
-def student_basic_query(graduate_program_id: str = None,
-                        institution_id: str = None,
-                        lattes_id: str = None):
-
+def student_basic_query(
+    graduate_program_id: str = None,
+    institution_id: str = None,
+    lattes_id: str = None,
+):
     if lattes_id:
         filter_lattes_id = f"AND r.lattes_id = '{lattes_id}'"
     else:
@@ -45,7 +47,8 @@ def student_basic_query(graduate_program_id: str = None,
 
     if graduate_program_id:
         filter_graduate_program = (
-            f"AND gps.graduate_program_id = '{graduate_program_id}'")
+            f"AND gps.graduate_program_id = '{graduate_program_id}'"
+        )
     else:
         filter_graduate_program = str()
 
@@ -58,12 +61,13 @@ def student_basic_query(graduate_program_id: str = None,
         SELECT
             r.name,
             r.lattes_id,
-            'DISCENTE' as type_
+            'DISCENTE' as type_,
+            gps.year
         FROM
             graduate_program_student gps
         LEFT JOIN researcher r ON
         r.researcher_id = gps.researcher_id
-        WHERE 
+        WHERE
             1 = 1
             {filter_graduate_program}
             {filter_institution}
@@ -76,6 +80,7 @@ def student_basic_query(graduate_program_id: str = None,
             "name",
             "lattes_id",
             "type_",
+            "year",
         ],
     )
 
@@ -89,7 +94,6 @@ def student_delete(student_id, graduate_program):
         WHERE gs.researcher_id = r.researcher_id
             AND r.lattes_id = '{student_id}'
             AND gs.graduate_program_id = '{graduate_program}';
-        
         DELETE FROM researcher WHERE lattes_id = '{student_id}';
         """
     adm_database.exec(SCRIPT_SQL)
