@@ -80,7 +80,7 @@ def student_basic_query(
             "name",
             "lattes_id",
             "type_",
-            "year",
+            "years",
         ],
     )
 

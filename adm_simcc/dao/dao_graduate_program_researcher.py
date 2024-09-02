@@ -61,8 +61,9 @@ def graduate_program_researcher_update(
     adm_database.execmany(SCRIPT_SQL, parameters)
 
 
-def graduate_program_researcher_delete(researcher_id: UUID4,
-                                       graduate_program_id: UUID4):
+def graduate_program_researcher_delete(
+    researcher_id: UUID4, graduate_program_id: UUID4
+):
     parameters = [researcher_id, graduate_program_id]
     SCRIPT_SQL = """
         DELETE FROM graduate_program_researcher
@@ -75,8 +76,9 @@ def graduate_program_researcher_delete(researcher_id: UUID4,
     adm_database.exec(SCRIPT_SQL, parameters)
 
 
-def graduate_program_researcher_count(institution_id: UUID4 = None,
-                                      graduate_program_id: UUID4 = None):
+def graduate_program_researcher_count(
+    institution_id: UUID4 = None, graduate_program_id: UUID4 = None
+):
     parameters = list()
 
     filter_institution = str()
@@ -114,8 +116,9 @@ def graduate_program_researcher_count(institution_id: UUID4 = None,
     return registry[0][0]
 
 
-def graduate_program_researcher_basic_query(graduate_program_id: UUID4,
-                                            type_: str = None):
+def graduate_program_researcher_basic_query(
+    graduate_program_id: UUID4, type_: str = None
+):
     parameters = [graduate_program_id]
 
     if type_:
@@ -143,7 +146,7 @@ def graduate_program_researcher_basic_query(graduate_program_id: UUID4,
 
     data_frame = pd.DataFrame(
         registry,
-        columns=["name", "lattes_id", "type_", "created_at", "year"],
+        columns=["name", "lattes_id", "type_", "created_at", "years"],
     )
 
     return data_frame.to_dict(orient="records")

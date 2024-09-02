@@ -77,11 +77,14 @@ def select_user(uid):
 
     data_frame = data_frame.merge(users_roles(), on="user_id", how="left")
     data_frame = data_frame.merge(
-        users_graduate_program(), on="lattes_id", how="left")
-    data_frame = data_frame.merge(users_departaments(), on="lattes_id", how="left")
+        users_graduate_program(), on="lattes_id", how="left"
+    )
+    data_frame = data_frame.merge(
+        users_departaments(), on="lattes_id", how="left"
+    )
 
     data_frame.fillna("", inplace=True)
-    return data_frame.to_dict(orient='records')
+    return data_frame.to_dict(orient="records")
 
 
 def list_all_users():
@@ -121,9 +124,11 @@ def list_all_users():
 
     data_frame = data_frame.merge(users_roles(), on="user_id", how="left")
     data_frame = data_frame.merge(
-        users_graduate_program(), on="lattes_id", how="left")
+        users_graduate_program(), on="lattes_id", how="left"
+    )
     data_frame = data_frame.merge(
-        users_departaments(), on="lattes_id", how="left")
+        users_departaments(), on="lattes_id", how="left"
+    )
 
     data_frame.fillna("", inplace=True)
     return data_frame.to_dict(orient="records")
@@ -137,9 +142,15 @@ def update_user(user):
         display_name = %s
     WHERE uid = %s
     """
-    adm_database.exec(SCRIPT_SQL, [
-        user['linkedin'], user['lattes_id'], user['display_name'], user['uid']
-    ])
+    adm_database.exec(
+        SCRIPT_SQL,
+        [
+            user["linkedin"],
+            user["lattes_id"],
+            user["display_name"],
+            user["uid"],
+        ],
+    )
 
 
 def list_users():
@@ -158,10 +169,11 @@ def list_users():
         """
     registry = adm_database.select(SCRIPT_SQL)
     data_frame = pd.DataFrame(
-        registry, columns=["user_id", "display_name", "email", "roles", "photo_url"]
+        registry,
+        columns=["user_id", "display_name", "email", "roles", "photo_url"],
     )
 
-    return data_frame.to_dict(orient='records')
+    return data_frame.to_dict(orient="records")
 
 
 def create_new_role(role):
@@ -169,7 +181,7 @@ def create_new_role(role):
         INSERT INTO roles (role)
         VALUES (%s)
         """
-    adm_database.exec(SCRIPT_SQL, [role[0]['role']])
+    adm_database.exec(SCRIPT_SQL, [role[0]["role"]])
 
 
 def view_roles():
@@ -178,8 +190,8 @@ def view_roles():
         FROM roles
         """
     reg = adm_database.select(SCRIPT_SQL)
-    data_frame = pd.DataFrame(reg, columns=['id', 'role'])
-    return data_frame.to_dict(orient='records')
+    data_frame = pd.DataFrame(reg, columns=["id", "role"])
+    return data_frame.to_dict(orient="records")
 
 
 def update_role(role):
@@ -188,7 +200,7 @@ def update_role(role):
         SET role = %s
         WHERE id = %s;
         """
-    adm_database.exec(SCRIPT_SQL, [role[0]['role'], role[0]['id']])
+    adm_database.exec(SCRIPT_SQL, [role[0]["role"], role[0]["id"]])
 
 
 def delete_role(role):
@@ -196,7 +208,7 @@ def delete_role(role):
         DELETE FROM roles
         WHERE id = %s;
         """
-    adm_database.exec(SCRIPT_SQL, [role[0]['id']])
+    adm_database.exec(SCRIPT_SQL, [role[0]["id"]])
 
 
 def create_new_permission(permission):
@@ -204,8 +216,9 @@ def create_new_permission(permission):
         INSERT INTO permission (role_id, permission)
         VALUES (%s, %s);
         """
-    adm_database.exec(SCRIPT_SQL,
-                      [permission[0]['role_id'], permission[0]['permission']])
+    adm_database.exec(
+        SCRIPT_SQL, [permission[0]["role_id"], permission[0]["permission"]]
+    )
 
 
 def permissions_view(role_id):
@@ -215,8 +228,8 @@ def permissions_view(role_id):
     WHERE role_id = %s
     """
     reg = adm_database.select(SCRIPT_SQL, [role_id])
-    data_frame = pd.DataFrame(reg, columns=['id', 'permission'])
-    return data_frame.to_dict(orient='records')
+    data_frame = pd.DataFrame(reg, columns=["id", "permission"])
+    return data_frame.to_dict(orient="records")
 
 
 def update_permission(permission):
@@ -225,8 +238,9 @@ def update_permission(permission):
         SET permission = %s
         WHERE id = %s;
         """
-    adm_database.exec(SCRIPT_SQL,
-                      [permission[0]['permission'], permission[0]['id']])
+    adm_database.exec(
+        SCRIPT_SQL, [permission[0]["permission"], permission[0]["id"]]
+    )
 
 
 def delete_permission(permission):
@@ -234,7 +248,7 @@ def delete_permission(permission):
         DELETE FROM permission
         WHERE id = %s;
         """
-    adm_database.exec(SCRIPT_SQL, [permission[0]['id']])
+    adm_database.exec(SCRIPT_SQL, [permission[0]["id"]])
 
 
 def assign_user(user):
@@ -272,7 +286,7 @@ def view_user_roles(uid, role_id):
 
     reg = adm_database.select(SCRIPT_SQL, [uid, role_id])
     data_frame = pd.DataFrame(reg, columns=["role_id", "permissions"])
-    return data_frame.to_dict(orient='records')
+    return data_frame.to_dict(orient="records")
 
 
 def unassign_user(user):
@@ -280,8 +294,7 @@ def unassign_user(user):
         DELETE FROM users_roles
         WHERE role_id = %s AND user_id = %s;
         """
-    adm_database.exec(
-        SCRIPT_SQL, [user[0]['role_id'], user[0]['user_id']])
+    adm_database.exec(SCRIPT_SQL, [user[0]["role_id"], user[0]["user_id"]])
 
 
 def users_roles():
@@ -314,7 +327,8 @@ def users_graduate_program():
     registry = adm_database.select(SCRIPT_SQL)
 
     data_frame = pd.DataFrame(
-        registry, columns=["lattes_id", "graduate_program"])
+        registry, columns=["lattes_id", "graduate_program"]
+    )
 
     return data_frame
 

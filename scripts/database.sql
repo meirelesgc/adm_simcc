@@ -39,10 +39,9 @@ CREATE TABLE IF NOT EXISTS public.graduate_program(
       state character varying(4) DEFAULT 'BA'::character varying,
       city character varying(100) DEFAULT 'Salvador'::character varying,
       region character varying(100) DEFAULT 'Nordeste'::character varying,
-      instituicao character varying(100),
       url_image VARCHAR(200) NULL,
       acronym character varying(100),
-      description TEXT NULL,
+      description TEXT,
       visible bool DEFAULT FALSE,
       site TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -293,7 +292,7 @@ INSERT INTO permission (role_id, permission) VALUES
 
 INSERT INTO users (user_id, display_name, email, uid, photo_url, lattes_id, provider, linkedin, institution_id) VALUES
 ('9b7c08e3-f14c-40d7-b445-d7b8167d9437', 'Conectee', 'conectee.eng@gmail.com', 'j5Fgp4jRSGhPVLq9WNqqfUE00P32', 'https://lh3.googleusercontent.com/a/ACg8ocJWtAJdH1Lt2X5f9bdAnKhr7GlJHNPomCo6xxdoGDgFqONMsw=s96-c', '6716225567627323', 'google', '', '083a16f0-cccf-47d2-a676-d10b8931f66b'),
-('30a2c264-af11-4043-a3ce-4f2bf1ed03c3', 'Gleidson Costa', 'geucosta167@gmail.com', 'NTGYnlLRd5S6TyHO62Odrpba0I13', 'https://lh3.googleusercontent.com/a/ACg8ocLu4zWxxOFI9Vtl-x4UvwNhtlV0YO09JLfL9biGDY3agHQreA=s96-c', '', 'google', '', '083a16f0-cccf-47d2-a676-d10b8931f66b'),
+('30a2c264-af11-4043-a3ce-4f2bf1ed03c3', 'Gleidson Costa', 'geucosta167@gmail.com', 'dnmdspfXXkbTl8oHGGRYjkOyzHY2', 'https://lh3.googleusercontent.com/a/ACg8ocLu4zWxxOFI9Vtl-x4UvwNhtlV0YO09JLfL9biGDY3agHQreA=s96-c', '', 'google', '', '083a16f0-cccf-47d2-a676-d10b8931f66b'),
 ('ecbfc3e8-8221-41ec-b20c-00712f88b148', 'Victor Hugo de Jesus Oliveira', 'victorhugodejesus2004@hotmail.com', 'XSVw3AnnpXMM91qEAaWAPVvI0M52', 'None', '', 'google', '', '083a16f0-cccf-47d2-a676-d10b8931f66b'),
 ('fa000ca8-9231-41a6-887d-54598995528b', 'Eduardo M F Jorge', 'emjorge1974@gmail.com', 'lOAKfTIKnObOOt3FijCVopCgtOj2', 'https://lh3.googleusercontent.com/a/ACg8ocIo7rKtveFIq0V7JjRz0MblwmY8CqbASvZYQifyFf1PvpRrtA=s96-c', '6716225567627323', 'google', '', '083a16f0-cccf-47d2-a676-d10b8931f66b');
 INSERT INTO users_roles (role_id, user_id) VALUES

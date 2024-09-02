@@ -1,10 +1,10 @@
-import os
 import json
+import os
 import subprocess
-import psycopg2
-
 from http import HTTPStatus
-from flask import Blueprint, jsonify, request, redirect, url_for
+
+import psycopg2
+from flask import Blueprint, jsonify, request
 
 from ..dao import dao_system
 from ..models import UserModel
@@ -15,15 +15,17 @@ HOP_LOG_FILE_PATH = os.getenv("HOP_LOG_FILE_PATH")
 HOP_ROUTINE_PATH = os.getenv("HOP_ROUTINE_PATH")
 
 
-@rest_system.route('/s/user', methods=['POST'])
+@rest_system.route("/s/user", methods=["POST"])
 def create_user():
     try:
         user = request.get_json()
         user = UserModel(**user[0])
         dao_system.create_user(user)
-        return jsonify('OK'), HTTPStatus.CREATED
+        return jsonify("OK"), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
+        return jsonify(
+            {"message": "discente já cadastrado"}
+        ), HTTPStatus.CONFLICT
 
 
 @rest_system.route("/s/ufmg/user", methods=["GET"])
@@ -42,19 +44,18 @@ def create_ufmg_user():
         return jsonify(user), HTTPStatus.CREATED
 
     except psycopg2.errors.UniqueViolation:
-
         user = dao_system.select_user(user.uid)
         return jsonify(user), HTTPStatus.OK
 
 
-@rest_system.route('/s/user', methods=['GET'])
+@rest_system.route("/s/user", methods=["GET"])
 def select_user():
-    uid = request.args.get('uid')
+    uid = request.args.get("uid")
     user = dao_system.select_user(uid)
     return jsonify(user), HTTPStatus.OK
 
 
-@rest_system.route('/s/user/all', methods=['GET'])
+@rest_system.route("/s/user/all", methods=["GET"])
 def list_users():
     user = dao_system.list_users()
     return jsonify(user), HTTPStatus.OK
@@ -66,111 +67,112 @@ def list_all_users():
     return jsonify(user), HTTPStatus.OK
 
 
-@rest_system.route('/s/user', methods=['PUT'])
+@rest_system.route("/s/user", methods=["PUT"])
 def update_user():
     user = request.get_json()
     dao_system.update_user(user[0])
     return jsonify(), HTTPStatus.OK
 
 
-@rest_system.route('/s/save-directory', methods=['POST'])
+@rest_system.route("/s/save-directory", methods=["POST"])
 def save_directory():
     data = request.json
-    directory = data.get('directory')
+    directory = data.get("directory")
 
     if not directory:
-        return jsonify({'error': 'No directory provided'}), 400
+        return jsonify({"error": "No directory provided"}), 400
 
     try:
-        with open('files/directory.json', 'w') as file:
-            json.dump({'directory': directory}, file)
-        return jsonify({'message': 'Directory saved successfully'}), 200
+        with open("files/directory.json", "w") as file:
+            json.dump({"directory": directory}, file)
+        return jsonify({"message": "Directory saved successfully"}), 200
     except Exception as e:
-        print('Error saving directory:', e)
-        return jsonify({'error': 'Failed to save directory'}), 500
+        print("Error saving directory:", e)
+        return jsonify({"error": "Failed to save directory"}), 500
 
 
-@rest_system.route('/s/directory', methods=['GET'])
+@rest_system.route("/s/directory", methods=["GET"])
 def get_directory():
-
     try:
-        with open('files/directory.json', 'r') as file:
+        with open("files/directory.json", "r") as file:
             data = json.load(file)
-            directory_path = data.get('directory')
+            directory_path = data.get("directory")
         if not directory_path:
-            return jsonify({'error': 'Directory path not found'}), 404
+            return jsonify({"error": "Directory path not found"}), 404
 
         directory_list = os.listdir(directory_path)
         return jsonify(directory_list)
     except FileNotFoundError:
-        return jsonify({'error': 'Directory file not found'}), 404
+        return jsonify({"error": "Directory file not found"}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
 
-@rest_system.route('/s/role', methods=['POST'])
+@rest_system.route("/s/role", methods=["POST"])
 def create_new_role():
     role = request.get_json()
     dao_system.create_new_role(role)
-    return jsonify('OK'), HTTPStatus.CREATED
+    return jsonify("OK"), HTTPStatus.CREATED
 
 
-@rest_system.route('/s/role', methods=['GET'])
+@rest_system.route("/s/role", methods=["GET"])
 def view_roles():
     roles = dao_system.view_roles()
     return jsonify(roles), HTTPStatus.OK
 
 
-@rest_system.route('/s/role', methods=['PUT'])
+@rest_system.route("/s/role", methods=["PUT"])
 def update_role():
     role = request.get_json()
     dao_system.update_role(role)
-    return jsonify('OK'), HTTPStatus.CREATED
+    return jsonify("OK"), HTTPStatus.CREATED
 
 
-@rest_system.route('/s/role', methods=['DELETE'])
+@rest_system.route("/s/role", methods=["DELETE"])
 def delete_role():
     role = request.get_json()
     dao_system.delete_role(role)
     return jsonify(), HTTPStatus.OK
 
 
-@rest_system.route('/s/permission', methods=['POST'])
+@rest_system.route("/s/permission", methods=["POST"])
 def create_new_permission():
     permission = request.get_json()
     dao_system.create_new_permission(permission)
-    return jsonify('OK'), HTTPStatus.CREATED
+    return jsonify("OK"), HTTPStatus.CREATED
 
 
-@rest_system.route('/s/permission', methods=['GET'])
+@rest_system.route("/s/permission", methods=["GET"])
 def permissions_view():
-    role_id = request.args.get('role_id')
+    role_id = request.args.get("role_id")
     roles = dao_system.permissions_view(role_id)
     return jsonify(roles), HTTPStatus.OK
 
 
-@rest_system.route('/s/permission', methods=['PUT'])
+@rest_system.route("/s/permission", methods=["PUT"])
 def update_permission():
     permission = request.get_json()
     dao_system.update_permission(permission)
-    return jsonify('OK'), HTTPStatus.CREATED
+    return jsonify("OK"), HTTPStatus.CREATED
 
 
-@rest_system.route('/s/permission', methods=['DELETE'])
+@rest_system.route("/s/permission", methods=["DELETE"])
 def delete_permission():
     permission = request.get_json()
     dao_system.delete_permission(permission)
-    return jsonify('OK'), HTTPStatus.NO_CONTENT
+    return jsonify("OK"), HTTPStatus.NO_CONTENT
 
 
-@rest_system.route('/s/user/role', methods=['POST'])
+@rest_system.route("/s/user/role", methods=["POST"])
 def assign_user():
     try:
         user = request.get_json()
         dao_system.assign_user(user)
-        return jsonify('OK'), HTTPStatus.CREATED
+        return jsonify("OK"), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
+        return jsonify(
+            {"message": "discente já cadastrado"}
+        ), HTTPStatus.CONFLICT
 
 
 @rest_system.route("/s/user/permissions", methods=["GET"])
@@ -181,11 +183,11 @@ def view_user_roles():
     return jsonify(permissions), HTTPStatus.OK
 
 
-@rest_system.route('/s/user/role', methods=['DELETE'])
+@rest_system.route("/s/user/role", methods=["DELETE"])
 def unassign_user():
     technician = request.get_json()
     dao_system.unassign_user(technician)
-    return jsonify('OK'), HTTPStatus.NO_CONTENT
+    return jsonify("OK"), HTTPStatus.NO_CONTENT
 
 
 @rest_system.route("/s/hop", methods=["POST"])
@@ -213,7 +215,10 @@ def hop():
         if os.path.exists(HOP_LOCK_FILE_PATH):
             os.remove(HOP_LOCK_FILE_PATH)
 
-        response = {"status": "error", "message": f"An error occurred: {str(e)}"}
+        response = {
+            "status": "error",
+            "message": f"An error occurred: {str(e)}",
+        }
         return jsonify(response), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
@@ -230,10 +235,14 @@ def get_last_log_line():
             lines = log_file.readlines()
             last_line = lines[-1].strip() if lines else "Log file is empty."
 
-        return jsonify({"status": "success", "message": last_line}), HTTPStatus.OK
+        return jsonify(
+            {"status": "success", "message": last_line}
+        ), HTTPStatus.OK
 
     except Exception as e:
         return (
-            jsonify({"status": "error", "message": f"An error occurred: {str(e)}"}),
+            jsonify(
+                {"status": "error", "message": f"An error occurred: {str(e)}"}
+            ),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
