@@ -146,7 +146,6 @@ CREATE TABLE IF NOT EXISTS UFMG.researcher (
       entradaNaUFMG DATE,
       progressao DATE,
       semester character varying(6),
-      PRIMARY KEY (matric, semester),
       FOREIGN KEY (researcher_id) REFERENCES public.researcher (researcher_id)
 );
 CREATE TABLE IF NOT EXISTS UFMG.technician (

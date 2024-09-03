@@ -19,7 +19,9 @@ def graduate_program_student_insert():
         dao_graduate_program_student.student_insert(list_instance)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message": "discente já cadastrado"}), HTTPStatus.CONFLICT
+        return jsonify(
+            {"message": "discente já cadastrado"}
+        ), HTTPStatus.CONFLICT
 
 
 @rest_graduate_program_student.route("/update", methods=["POST"])

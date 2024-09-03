@@ -32,6 +32,29 @@ def graduate_program_researcher_insert(
     adm_database.execmany(SCRIPT_SQL, parameters)
 
 
+def graduate_program_researcher_insert_lattes(ListResearcher: ListResearcher):
+    parameters = list()
+    # fmt: 0ff
+    for researcher in ListResearcher.researcher_list:
+        parameters.append(
+            (
+                researcher.graduate_program_id,
+                researcher.year,
+                researcher.type_,
+                researcher.lattes_id,
+            )
+        )
+    # fmt: on
+
+    SCRIPT_SQL = """
+        INSERT INTO graduate_program_researcher(
+        graduate_program_id, researcher_id, year, type_)
+        SELECT %s, researcher_id, %s, %s FROM researcher
+        WHERE lattes_id = %s;
+        """
+    adm_database.execmany(SCRIPT_SQL, parameters)
+
+
 def graduate_program_researcher_update(
     ListResearcher: ListResearcher,
 ):
