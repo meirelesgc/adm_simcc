@@ -118,7 +118,7 @@ def student_update(
     SCRIPT_SQL = """
         UPDATE graduate_program_student AS gps
         SET
-            year = %s,
+            year = %s
         FROM researcher AS r
         WHERE
             gps.researcher_id = r.researcher_id
