@@ -58,9 +58,9 @@ def graduate_program_researcher_update():
 @rest_graduate_program_researcher.route("/Delete", methods=["DELETE"])
 def graduate_program_researcher_delete():
     researcher = request.get_json()
-    researcher_id = researcher[0]["lattes_id"]
+    lattes_id = researcher[0]["lattes_id"]
     graduate_program_id = researcher[0]["graduate_program_id"]
-    dao.graduate_program_researcher_delete(researcher_id, graduate_program_id)
+    dao.graduate_program_researcher_delete(lattes_id, graduate_program_id)
     return jsonify(), HTTPStatus.NO_CONTENT
 
 

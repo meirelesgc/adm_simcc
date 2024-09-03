@@ -45,7 +45,8 @@ def select_user(uid):
             provider,
             u.lattes_id,
             u.institution_id,
-            rr.name
+            rr.name,
+            u.verify
         FROM users u
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
         WHERE uid = %s
@@ -72,6 +73,7 @@ def select_user(uid):
             "lattes_id",
             "institution_id",
             "researcger_name",
+            "verify",
         ],
     )
 
@@ -99,7 +101,8 @@ def list_all_users():
             provider,
             u.lattes_id,
             u.institution_id,
-            rr.name
+            rr.name,
+            u.verify
         FROM users u
         LEFT JOIN researcher rr ON rr.lattes_id = u.lattes_id
         GROUP BY u.user_id, display_name, email, uid, photo_url, u.institution_id, rr.name;
@@ -119,6 +122,7 @@ def list_all_users():
             "lattes_id",
             "institution_id",
             "researcger_name",
+            "verify",
         ],
     )
 
@@ -139,7 +143,8 @@ def update_user(user):
     UPDATE users
     SET linkedin = %s,
         lattes_id = %s,
-        display_name = %s
+        display_name = %s,
+        verify = %s
     WHERE uid = %s
     """
     adm_database.exec(
@@ -148,6 +153,7 @@ def update_user(user):
             user["linkedin"],
             user["lattes_id"],
             user["display_name"],
+            user["verify"],
             user["uid"],
         ],
     )
@@ -155,13 +161,10 @@ def update_user(user):
 
 def list_users():
     SCRIPT_SQL = """
-        SELECT * FROM
-        """
-    SCRIPT_SQL = """
         SELECT
             u.user_id, display_name, email,
             jsonb_agg(jsonb_build_object('role', rl.role, 'role_id', rl.id)) AS roles,
-            photo_url
+            photo_url, verify
         FROM users u
         LEFT JOIN users_roles ur ON u.user_id = ur.user_id
         LEFT JOIN roles rl ON rl.id = ur.role_id
@@ -170,7 +173,14 @@ def list_users():
     registry = adm_database.select(SCRIPT_SQL)
     data_frame = pd.DataFrame(
         registry,
-        columns=["user_id", "display_name", "email", "roles", "photo_url"],
+        columns=[
+            "user_id",
+            "display_name",
+            "email",
+            "roles",
+            "photo_url",
+            "verify",
+        ],
     )
 
     return data_frame.to_dict(orient="records")

@@ -243,6 +243,7 @@ CREATE TABLE users (
       institution_id uuid,
       provider VARCHAR(255),
       linkedin VARCHAR(255),
+      verify bool DEFAULT FALSE,
       PRIMARY KEY (user_id)
 );
 CREATE TABLE users_roles (
