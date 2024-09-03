@@ -85,9 +85,9 @@ def graduate_program_researcher_update(
 
 
 def graduate_program_researcher_delete(
-    researcher_id: UUID4, graduate_program_id: UUID4
+    lattes_id: UUID4, graduate_program_id: UUID4
 ):
-    parameters = [researcher_id, graduate_program_id]
+    parameters = [lattes_id, graduate_program_id]
     SCRIPT_SQL = """
         DELETE FROM graduate_program_researcher
         WHERE

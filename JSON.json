@@ -1,16 +1,6 @@
 [
     {
         "graduate_program_id": "86d3f05b-5853-4270-a024-f6ceec13cbdf",
-        "researcher_id": "a0db88cd-bdb2-4763-99d6-4ca565f29a66",
-        "year": "1233; 2345; 5234",
-        "type_": "COLABORADOR",
-        "lattes_id": "1234567890"
-    },
-    {
-        "graduate_program_id": "86d3f05b-5853-4270-a024-f6ceec13cbdf",
-        "researcher_id": "c907555c-4bec-4227-afa9-99692e10299e",
-        "year": "1233; 2345; 5234",
-        "type_": "COLABORADOR",
         "lattes_id": "1234567890"
     }
 ]

@@ -285,7 +285,8 @@ def researcher_query_grant(institution_id):
 
 
 def researcher_departament_insert(
-        ListResearcherDepartament: ListResearcherDepartament):
+    ListResearcherDepartament: ListResearcherDepartament,
+):
     parameters = list()
 
     for researcher in ListResearcherDepartament.researcher_departament:
@@ -299,7 +300,6 @@ def researcher_departament_insert(
 
 
 def researcher_departament_basic_query(researcher_id):
-
     SCRIPT_SQL = """
         SELECT
             dep_id, org_cod, dep_nom, dep_des, dep_email, dep_site, dep_sigla, 
@@ -313,7 +313,8 @@ def researcher_departament_basic_query(researcher_id):
 
     registry = adm_database.select(SCRIPT_SQL, researcher_id)
 
-    data_frame = pd.DataFrame(registry,
+    data_frame = pd.DataFrame(
+        registry,
         columns=[
             "dep_id",
             "org_cod",
@@ -332,7 +333,9 @@ def researcher_departament_basic_query(researcher_id):
 def researcher_departament_delete(researcher):
     SCRIPT_SQL = """
         DELETE FROM ufmg.departament_researcher
-        WHERE researcher_id = %s AND dep_id = %s;
+        WHERE researcher_id = (SELECT researcher_id FROM researcher WHERE lattes_id = %s) 
+        AND dep_id = %s;
         """
     adm_database.exec(
-        SCRIPT_SQL, [researcher[0]['researcher_id'], researcher[0]['dep_id']])
+        SCRIPT_SQL, [researcher[0]["lattes_id"], researcher[0]["dep_id"]]
+    )
