@@ -105,7 +105,7 @@ def student_update(
     parameters = list()
 
     # fmt: 0ff
-    for researcher in ListGraduateProgramStudent.researcher_list:
+    for researcher in ListGraduateProgramStudent.student_list:
         parameters.append(
             (
                 researcher.year,
