@@ -27,7 +27,7 @@ def graduate_program_student_insert():
 @rest_graduate_program_student.route("/update", methods=["PUT"])
 def graduate_program_student_update():
     student = request.get_json()
-    instance = GraduateProgramStudent(**student[0])
+    instance = ListGraduateProgramStudent(student_list=student)
     dao_graduate_program_student.student_update(instance)
     return jsonify({"message": "ok"}), HTTPStatus.OK
 
