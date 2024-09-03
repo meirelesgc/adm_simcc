@@ -67,6 +67,7 @@ def graduate_program_researcher_update(
                 researcher.year,
                 researcher.type_,
                 researcher.lattes_id,
+                researcher.graduate_program_id,
             )
         )
     # fmt: on
@@ -79,7 +80,8 @@ def graduate_program_researcher_update(
         FROM researcher AS r
         WHERE
             gpr.researcher_id = r.researcher_id
-            AND r.lattes_id = %s;
+            AND r.lattes_id = %s
+            AND gpr.graduate_program_id = %s;
         """
     adm_database.execmany(SCRIPT_SQL, parameters)
 
