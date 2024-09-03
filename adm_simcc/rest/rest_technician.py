@@ -16,8 +16,9 @@ def technician_insert():
         dao_technician.technician_insert(technician)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:
-        return jsonify({"message":
-                        "Tecnico já cadastrado"}), HTTPStatus.CONFLICT
+        return jsonify(
+            {"message": "Tecnico já cadastrado"}
+        ), HTTPStatus.CONFLICT
 
 
 @rest_technician.route("/tecnicos", methods=["GET"])
@@ -26,7 +27,8 @@ def technician_basic_query():
     semester = request.args.get("semester")
     departament = request.args.get("departament")
     technicians = dao_technician.technician_basic_query(
-        year, semester, departament)
+        year, semester, departament
+    )
     return jsonify(technicians), HTTPStatus.OK
 
 
@@ -56,5 +58,6 @@ def technician_departament_basic_query():
     dep_id = request.args.get("dep_id")
     technician_id = request.args.get("technician_id")
     technician = dao_technician.technician_departament_basic_query(
-        technician_id, dep_id)
+        technician_id, dep_id
+    )
     return jsonify(technician), HTTPStatus.OK

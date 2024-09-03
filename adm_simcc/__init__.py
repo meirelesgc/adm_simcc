@@ -1,22 +1,25 @@
+from http import HTTPStatus
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from http import HTTPStatus
+
+from .rest.rest_departament import rest_departament
+from .rest.rest_graduate_program import rest_graduate_program
+from .rest.rest_graduate_program_student import rest_graduate_program_student
+from .rest.rest_gradute_program_researcher import (
+    rest_graduate_program_researcher,
+)
+from .rest.rest_ind_prod import rest_ind_prod
+from .rest.rest_institution import rest_institution
+from .rest.rest_researcher import rest_researcher
+from .rest.rest_researcher_group import rest_researcher_group
+from .rest.rest_system_management import rest_system
+from .rest.rest_teacher import rest_teacher
+from .rest.rest_technician import rest_technician
 
 
 def create_app():
     app = Flask(__name__)
-
-    from .rest.rest_graduate_program import rest_graduate_program
-    from .rest.rest_gradute_program_researcher import rest_graduate_program_researcher
-    from .rest.rest_graduate_program_student import rest_graduate_program_student
-    from .rest.rest_ind_prod import rest_ind_prod
-    from .rest.rest_institution import rest_institution
-    from .rest.rest_researcher import rest_researcher
-    from .rest.rest_researcher_group import rest_researcher_group
-    from .rest.rest_system_management import rest_system
-    from .rest.rest_teacher import rest_teacher
-    from .rest.rest_technician import rest_technician
-    from .rest.rest_departament import rest_departament
 
     app.register_blueprint(rest_researcher_group)
     app.register_blueprint(rest_institution)
