@@ -24,7 +24,7 @@ def graduate_program_student_insert():
         ), HTTPStatus.CONFLICT
 
 
-@rest_graduate_program_student.route("/update", methods=["POST"])
+@rest_graduate_program_student.route("/update", methods=["PUT"])
 def graduate_program_student_update():
     student = request.get_json()
     instance = GraduateProgramStudent(**student[0])

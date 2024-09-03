@@ -99,14 +99,30 @@ def student_delete(student_id, graduate_program):
     adm_database.exec(SCRIPT_SQL)
 
 
-def student_update(student: GraduateProgramStudent):
-    SCRIPT_SQL = f"""
-        UPDATE researcher
+def student_update(
+    ListGraduateProgramStudent: ListGraduateProgramStudent,
+):
+    parameters = list()
+
+    # fmt: 0ff
+    for researcher in ListGraduateProgramStudent.researcher_list:
+        parameters.append(
+            (
+                researcher.year,
+                researcher.lattes_id,
+                researcher.graduate_program_id,
+            )
+        )
+    # fmt: on
+
+    SCRIPT_SQL = """
+        UPDATE graduate_program_student AS gps
         SET
-            researcher_id = '{student.student_id}',
-            name = '{student.name}',
-            lattes_id = '{student.lattes_id}',
-            institution_id = '{student.institution_id}'
-        WHERE researcher_id = '{student.student_id}';
+            year = %s,
+        FROM researcher AS r
+        WHERE
+            gps.researcher_id = r.researcher_id
+            AND r.lattes_id = %s
+            AND gps.graduate_program_id = %s;
         """
-    adm_database.exec(SCRIPT_SQL)
+    adm_database.execmany(SCRIPT_SQL, parameters)
