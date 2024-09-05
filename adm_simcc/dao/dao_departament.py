@@ -13,11 +13,15 @@ def departament_insert(departaments, file):
     parameters = list()
 
     parameters = [
-        departaments["dep_id"], departaments["org_cod"],
-        departaments["dep_nom"], departaments["dep_des"],
-        departaments["dep_email"], departaments["dep_site"],
-        departaments["dep_sigla"], departaments["dep_tel"],
-        psycopg2.Binary(file["img_data"].read())
+        departaments["dep_id"],
+        departaments["org_cod"],
+        departaments["dep_nom"],
+        departaments["dep_des"],
+        departaments["dep_email"],
+        departaments["dep_site"],
+        departaments["dep_sigla"],
+        departaments["dep_tel"],
+        psycopg2.Binary(file["img_data"].read()),
     ]
     SCRIPT_SQL = """
         INSERT INTO UFMG.departament
@@ -57,9 +61,11 @@ def departament_basic_query(dep_id):
     result = list()
     for row in reg:
         row_dict = dict(zip(columns, row))
-        row_dict["img_data"] = (base64.b64encode(
-            row_dict["img_data"]).decode("utf-8")
-                                if row_dict["img_data"] else None)
+        row_dict["img_data"] = (
+            base64.b64encode(row_dict["img_data"]).decode("utf-8")
+            if row_dict["img_data"]
+            else None
+        )
         result.append(row_dict)
 
     return result
@@ -124,8 +130,9 @@ def departament_researcher_query(dep_id):
 
     registry = adm_database.select(SCRIPT_SQL, [dep_id])
 
-    data_frame = pd.DataFrame(registry,
-                              columns=["researcher_id", "name", "lattes_id"])
+    data_frame = pd.DataFrame(
+        registry, columns=["researcher_id", "name", "lattes_id"]
+    )
     return data_frame.to_dict(orient="records")
 
 
@@ -141,8 +148,7 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
             SELECT researcher_id FROM UFMG.researcher
             WHERE inscufmg = %s
             """
-            researcher_id = adm_database.select(SCRIPT_SQL,
-                                                [professor.ufmg_id])
+            researcher_id = adm_database.select(SCRIPT_SQL, [professor.ufmg_id])
             if researcher_id:
                 professors_id.append(researcher_id[0][0])
             else:
@@ -151,14 +157,27 @@ def departament_insert_discipline(ListDiscipline: ListDiscipline):
             professors_workload.append(professor.responsibility)
 
         parameters.append(
-            (discipline.dep_id, discipline.semester, discipline.department,
-             discipline.academic_activity_code,
-             discipline.academic_activity_name,
-             discipline.academic_activity_ch, discipline.demanding_courses,
-             discipline.oft, discipline.id, discipline.available_slots,
-             discipline.occupied_slots, discipline.percent_occupied_slots,
-             discipline.schedule, discipline.language, professors_id,
-             professors_workload, discipline.status, professors_name))
+            (
+                discipline.dep_id,
+                discipline.semester,
+                discipline.department,
+                discipline.academic_activity_code,
+                discipline.academic_activity_name,
+                discipline.academic_activity_ch,
+                discipline.demanding_courses,
+                discipline.oft,
+                discipline.id,
+                discipline.available_slots,
+                discipline.occupied_slots,
+                discipline.percent_occupied_slots,
+                discipline.schedule,
+                discipline.language,
+                professors_id,
+                professors_workload,
+                discipline.status,
+                professors_name,
+            )
+        )
 
     SCRIPT_SQL = """
         INSERT INTO UFMG.disciplines
@@ -195,14 +214,27 @@ def departament_query_discipline(dep_id):
     data_frame = pd.DataFrame(
         registry,
         columns=[
-            'semester', 'department', 'academic_activity_code',
-            'academic_activity_name', 'academic_activity_ch',
-            'demanding_courses', 'oft', 'id', 'available_slots',
-            'occupied_slots', 'percent_occupied_slots', 'schedule', 'language',
-            'researcher_id', 'workload', 'status', 'researcher_name'
-        ])
+            "semester",
+            "department",
+            "academic_activity_code",
+            "academic_activity_name",
+            "academic_activity_ch",
+            "demanding_courses",
+            "oft",
+            "id",
+            "available_slots",
+            "occupied_slots",
+            "percent_occupied_slots",
+            "schedule",
+            "language",
+            "researcher_id",
+            "workload",
+            "status",
+            "researcher_name",
+        ],
+    )
 
-    return data_frame.to_dict(orient='records')
+    return data_frame.to_dict(orient="records")
 
 
 def departament_query_discipline_semester(dep_id):

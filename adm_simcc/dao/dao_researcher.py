@@ -201,7 +201,6 @@ def researcher_insert_grant(ListSubsidies: ListSubsidies):
 
     for subsidy in ListSubsidies.grant_list:
         researcher_id = researcher_search_id(subsidy.id_lattes)
-        print(subsidy)
         parameters.append(
             (
                 researcher_id or None,

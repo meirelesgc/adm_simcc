@@ -144,7 +144,11 @@ def update_user(user):
     SET linkedin = %s,
         lattes_id = %s,
         display_name = %s,
-        verify = %s
+        institution_id = %s,
+        verify = %s,
+        email = %s,
+        photo_url = %s,
+        provider = %s
     WHERE uid = %s
     """
     adm_database.exec(
@@ -153,7 +157,11 @@ def update_user(user):
             user["linkedin"],
             user["lattes_id"],
             user["display_name"],
+            user["institution_id"],
             user["verify"],
+            user["email"],
+            user["photo_url"],
+            user["provider"],
             user["uid"],
         ],
     )
