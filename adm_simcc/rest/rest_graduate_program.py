@@ -1,7 +1,7 @@
 import psycopg2
 from http import HTTPStatus
 from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
+
 from ..dao import dao_graduate_program as dao
 from ..models.graduate_program import GraduateProgram, ListGraduateProgram
 
@@ -15,7 +15,9 @@ rest_graduate_program = Blueprint(
 def graduate_program_insert():
     try:
         graduate_program_list = request.get_json()
-        list_instance = ListGraduateProgram(graduate_program_list=graduate_program_list)
+        list_instance = ListGraduateProgram(
+            graduate_program_list=graduate_program_list
+        )
         dao.graduate_program_insert(list_instance)
         return jsonify({"message": "ok"}), HTTPStatus.CREATED
     except psycopg2.errors.UniqueViolation:

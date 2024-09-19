@@ -16,13 +16,13 @@ CREATE TABLE IF NOT EXISTS public.institution(
       PRIMARY KEY (institution_id)
 );
 CREATE TABLE IF NOT EXISTS public.researcher(
-      researcher_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+      researcher_id uuid NOT NULL DEFAULT uuid_generate_v4() UNIQUE,
       name VARCHAR(150) NOT NULL,
-      lattes_id VARCHAR(20) UNIQUE,
+      lattes_id VARCHAR(20),
       institution_id uuid NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (researcher_id),
+      PRIMARY KEY (lattes_id, institution_id),
       FOREIGN KEY (institution_id) REFERENCES institution (institution_id)
 );
 CREATE TABLE IF NOT EXISTS public.graduate_program(
@@ -251,6 +251,11 @@ CREATE TABLE users_roles (
       user_id UUID NOT NULL,
       PRIMARY KEY (role_id, user_id),
       FOREIGN KEY (user_id) REFERENCES public.users (user_id)
+);
+CREATE TABLE newsletter_subscribers (
+      id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 INSERT INTO public.institution (
             institution_id,

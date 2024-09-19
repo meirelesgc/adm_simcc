@@ -366,3 +366,29 @@ def users_departaments():
     data_frame = pd.DataFrame(registry, columns=["lattes_id", "departament"])
 
     return data_frame
+
+
+def add_email(email):
+    SCRIPT_SQL = """
+        INSERT INTO newsletter_subscribers (email)
+        VALUES (%s);
+    """
+    adm_database.exec(SCRIPT_SQL, (email,))
+
+
+def select_email():
+    SCRIPT_SQL = """
+        SELECT email, subscribed_at
+        FROM newsletter_subscribers;
+    """
+    registry = adm_database.select(SCRIPT_SQL)
+    dataframe = pd.DataFrame(registry, columns=["email", "subscribed_at"])
+    return dataframe.to_dict(orient="records")
+
+
+def delete_email(email):
+    SCRIPT_SQL = """
+        DELETE FROM newsletter_subscribers
+        WHERE email = %s;
+    """
+    adm_database.exec(SCRIPT_SQL, (email,))
