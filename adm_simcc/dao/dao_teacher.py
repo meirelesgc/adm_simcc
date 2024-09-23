@@ -6,7 +6,6 @@ adm_database = Connection()
 
 
 def ufmg_researcher_insert(ListTeachers: ListTeachers):
-
     SCRIPT_SQL = """
         DELETE FROM UFMG.researcher
         WHERE semester = %s;
@@ -20,7 +19,7 @@ def ufmg_researcher_insert(ListTeachers: ListTeachers):
     for teacher in ListTeachers.list_teachers:
         SCRIPT_SQL = """
             SELECT researcher_id FROM researcher
-            WHERE ts_rank(to_tsvector(unaccent(LOWER(name))), websearch_to_tsquery(%s)) > 0.04
+            WHERE unaccent(LOWER(name)) ILIKE %s
             LIMIT 1;
             """
 
@@ -126,16 +125,16 @@ def teacher_insert_role(ListRole: ListRole):
 
 
 def teacher_query_role():
-    SCRIPT_SQL = '''
+    SCRIPT_SQL = """
         SELECT
             role,
             technician_id
         FROM
             technician_role
-        '''
+        """
 
     registry = adm_database.select(SCRIPT_SQL)
 
-    data_frame = pd.Dataframe(registry, columns=['role', 'technician_id'])
+    data_frame = pd.Dataframe(registry, columns=["role", "technician_id"])
 
-    return data_frame.to_dict(orient='records')
+    return data_frame.to_dict(orient="records")
