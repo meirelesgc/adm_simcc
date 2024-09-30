@@ -1,12 +1,11 @@
 import pandas as pd
-from zeep import Client
 from pydantic import UUID4
+from zeep import Client
 
 from ..dao import Connection
 from ..models.researcher import (
-    ListResearchers,
-    ListSubsidies,
     ListResearcherDepartament,
+    ListResearchers,
 )
 
 adm_database = Connection()
@@ -84,17 +83,12 @@ def researcher_basic_query(
             r.name,
             r.lattes_id,
             r.institution_id,
-            r.created_at,
-            jsonb_agg(jsonb_build_object(
-                'subsidy_id', s.id,
-                'modality_code', s.modality_code,
-                'category_level_code', s.category_level_code
-            )) AS subsidies
+            r.created_at
         FROM
             researcher r
-        LEFT JOIN subsidy s ON s.researcher_id = r.researcher_id
         WHERE
-            r.researcher_id NOT IN (SELECT researcher_id FROM graduate_program_student)
+            r.researcher_id NOT IN
+            (SELECT researcher_id FROM graduate_program_student)
             {filter_institution}
             {filter_name}
             {filter_lattes_id}
@@ -118,10 +112,9 @@ def researcher_basic_query(
             "lattes_id",
             "institution_id",
             "created_at",
-            "subsidies",
         ],
     )
-    SCRIPT_SQL = f"""
+    SCRIPT_SQL = """
         SELECT
             r.lattes_id,
             r.last_update
@@ -129,9 +122,6 @@ def researcher_basic_query(
             researcher r
         """
 
-    # registry = simcc_database.select(SCRIPT_SQL=SCRIPT_SQL)
-    # data_frame_simcc = pd.DataFrame(registry, columns=["lattes_id", "last_update"])
-    # data_frame = pd.merge(data_frame, data_frame_simcc, how="left", on="lattes_id")
     data_frame = data_frame.drop(columns=["created_at"])
     return data_frame.fillna("Não esta atualizado").to_dict(orient="records")
 
@@ -188,99 +178,6 @@ def researcher_search_id(lattes_id):
         return researcher_id[0][0]
     else:
         return str()
-
-
-def researcher_insert_grant(ListSubsidies: ListSubsidies):
-    parameters = list()
-    untracket_researchers = list()
-
-    SCRIPT_SQL = """
-    DELETE FROM subsidy;
-    """
-    adm_database.exec(SCRIPT_SQL)
-
-    for subsidy in ListSubsidies.grant_list:
-        researcher_id = researcher_search_id(subsidy.id_lattes)
-        parameters.append(
-            (
-                researcher_id or None,
-                subsidy.cod_modalidade,
-                subsidy.nome_modalidade,
-                subsidy.titulo_chamada,
-                subsidy.cod_categoria_nivel,
-                subsidy.nome_programa_fomento,
-                subsidy.nome_instituto,
-                subsidy.quant_auxilio,
-                subsidy.quant_bolsa,
-            )
-        )
-
-    SCRIPT_SQL = """
-        INSERT INTO subsidy(
-            researcher_id,
-            modality_code,
-            modality_name,
-            call_title,
-            category_level_code,
-            funding_program_name,
-            institute_name,
-            aid_quantity,
-            scholarship_quantity)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-    """
-    adm_database.execmany(SCRIPT_SQL, parameters)
-
-    return untracket_researchers
-
-
-def researcher_query_grant(institution_id):
-    parameters = list()
-    filter_institution = str()
-    if institution_id:
-        filter_institution = """
-                AND r.institution_id = %s
-                """
-        parameters.extend([institution_id])
-
-    SCRIPT_SQL = f"""
-        SELECT
-            s.researcher_id,
-            r.name,
-            s.modality_code,
-            s.modality_name,
-            s.call_title,
-            s.category_level_code,
-            s.funding_program_name,
-            s.institute_name,
-            s.aid_quantity,
-            s.scholarship_quantity
-        FROM
-            subsidy s
-            LEFT JOIN researcher r ON s.researcher_id = r.researcher_id
-        WHERE
-        s.researcher_id IS NOT NULL
-        {filter_institution}
-        """
-
-    registry = adm_database.select(SCRIPT_SQL, parameters)
-
-    data_frame = pd.DataFrame(
-        registry,
-        columns=[
-            "researcher_id",
-            "name",
-            "modality_code",
-            "modality_name",
-            "call_title",
-            "category_level_code",
-            "funding_program_name",
-            "institute_name",
-            "aid_quantity",
-            "scholarship_quantity",
-        ],
-    )
-
-    return data_frame.to_dict(orient="records")
 
 
 def researcher_departament_insert(

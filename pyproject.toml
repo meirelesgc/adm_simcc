@@ -45,6 +45,6 @@ select = ['I', 'F', 'E', 'W', 'PL', 'PT']
 addopts = '-p no:warnings'
 
 [tool.taskipy.tasks]
-run = 'gunicorn --certfile=$CERT_FILE --keyfile=$KEY_FILE -b 0.0.0.0:5000 app:app --reload'
+run = 'gunicorn --certfile=$CERT_FILE --keyfile=$KEY_FILE -b 0.0.0.0:5000 adm_simcc:create_app --reload'
 test = 'pytest -x -s --cov=adm_simcc/rest -vv --new-first'
 post_test = 'coverage html'

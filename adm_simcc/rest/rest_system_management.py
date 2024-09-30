@@ -83,7 +83,7 @@ def save_directory():
         return jsonify({"error": "No directory provided"}), 400
 
     try:
-        with open("files/directory.json", "w") as file:
+        with open("files/directory.json", "w", encoding="utf-8") as file:
             json.dump({"directory": directory}, file)
         return jsonify({"message": "Directory saved successfully"}), 200
     except Exception as e:

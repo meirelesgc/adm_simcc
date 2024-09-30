@@ -68,19 +68,6 @@ CREATE TABLE IF NOT EXISTS public.graduate_program_student(
       FOREIGN KEY (researcher_id) REFERENCES researcher (researcher_id),
       FOREIGN KEY (graduate_program_id) REFERENCES graduate_program (graduate_program_id)
 );
-CREATE TABLE IF NOT EXISTS public.research_group (
-      research_group_id uuid NOT NULL DEFAULT uuid_generate_v4(),
-      research_group_name VARCHAR(255) UNIQUE,
-      researcher_id uuid,
-      institution_id uuid NOT NULL,
-      area VARCHAR(255),
-      last_date_sent DATE,
-      situation VARCHAR(50),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      CONSTRAINT fk_researcher_id FOREIGN KEY (researcher_id) REFERENCES researcher(researcher_id),
-      CONSTRAINT fk_institution_id FOREIGN KEY (institution_id) REFERENCES institution(institution_id)
-);
 CREATE TABLE IF NOT EXISTS public.weights (
       institution_id uuid DEFAULT uuid_generate_v4(),
       a1 numeric(20, 3),
@@ -104,18 +91,6 @@ CREATE TABLE IF NOT EXISTS public.weights (
       f3 numeric(20, 3) DEFAULT 0,
       f4 numeric(20, 3) DEFAULT 0,
       f5 numeric(20, 3) DEFAULT 0
-);
-CREATE TABLE IF NOT EXISTS public.subsidy (
-      id uuid NOT NULL DEFAULT uuid_generate_v4(),
-      researcher_id uuid,
-      modality_code character varying(50),
-      modality_name character varying(255),
-      call_title character varying(255),
-      category_level_code character varying(50),
-      funding_program_name character varying(255),
-      institute_name character varying(255),
-      aid_quantity character varying(255),
-      scholarship_quantity integer
 );
 CREATE TABLE roles (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

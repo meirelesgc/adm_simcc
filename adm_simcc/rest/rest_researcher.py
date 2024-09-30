@@ -1,15 +1,13 @@
-import psycopg2
 from http import HTTPStatus
+
+import psycopg2
 from flask import Blueprint, jsonify, request
 
 from ..dao import dao_researcher
 from ..models.researcher import (
-    ListResearchers,
-    ListSubsidies,
-    Subsidies,
     ListResearcherDepartament,
+    ListResearchers,
 )
-
 
 rest_researcher = Blueprint(
     "rest_researcher", __name__, url_prefix="/ResearcherRest"
@@ -57,28 +55,6 @@ def researcher_count():
     institution_id = request.args.get("institution_id")
     researchers_count = dao_researcher.researcher_count(institution_id)
     return jsonify(researchers_count)
-
-
-@rest_researcher.route("/InsertGrant", methods=["POST"])
-def researcher_insert_grant():
-    grant_list = request.get_json()
-    for a, b in enumerate(grant_list):
-        try:
-            Subsidies(**b)
-        except Exception as E:
-            print(b, E)
-    list_instance = ListSubsidies(grant_list=grant_list)
-    untracket_researchers = dao_researcher.researcher_insert_grant(
-        list_instance
-    )
-    return jsonify({"not found": untracket_researchers}), HTTPStatus.CREATED
-
-
-@rest_researcher.route("/Query/Subsidy", methods=["GET"])
-def researcher_query_grant():
-    institution_id = request.args.get("institution_id")
-    researchers_list = dao_researcher.researcher_query_grant(institution_id)
-    return jsonify(researchers_list), HTTPStatus.OK
 
 
 @rest_researcher.route("/departament", methods=["POST"])
