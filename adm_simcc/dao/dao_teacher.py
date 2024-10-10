@@ -1,6 +1,7 @@
 import pandas as pd
+
 from ..dao import Connection
-from ..models.teachers import ListTeachers, ListRole
+from ..models.teachers import ListRole, ListTeachers
 
 adm_database = Connection()
 
@@ -24,6 +25,7 @@ def ufmg_researcher_insert(ListTeachers: ListTeachers):
             """
 
         researcher_id = adm_database.select(SCRIPT_SQL, [teacher.nome])
+        print(researcher_id)
         if researcher_id:
             researcher_id = researcher_id[0][0]
 

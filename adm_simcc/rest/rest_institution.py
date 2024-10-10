@@ -4,7 +4,7 @@ import psycopg2
 from flask import Blueprint, jsonify, request
 
 from ..dao import dao_institution
-from ..models.institution import ListInstitutions
+from ..models.institution import Institution, ListInstitutions
 
 rest_institution = Blueprint(
     "rest_institution", __name__, url_prefix="/InstitutionRest"
@@ -22,6 +22,21 @@ def institution_insert():
         return jsonify(
             {"message": "instituição já cadastrado"}
         ), HTTPStatus.CONFLICT
+
+
+@rest_institution.route("/Delete", methods=["DELETE"])
+def institution_delete():
+    institution_id = request.args.get("institution_id")
+    dao_institution.delete_institution(institution_id)
+    return jsonify({"message": "ok"}), HTTPStatus.OK
+
+
+@rest_institution.route("/Update", methods=["PUT"])
+def institution_update():
+    institution = request.get_json()
+    institution = Institution(**institution)
+    dao_institution.update_institution(institution)
+    return jsonify({"message": "ok"}), HTTPStatus.OK
 
 
 @rest_institution.route("/Query", methods=["GET"])

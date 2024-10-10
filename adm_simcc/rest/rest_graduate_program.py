@@ -1,10 +1,10 @@
-import psycopg2
 from http import HTTPStatus
+
+import psycopg2
 from flask import Blueprint, jsonify, request
 
 from ..dao import dao_graduate_program as dao
 from ..models.graduate_program import GraduateProgram, ListGraduateProgram
-
 
 rest_graduate_program = Blueprint(
     "rest_graduate_program", __name__, url_prefix="/GraduateProgramRest"

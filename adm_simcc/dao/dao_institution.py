@@ -2,7 +2,7 @@ import pandas as pd
 from pydantic import UUID4
 
 from ..dao import Connection
-from ..models.institution import ListInstitutions
+from ..models.institution import Institution, ListInstitutions
 
 adm_database = Connection()
 
@@ -129,3 +129,21 @@ def institution_query_name(institution_name: str):
         return registry[0][0]
     else:
         return None
+
+
+def delete_institution(institution_id):
+    SCRIPT_SQL = """
+        DELETE FROM institution WHERE institution_id = %s;
+        """
+    adm_database.exec(SCRIPT_SQL, [institution_id])
+
+
+def update_institution(institution: Institution):
+    SCRIPT_SQL = """
+        UPDATE institution SET
+            name = %(name)s,
+            acronym = %(acronym)s,
+            lattes_id = %(lattes_id)s
+        WHERE institution_id = %(institution_id)s;
+        """
+    adm_database.exec(SCRIPT_SQL, institution.model_dump())
