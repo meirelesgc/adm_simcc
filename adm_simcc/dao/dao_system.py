@@ -1,6 +1,7 @@
-from ..dao import Connection
-from ..models import UserModel
 import pandas as pd
+
+from ..dao import Connection
+from ..models import FeedbackSchema, UserModel
 
 adm_database = Connection()
 
@@ -392,3 +393,11 @@ def delete_email(email):
         WHERE email = %s;
     """
     adm_database.exec(SCRIPT_SQL, (email,))
+
+
+def add_feedback(feedback: FeedbackSchema):
+    SCRIPT_SQL = """
+        INSERT INTO public.feedback(name, email, rating, description)
+        VALUES (%(name)s, %(email)s, %(rating)s, %(description)s);
+        """
+    adm_database.exec(SCRIPT_SQL, feedback.model_dump())

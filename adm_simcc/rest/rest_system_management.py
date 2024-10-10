@@ -5,9 +5,10 @@ from http import HTTPStatus
 
 import psycopg2
 from flask import Blueprint, jsonify, request
+from pydantic import ValidationError
 
 from ..dao import dao_system
-from ..models import UserModel
+from ..models import FeedbackSchema, UserModel
 
 rest_system = Blueprint("rest_system_management", __name__)
 HOP_LOCK_FILE_PATH = os.getenv("HOP_LOCK_FILE_PATH", "/tmp/hop_execution.lock")
@@ -246,3 +247,20 @@ def get_last_log_line():
             ),
             HTTPStatus.INTERNAL_SERVER_ERROR,
         )
+
+
+@rest_system.route("/s/feedback", methods=["POST"])
+def feedback():
+    try:
+        feedback_data = FeedbackSchema(**request.json)
+        dao_system.add_feedback(feedback_data)
+        return jsonify(
+            {
+                "message": "Feedback recebido com sucesso!",
+                "data": feedback_data.dict(),
+            }
+        ), 200
+    except ValidationError as e:
+        return jsonify(
+            {"message": "Validation error", "errors": e.errors()}
+        ), 400

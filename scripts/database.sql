@@ -232,6 +232,14 @@ CREATE TABLE newsletter_subscribers (
       email VARCHAR(255) NOT NULL UNIQUE,
       subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE feedback (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    rating INTEGER CHECK (rating >= 0 AND rating <= 10) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 INSERT INTO public.institution (
             institution_id,
             name,
